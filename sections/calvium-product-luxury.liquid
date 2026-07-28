@@ -84,16 +84,23 @@
       {%- endcomment -%}
       {% render 'cm-cross-product-swatches', product: product %}
 
+      {%- assign has_cross_group = false -%}
+      {%- for tg in product.tags -%}
+        {%- if tg contains 'color-group:' -%}{%- assign has_cross_group = true -%}{%- endif -%}
+      {%- endfor -%}
       <form method="post" action="{{ routes.cart_add_url }}" data-cm-picker>
         {%- for option in product.options_with_values -%}
           {%- assign lower_name = option.name | downcase -%}
-          {%- comment -%} Skip in-variant Color picker when a cross-product group exists. {%- endcomment -%}
-          {%- assign has_cross_group = false -%}
-          {%- for tg in product.tags -%}
-            {%- if tg contains 'color-group:' -%}{%- assign has_cross_group = true -%}{%- endif -%}
-          {%- endfor -%}
+          {%- comment -%}
+            When cross-product group exists, skip both the Color picker (handled by
+            cm-cross-product-swatches snippet above) and the Title picker (single-variant
+            default, has nothing to select).
+          {%- endcomment -%}
           {%- if has_cross_group -%}
             {%- if lower_name contains 'color' or lower_name contains 'colour' -%}
+              {%- continue -%}
+            {%- endif -%}
+            {%- if lower_name == 'title' -%}
               {%- continue -%}
             {%- endif -%}
           {%- endif -%}

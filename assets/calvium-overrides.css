@@ -1631,23 +1631,67 @@ free-shipping-component .message {
 }
 
 /* ----- 22. Cross-product color swatches -----
-   Snippet `cm-cross-product-swatches.liquid` renders <a> anchors styled to
-   match the existing .cm-picker__thumb buttons. Applied to the swatches when
-   a product has a `color-group:X` tag (i.e. after the SKU split). */
-.cm-cross-swatches a.cm-picker__thumb {
+   Snippet `cm-cross-product-swatches.liquid` renders <a> anchors that link
+   to sibling color products. Each swatch has a thumb + a color name label below.
+   Row wraps on mobile, caps at 6 across desktop. */
+.cm-cross-swatches {
+  margin: 0 auto 20px;
+  max-width: 520px;
+}
+.cm-cross-swatches__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 12px;
+  align-items: flex-start;
+}
+.cm-cross-swatch {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
   color: inherit;
+  width: 56px;
+  flex: 0 0 auto;
+}
+.cm-cross-swatch__thumb {
+  width: 48px;
+  height: 60px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #f4f0ea;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid transparent;
+  transition: border-color 120ms ease;
 }
-.cm-cross-swatches a.cm-picker__thumb.is-active {
-  outline: 2px solid var(--cm-ink, #000);
-  outline-offset: 2px;
+.cm-cross-swatch__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.cm-cross-swatches .cm-picker__fallback {
-  font-size: 12px;
-  letter-spacing: 0.06em;
+.cm-cross-swatch__name {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--cm-ink-70, #666);
+  text-align: center;
+  line-height: 1.3;
+  max-width: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cm-cross-swatch:hover .cm-cross-swatch__thumb {
+  border-color: var(--cm-ink, #000);
+}
+.cm-cross-swatch.is-active .cm-cross-swatch__thumb {
+  border-color: var(--cm-ink, #000);
+  border-width: 2px;
+}
+.cm-cross-swatch.is-active .cm-cross-swatch__name {
+  color: var(--cm-ink, #000);
   font-weight: 600;
 }
 
