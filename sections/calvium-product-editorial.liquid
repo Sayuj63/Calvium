@@ -173,8 +173,10 @@
         {%- for tg in product.tags -%}
           {%- if tg contains 'color-group:' -%}{%- assign has_cross_group = true -%}{%- endif -%}
         {%- endfor -%}
-        {%- if has_cross_group and (lower_name contains 'color' or lower_name contains 'colour') -%}
-          {%- continue -%}
+        {%- if has_cross_group -%}
+          {%- if lower_name contains 'color' or lower_name contains 'colour' -%}
+            {%- continue -%}
+          {%- endif -%}
         {%- endif -%}
         <div class="cm-picker" data-cm-picker-group>
           <p class="cm-picker__label" style="text-align:center;">
