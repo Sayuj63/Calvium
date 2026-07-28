@@ -5,22 +5,28 @@
   looks each one up via `all_products[handle]`, and renders a swatch. Each
   swatch = image thumb + color name label below.
 
+  Multi-word colors like `beige-off-white` render as "Beige Off White" (title
+  case), not "Beige off white" (Liquid's plain `capitalize` filter caps only
+  the first letter).
+
   Falls back to iterating `collections.all.products` if the metafield isn't
-  set (works only if siblings are within the first ~50 products).
+  set (only works if siblings sit within the first ~250 products).
 {%- endcomment -%}
 
-{%- liquid
-  assign this_color_label = ''
-  for t in product.tags
-    if t contains 'color:'
-      unless t contains 'color-group'
-        assign this_color_label = t | remove: 'color:' | replace: '-', ' ' | capitalize
-      endunless
-    endif
-  endfor
+{%- capture titlecase_this -%}
+  {%- for t in product.tags -%}
+    {%- if t contains 'color:' -%}
+      {%- unless t contains 'color-group' -%}
+        {%- assign raw = t | remove: 'color:' | strip -%}
+        {%- assign parts = raw | split: '-' -%}
+        {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
+      {%- endunless -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign this_color_label = titlecase_this | strip -%}
 
-  assign siblings_csv = product.metafields.custom.color_siblings
--%}
+{%- assign siblings_csv = product.metafields.custom.color_siblings -%}
 
 {%- if siblings_csv != blank -%}
   {%- assign sibling_handles = siblings_csv | split: ',' -%}
@@ -36,14 +42,18 @@
           {%- assign h = handle | strip -%}
           {%- assign sib = all_products[h] -%}
           {%- if sib != empty -%}
-            {%- assign sib_color_label = '' -%}
-            {%- for t in sib.tags -%}
-              {%- if t contains 'color:' -%}
-                {%- unless t contains 'color-group' -%}
-                  {%- assign sib_color_label = t | remove: 'color:' | replace: '-', ' ' | capitalize -%}
-                {%- endunless -%}
-              {%- endif -%}
-            {%- endfor -%}
+            {%- capture titlecase_sib -%}
+              {%- for t in sib.tags -%}
+                {%- if t contains 'color:' -%}
+                  {%- unless t contains 'color-group' -%}
+                    {%- assign raw = t | remove: 'color:' | strip -%}
+                    {%- assign parts = raw | split: '-' -%}
+                    {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
+                  {%- endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+            {%- assign sib_color_label = titlecase_sib | strip -%}
             <a
               href="{{ sib.url }}"
               class="cm-cross-swatch {% if sib.id == product.id %}is-active{% endif %}"
@@ -54,9 +64,9 @@
               <span class="cm-cross-swatch__thumb">
                 {%- if sib.featured_image -%}
                   <img
-                    src="{{ sib.featured_image | image_url: width: 120 }}"
+                    src="{{ sib.featured_image | image_url: width: 160 }}"
                     alt="{{ sib_color_label | default: sib.title | escape }}"
-                    width="48" height="60" loading="lazy">
+                    width="60" height="76" loading="lazy">
                 {%- endif -%}
               </span>
               <span class="cm-cross-swatch__name">{{ sib_color_label | default: sib.title }}</span>
@@ -91,19 +101,23 @@
         <div class="cm-cross-swatches__row">
           {%- for sib in collections.all.products limit: 250 -%}
             {%- if sib.tags contains target_tag -%}
-              {%- assign sib_color_label = '' -%}
-              {%- for t in sib.tags -%}
-                {%- if t contains 'color:' -%}
-                  {%- unless t contains 'color-group' -%}
-                    {%- assign sib_color_label = t | remove: 'color:' | replace: '-', ' ' | capitalize -%}
-                  {%- endunless -%}
-                {%- endif -%}
-              {%- endfor -%}
+              {%- capture titlecase_sib2 -%}
+                {%- for t in sib.tags -%}
+                  {%- if t contains 'color:' -%}
+                    {%- unless t contains 'color-group' -%}
+                      {%- assign raw = t | remove: 'color:' | strip -%}
+                      {%- assign parts = raw | split: '-' -%}
+                      {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
+                    {%- endunless -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endcapture -%}
+              {%- assign sib_color_label = titlecase_sib2 | strip -%}
               <a href="{{ sib.url }}" class="cm-cross-swatch {% if sib.id == product.id %}is-active{% endif %}"
                  title="{{ sib_color_label | default: sib.title | escape }}">
                 <span class="cm-cross-swatch__thumb">
                   {%- if sib.featured_image -%}
-                    <img src="{{ sib.featured_image | image_url: width: 120 }}" alt="{{ sib_color_label | escape }}" width="48" height="60" loading="lazy">
+                    <img src="{{ sib.featured_image | image_url: width: 160 }}" alt="{{ sib_color_label | escape }}" width="60" height="76" loading="lazy">
                   {%- endif -%}
                 </span>
                 <span class="cm-cross-swatch__name">{{ sib_color_label | default: sib.title }}</span>

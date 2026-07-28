@@ -1651,12 +1651,12 @@ free-shipping-component .message {
   gap: 6px;
   text-decoration: none;
   color: inherit;
-  width: 56px;
+  width: 76px;
   flex: 0 0 auto;
 }
 .cm-cross-swatch__thumb {
-  width: 48px;
-  height: 60px;
+  width: 60px;
+  height: 76px;
   border-radius: 2px;
   overflow: hidden;
   background: #f4f0ea;
@@ -1677,11 +1677,14 @@ free-shipping-component .message {
   letter-spacing: 0.02em;
   color: var(--cm-ink-70, #666);
   text-align: center;
-  line-height: 1.3;
-  max-width: 56px;
+  line-height: 1.25;
+  max-width: 76px;
+  word-break: break-word;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .cm-cross-swatch:hover .cm-cross-swatch__thumb {
   border-color: var(--cm-ink, #000);
