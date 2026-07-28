@@ -26,7 +26,7 @@
 
   {%- comment -%} Count siblings first (so we only render the row when >1 exists). {%- endcomment -%}
   {%- assign sibling_count = 0 -%}
-  {%- for p in collections.all.products -%}
+  {%- for p in collections.all.products limit: 250 -%}
     {%- if p.tags contains target_tag -%}
       {%- assign sibling_count = sibling_count | plus: 1 -%}
     {%- endif -%}
