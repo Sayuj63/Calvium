@@ -78,9 +78,25 @@
         <p class="cm-pdp-lux__desc">{{ section.settings.short_description }}</p>
       {%- endif -%}
 
+      {%- comment -%}
+        Cross-product color swatches — renders <a> links to sibling color products
+        when this product has a `color-group:X` tag. See snippets/cm-cross-product-swatches.liquid.
+      {%- endcomment -%}
+      {% render 'cm-cross-product-swatches', product: product %}
+
       <form method="post" action="{{ routes.cart_add_url }}" data-cm-picker>
         {%- for option in product.options_with_values -%}
           {%- assign lower_name = option.name | downcase -%}
+          {%- comment -%} Skip in-variant Color picker when a cross-product group exists. {%- endcomment -%}
+          {%- assign has_cross_group = false -%}
+          {%- for tg in product.tags -%}
+            {%- if tg contains 'color-group:' -%}{%- assign has_cross_group = true -%}{%- endif -%}
+          {%- endfor -%}
+          {%- if has_cross_group -%}
+            {%- if lower_name contains 'color' or lower_name contains 'colour' -%}
+              {%- continue -%}
+            {%- endif -%}
+          {%- endif -%}
           <div class="cm-picker" data-cm-picker-group>
             <p class="cm-picker__label">
               <span>{{ option.name }}:</span>
