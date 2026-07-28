@@ -1,0 +1,20 @@
+{%- liquid
+  assign bl_stts = block.settings
+-%}
+
+<div
+  class="card_article__button spacing-style button"
+  style="
+    {%- render 'size-style', settings: bl_stts -%}
+    {%- render 'spacing-style', settings: bl_stts -%}
+  "
+>
+  <a
+    href="{{ card_article.url }}"
+    id="StandardCardNoMediaLink-{{ section_id }}-{{ card_article.id }}"
+    class="full-unstyled-link card-button-change"
+    aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_article.id }} NoMediaStandardBadge-{{ section_id }}-{{ card_article.id }}"
+  >
+    {{ bl_stts.text | default: 'Read more...' }}
+  </a>
+</div>

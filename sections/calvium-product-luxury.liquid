@@ -1,0 +1,189 @@
+{%- comment -%}
+  Calvium — PDP variant "Luxury" (Miraggio full-bleed hero + sticky buy card).
+  Add via a new template product.luxury.json.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign compare = current_variant.compare_at_price -%}
+{%- assign on_sale = false -%}
+{%- if compare > current_variant.price -%}
+  {%- assign on_sale = true -%}
+  {%- assign percent_off = compare | minus: current_variant.price | times: 100.0 | divided_by: compare | round -%}
+{%- endif -%}
+{%- assign hero_media = product.media[section.settings.hero_index] | default: product.featured_media -%}
+
+<section class="cm-pdp-lux" data-cm-reveal>
+  <div class="cm-pdp-lux__hero">
+    {%- if hero_media -%}
+      <img
+        src="{{ hero_media | image_url: width: 2400 }}"
+        srcset="{{ hero_media | image_url: width: 1200 }} 1200w, {{ hero_media | image_url: width: 1800 }} 1800w, {{ hero_media | image_url: width: 2400 }} 2400w"
+        sizes="100vw"
+        alt="{{ product.title | escape }}"
+        width="2400" height="1500"
+        fetchpriority="high"
+      >
+    {%- endif -%}
+    <div class="cm-pdp-lux__hero-overlay">
+      {%- if product.vendor != blank -%}
+        <p class="cm-pdp-lux__hero-vendor">{{ product.vendor }}</p>
+      {%- endif -%}
+      <h1 class="cm-pdp-lux__hero-title">{{ product.title }}</h1>
+      <p class="cm-pdp-lux__hero-price">
+        {{ current_variant.price | money }}{% if on_sale %} · <span style="opacity: 0.75; text-decoration: line-through;">{{ compare | money }}</span>{% endif %}
+      </p>
+    </div>
+  </div>
+
+  <div class="cm-pdp-lux__buy">
+    <div class="cm-pdp-lux__gallery">
+      {%- for media in product.media limit: 6 -%}
+        <img
+          src="{{ media | image_url: width: 900 }}"
+          srcset="{{ media | image_url: width: 500 }} 500w, {{ media | image_url: width: 700 }} 700w, {{ media | image_url: width: 900 }} 900w"
+          sizes="(max-width: 900px) 100vw, 50vw"
+          alt="{{ media.alt | escape }}"
+          width="900" height="1200"
+          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+        >
+      {%- endfor -%}
+    </div>
+
+    <aside class="cm-pdp-lux__card">
+      <h2 class="cm-pdp-lux__title">{{ product.title }}</h2>
+
+      {%- if section.settings.show_stub_rating -%}
+        <div class="cm-pdp-lux__rating">
+          <span class="stars">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
+            {%- endfor -%}
+          </span>
+          <span>{{ product.metafields.reviews.rating.value | default: '4.9' }} · {{ product.metafields.reviews.rating_count.value | default: '86' }} reviews</span>
+        </div>
+      {%- endif -%}
+
+      <div class="cm-pdp-lux__price-row">
+        <span class="cm-pdp-lux__price" data-cm-price>{{ current_variant.price | money }}</span>
+        {%- if on_sale -%}
+          <span class="cm-pdp-lux__compare">{{ compare | money }}</span>
+          <span class="cm-pdp-lux__percent">{{ percent_off }}% OFF</span>
+        {%- endif -%}
+      </div>
+      <p class="cm-pdp-lux__mrp">MRP inclusive of all taxes</p>
+
+      {%- if section.settings.short_description != blank -%}
+        <p class="cm-pdp-lux__desc">{{ section.settings.short_description }}</p>
+      {%- endif -%}
+
+      <form method="post" action="{{ routes.cart_add_url }}" data-cm-picker>
+        {%- for option in product.options_with_values -%}
+          {%- assign lower_name = option.name | downcase -%}
+          <div class="cm-picker" data-cm-picker-group>
+            <p class="cm-picker__label">
+              <span>{{ option.name }}:</span>
+              <strong data-cm-picker-value>{{ option.selected_value }}</strong>
+            </p>
+            <div class="cm-picker__row">
+              {%- if lower_name contains 'color' or lower_name contains 'colour' -%}
+                {%- for value in option.values -%}
+                  {%- assign v_variant = nil -%}
+                  {%- for v in product.variants -%}
+                    {%- if v.options contains value -%}{%- assign v_variant = v -%}{%- break -%}{%- endif -%}
+                  {%- endfor -%}
+                  <button type="button" class="cm-picker__thumb {% if value == option.selected_value %}is-active{% endif %}" data-option-name="{{ option.name | escape }}" data-option-value="{{ value | escape }}" title="{{ value }}">
+                    {%- if v_variant.featured_image -%}
+                      <img src="{{ v_variant.featured_image | image_url: width: 120 }}" alt="{{ value | escape }}" width="44" height="58" loading="lazy">
+                    {%- endif -%}
+                  </button>
+                {%- endfor -%}
+              {%- else -%}
+                {%- for value in option.values -%}
+                  <button type="button" class="cm-picker__pill {% if value == option.selected_value %}is-active{% endif %}" data-option-name="{{ option.name | escape }}" data-option-value="{{ value | escape }}">{{ value }}</button>
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+        <input type="hidden" name="quantity" value="1">
+        <script type="application/json" data-cm-variants>{{ product.variants | json }}</script>
+        <button type="submit" class="cm-pdp-lux__atc" data-cm-atc {% unless current_variant.available %}disabled{% endunless %}>
+          {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+        </button>
+        {%- if section.settings.show_buy_now -%}
+          <button type="submit" name="checkout" class="cm-pdp-lux__buy-now" formaction="{{ routes.cart_url }}/add?return_to=/checkout">Buy it now</button>
+        {%- endif -%}
+      </form>
+
+      <ul class="cm-pdp-lux__trust">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 4v2h-7"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>
+          <span>Free shipping over ₹999</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+          <span>Easy 15-day returns</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 4 8 8 9 4-1 8-4 8-9V6l-8-3Z"/></svg>
+          <span>1-year warranty · authentic materials</span>
+        </li>
+      </ul>
+    </aside>
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+      <section class="cm-pdp-lux__story {% cycle '', 'cm-pdp-lux__story--reverse' %}" {{ block.shopify_attributes }}>
+        <div class="cm-pdp-lux__story-media">
+          {%- if block.settings.image != blank -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 1400 }}"
+              srcset="{{ block.settings.image | image_url: width: 700 }} 700w, {{ block.settings.image | image_url: width: 1100 }} 1100w, {{ block.settings.image | image_url: width: 1400 }} 1400w"
+              sizes="(max-width: 900px) 100vw, 45vw"
+              alt="{{ block.settings.heading | escape }}"
+              width="1400" height="1750" loading="lazy"
+            >
+          {%- endif -%}
+        </div>
+        <div class="cm-pdp-lux__story-body">
+          {%- if block.settings.eyebrow != blank -%}
+            <p class="cm-eyebrow">{{ block.settings.eyebrow }}</p>
+          {%- endif -%}
+          <h3>{{ block.settings.heading }}</h3>
+          <p>{{ block.settings.body }}</p>
+        </div>
+      </section>
+    {%- endfor -%}
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — PDP Luxury",
+  "class": "shopify-section--cm-pdp-lux",
+  "tag": "section",
+  "settings": [
+    { "type": "range", "id": "hero_index", "label": "Hero image index in product media", "min": 0, "max": 9, "step": 1, "default": 0 },
+    { "type": "textarea", "id": "short_description", "label": "Short description (above ATC)", "default": "Made from premium leather with matte hardware. Structured to hold its shape and quietly refine with wear." },
+    { "type": "checkbox", "id": "show_buy_now", "label": "Show Buy It Now button", "default": true },
+    { "type": "checkbox", "id": "show_stub_rating", "label": "Show placeholder rating", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story block",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The material" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Chosen to age well" },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "Premium leather with a matte finish that softens with wear — not scuffing, but settling in." }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Calvium — PDP Luxury" } ]
+}
+{% endschema %}

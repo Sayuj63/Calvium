@@ -1,0 +1,61 @@
+{%- comment -%}
+  Calvium — "IN THE SPOTLIGHT" 50/50 editorial section.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
+
+<section
+  class="cm-section {% if section.settings.tone == 'cream' %}cm-section--cream{% elsif section.settings.tone == 'dark' %}cm-section--dark{% endif %}"
+  data-cm-reveal
+  style="padding-block: 0;"
+>
+  <div class="cm-spot {% if section.settings.image_position == 'right' %}cm-spot--reverse{% endif %}">
+    <div class="cm-spot__media">
+      {%- if section.settings.image != blank -%}
+        <img src="{{ section.settings.image | image_url: width: 1400 }}"
+             srcset="{{ section.settings.image | image_url: width: 700 }} 700w, {{ section.settings.image | image_url: width: 1100 }} 1100w, {{ section.settings.image | image_url: width: 1400 }} 1400w"
+             sizes="(max-width: 900px) 100vw, 50vw"
+             alt="{{ section.settings.heading | escape }}"
+             width="1400" height="1050" loading="lazy">
+      {%- endif -%}
+    </div>
+    <div class="cm-spot__body">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="cm-eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="cm-spot__heading">{{ section.settings.heading | default: 'IN THE SPOTLIGHT' }}</h2>
+      {%- if section.settings.body != blank -%}
+        <p>{{ section.settings.body }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_link | default: '#' }}" class="cm-button">{{ section.settings.cta_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — Spotlight",
+  "class": "shopify-section--cm-spotlight",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "EDITOR'S PICK" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "IN THE SPOTLIGHT" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "A closer look at the pieces our editors keep reaching for this season — and the ones you keep asking about." },
+    { "type": "image_picker", "id": "image", "label": "Feature image" },
+    { "type": "select", "id": "image_position", "label": "Image position",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ], "default": "left" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Shop the edit" },
+    { "type": "url", "id": "cta_link", "label": "CTA link" },
+    { "type": "select", "id": "tone", "label": "Background tone",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "cream", "label": "Cream" },
+        { "value": "dark", "label": "Dark" }
+      ], "default": "cream"
+    }
+  ],
+  "presets": [ { "name": "Calvium — Spotlight" } ]
+}
+{% endschema %}

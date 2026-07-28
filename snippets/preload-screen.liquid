@@ -1,0 +1,7 @@
+{{ 'preload-screen.css' | asset_url | stylesheet_tag }}
+
+<preload-screen class="preload-screen fixed inset-0 flex items-center justify-center overflow-hidden pointer-events-none off--ready z-100 no-js-hidden" {% if settings.enable_preloading_screen %} data-preload-screen-logo{% else %} data-preload-screen-page{% endif %}>
+  <div class="preload__screen-logo{% unless settings.enable_preloading_screen %} visually-hidden{% endunless %}">
+    {% render 'header-logo', custom_logo: settings.custom_logo, preload_screen: true %}
+  </div>
+</preload-screen>

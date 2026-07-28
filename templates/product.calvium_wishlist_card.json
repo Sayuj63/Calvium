@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "main": {
+      "type": "calvium-wishlist-card"
+    }
+  },
+  "order": ["main"]
+}

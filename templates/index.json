@@ -1,0 +1,500 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "calvium_hero": {
+      "type": "calvium-hero",
+      "settings": {
+        "height_desktop": 85,
+        "height_mobile": 80,
+        "overlay_opacity": 25,
+        "chip_text": "New Season 2026 · Live Now",
+        "eyebrow": "CALVIUM",
+        "heading": "Timeless style, made for modern lives.",
+        "subheading": "Handcrafted essentials in premium fabrics — designed to layer, made to last.",
+        "microcopy": "Free shipping on orders above ₹999 · 7-day easy returns",
+        "text_position": "left",
+        "text_align": "left",
+        "tone": "light",
+        "cta_label": "Shop the Edit",
+        "cta_link": "/collections/all",
+        "cta2_label": "New Arrivals",
+        "cta2_link": "/collections/new-arrivals"
+      }
+    },
+    "calvium_usp": {
+      "type": "calvium-usp-strip",
+      "blocks": {
+        "usp_1": {
+          "type": "usp",
+          "settings": {
+            "icon": "shipping",
+            "title": "Free Shipping",
+            "subtitle": "On orders above ₹999"
+          }
+        },
+        "usp_2": {
+          "type": "usp",
+          "settings": {
+            "icon": "returns",
+            "title": "Easy Returns",
+            "subtitle": "7-day hassle-free"
+          }
+        },
+        "usp_3": {
+          "type": "usp",
+          "settings": {
+            "icon": "cod",
+            "title": "Cash on Delivery",
+            "subtitle": "Available across India"
+          }
+        },
+        "usp_4": {
+          "type": "usp",
+          "settings": {
+            "icon": "secure",
+            "title": "Secure Checkout",
+            "subtitle": "100% safe payments"
+          }
+        }
+      },
+      "block_order": [
+        "usp_1",
+        "usp_2",
+        "usp_3",
+        "usp_4"
+      ],
+      "settings": {
+        "tone": "cream",
+        "bordered": true,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "calvium_shop_by_style": {
+      "type": "calvium-shop-by-style",
+      "blocks": {
+        "tab_1": {
+          "type": "tab",
+          "settings": {
+            "label": "Everyday",
+            "collection": "everyday",
+            "link": ""
+          }
+        },
+        "tab_2": {
+          "type": "tab",
+          "settings": {
+            "label": "Work Essential",
+            "collection": "work-essential",
+            "link": ""
+          }
+        },
+        "tab_3": {
+          "type": "tab",
+          "settings": {
+            "label": "After Hours",
+            "collection": "after-hours",
+            "link": ""
+          }
+        },
+        "tab_4": {
+          "type": "tab",
+          "settings": {
+            "label": "New Collection",
+            "collection": "hobo-bags",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "tab_1",
+        "tab_2",
+        "tab_3",
+        "tab_4"
+      ],
+      "settings": {
+        "heading": "SHOP BY STYLE",
+        "subheading": "Timeless silhouettes for every occasion — pick a mood to browse.",
+        "viewall_label": "View all",
+        "viewall_url": "/collections/all",
+        "tone": "light",
+        "max_products": 8,
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "calvium_most_loved_main": {
+      "type": "calvium-most-loved",
+      "settings": {
+        "heading": "MOST-LOVED STYLES",
+        "collection": "best-sellers",
+        "max_products": 12,
+        "cta_label": "Shop all bestsellers",
+        "cta_url": "/collections/best-sellers",
+        "tone": "light",
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "calvium_new_in_tiles_hp": {
+      "type": "calvium-new-in-tiles",
+      "blocks": {
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/EVERYDAY.jpg",
+            "label": "Everyday",
+            "link": ""
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/WORK-ESSENTIAL.jpg",
+            "label": "Work Essential",
+            "link": ""
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/AFTER-HOURS.jpg",
+            "label": "After Hours",
+            "link": ""
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/NEW-COLLECTION.jpg",
+            "label": "New Collection",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4"
+      ],
+      "settings": {
+        "heading": "NEW IN",
+        "tone": "cream",
+        "padding_top": 40,
+        "padding_bottom": 60
+      }
+    },
+    "calvium_spotlight_hp": {
+      "type": "calvium-spotlight",
+      "settings": {
+        "eyebrow": "THE CALVIUM STORY",
+        "heading": "THE ART OF EVERYDAY ELEGANCE",
+        "body": "Each piece is designed for a life in motion — quiet luxury built into every seam. Discover the craft, the fabric, the intention behind Calvium.",
+        "image": "shopify://shop_images/popup.png",
+        "image_position": "left",
+        "cta_label": "Read the full story",
+        "cta_link": "",
+        "tone": "light"
+      }
+    },
+    "calvium_trending_hp": {
+      "type": "calvium-trending-now",
+      "blocks": {
+        "t_1": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/4_323ad305-a7d0-4c32-aeab-a17d4040c203.png",
+            "caption": "Silhouettes",
+            "link": ""
+          }
+        },
+        "t_2": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/01_3d03e34f-cded-43b0-af34-2346f71599e1.jpg",
+            "caption": "Layering",
+            "link": ""
+          }
+        },
+        "t_3": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/01_d935c23c-4b8a-489a-baec-d94cb7fd5f3a.jpg",
+            "caption": "Neutrals",
+            "link": ""
+          }
+        },
+        "t_4": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/01_90b6faa6-746c-42cf-acf0-51f16353712f.jpg",
+            "caption": "Denim",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "t_1",
+        "t_2",
+        "t_3",
+        "t_4"
+      ],
+      "settings": {
+        "heading": "TRENDING NOW",
+        "tone": "light",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "calvium_testimonials_hp": {
+      "type": "calvium-testimonials",
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Elevated everyday pieces",
+            "quote": "The fabric feels premium, the cut is spot on, and it layers beautifully. I've reordered twice.",
+            "name": "Aanya Mehta",
+            "location": "Mumbai",
+            "verified": true,
+            "product_label": "Calvium Cubus",
+            "product_link": ""
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Best minimalist brand I've bought from",
+            "quote": "Clean design, thoughtful details, and the delivery was quick. This is what I want in my wardrobe.",
+            "name": "Rohan Iyer",
+            "location": "Bengaluru",
+            "verified": true,
+            "product_label": "Calvium Arcus",
+            "product_link": ""
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Timeless style, easy returns",
+            "quote": "Fell in love with the neutrals. Sizing was accurate, returns policy is a breeze. Highly recommend.",
+            "name": "Priya Sharma",
+            "location": "New Delhi",
+            "verified": true,
+            "product_label": "Calvium Magna",
+            "product_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "settings": {
+        "eyebrow": "REAL PEOPLE, REAL REVIEWS",
+        "heading": "Loved by 10,000+ customers across India",
+        "summary": "4.8 average from verified buyers",
+        "tone": "cream",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "calvium_lookbook_hp": {
+      "type": "calvium-lookbook",
+      "settings": {
+        "image": "shopify://shop_images/AFTER-HOURS_jpg.jpg",
+        "badge_text": "The Edit",
+        "eyebrow": "THE STORY",
+        "heading": "Layered minimalism, crafted for every day.",
+        "body": "A capsule of essentials — clean lines, soft palette, considered fabrics. Made to wear season after season.",
+        "cta_label": "Explore the Collection",
+        "cta_link": "/pages/about",
+        "collection": "everyday",
+        "shop_title": "Shop the story",
+        "show_count": true,
+        "max_products": 4,
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true,
+        "viewall_label": "Shop the full edit",
+        "viewall_url": "",
+        "layout": "split",
+        "image_position": "left",
+        "tone": "light",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "calvium_marquee_hp": {
+      "type": "calvium-marquee",
+      "settings": {
+        "phrases": "NEW ARRIVALS | FREE SHIPPING ABOVE ₹999 | EASY 7-DAY RETURNS | CASH ON DELIVERY AVAILABLE | HANDCRAFTED IN INDIA",
+        "separator": "diamond",
+        "speed": 45,
+        "font_size": 16,
+        "tone": "dark",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "calvium_ig_hp": {
+      "type": "calvium-instagram-grid",
+      "blocks": {
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 1",
+            "caption": "",
+            "open_new_tab": true
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 2",
+            "caption": "",
+            "open_new_tab": true
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 3",
+            "caption": "",
+            "open_new_tab": true
+          }
+        },
+        "t4": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 4",
+            "caption": "",
+            "open_new_tab": true
+          }
+        },
+        "t5": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 5",
+            "caption": "",
+            "open_new_tab": true
+          }
+        },
+        "t6": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 6",
+            "caption": "",
+            "open_new_tab": true
+          }
+        },
+        "t7": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 7",
+            "caption": "",
+            "open_new_tab": true
+          }
+        },
+        "t8": {
+          "type": "tile",
+          "settings": {
+            "link": "",
+            "alt": "Calvium look 8",
+            "caption": "",
+            "open_new_tab": true
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7",
+        "t8"
+      ],
+      "settings": {
+        "eyebrow": "SHOP THE FEED",
+        "heading": "On Instagram",
+        "handle": "@calvium.in",
+        "follow_link": "https://instagram.com/calvium.in",
+        "columns": "4",
+        "tone": "light",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "17714969651fbe9c80": {
+      "type": "apps",
+      "blocks": {
+        "whatmore_shoppable_videos_app_block_dDdwzX": {
+          "type": "shopify://apps/whatmore-shoppable-videos/blocks/app-block/20db8a72-315a-4364-8885-64219ee48303",
+          "settings": {
+            "heading": "Watch and Buy",
+            "widget-identity": "wgt_default",
+            "template-type": "template-e",
+            "title-font-size": 40,
+            "title-font-size-portrait": 24,
+            "landscape-padding": 32,
+            "top-bottom-padding": 20,
+            "scroll-video-tile-size": 80,
+            "scroll-video-tile-size-portrait": 80,
+            "min-height": 380
+          }
+        }
+      },
+      "block_order": [
+        "whatmore_shoppable_videos_app_block_dDdwzX"
+      ],
+      "settings": {
+        "include_margins": false
+      }
+    }
+  },
+  "order": [
+    "calvium_hero",
+    "calvium_usp",
+    "calvium_shop_by_style",
+    "calvium_most_loved_main",
+    "calvium_new_in_tiles_hp",
+    "calvium_spotlight_hp",
+    "calvium_trending_hp",
+    "calvium_testimonials_hp",
+    "calvium_lookbook_hp",
+    "calvium_marquee_hp",
+    "calvium_ig_hp",
+    "17714969651fbe9c80"
+  ]
+}

@@ -1,0 +1,86 @@
+{%- comment -%}
+  Calvium — Marquee.
+  Continuous horizontal scroller with configurable phrases + separators.
+  Pure CSS animation, no JS dependency. Replaces the OLD Swytch marquee block.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign speed = section.settings.speed | default: 40
+  assign phrases = section.settings.phrases | default: ''
+  assign items = phrases | split: '|'
+-%}
+
+<section
+  class="cm-marquee {% if section.settings.tone == 'dark' %}cm-marquee--dark{% elsif section.settings.tone == 'cream' %}cm-marquee--cream{% endif %}"
+  style="
+    padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;
+    --cm-marquee-speed: {{ speed }}s;
+    --cm-marquee-size: {{ section.settings.font_size }}px;
+  "
+  aria-label="Announcements"
+>
+  <div class="cm-marquee__track" aria-hidden="false">
+    {%- for pass in (1..2) -%}
+      <div class="cm-marquee__group" {% if pass == 2 %}aria-hidden="true"{% endif %}>
+        {%- for item in items -%}
+          {%- assign clean = item | strip -%}
+          {%- if clean != blank -%}
+            <span class="cm-marquee__item">{{ clean }}</span>
+            <span class="cm-marquee__sep" aria-hidden="true">
+              {%- case section.settings.separator -%}
+                {%- when 'star' -%}★
+                {%- when 'dot' -%}·
+                {%- when 'diamond' -%}◆
+                {%- when 'slash' -%}/
+                {%- when 'arrow' -%}→
+                {%- else -%}●
+              {%- endcase -%}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — Marquee",
+  "class": "shopify-section--cm-marquee",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "phrases",
+      "label": "Phrases",
+      "info": "Separate each phrase with a pipe |",
+      "default": "NEW ARRIVALS | FREE SHIPPING ABOVE ₹999 | EASY 7-DAY RETURNS | CASH ON DELIVERY AVAILABLE | HANDCRAFTED IN INDIA"
+    },
+    { "type": "select", "id": "separator", "label": "Separator",
+      "options": [
+        { "value": "bullet",  "label": "● Bullet" },
+        { "value": "star",    "label": "★ Star" },
+        { "value": "dot",     "label": "· Dot" },
+        { "value": "diamond", "label": "◆ Diamond" },
+        { "value": "slash",   "label": "/ Slash" },
+        { "value": "arrow",   "label": "→ Arrow" }
+      ], "default": "diamond"
+    },
+    { "type": "range", "id": "speed", "label": "Loop time (seconds)", "min": 15, "max": 90, "step": 5, "default": 45 },
+    { "type": "range", "id": "font_size", "label": "Font size (px)", "min": 12, "max": 40, "step": 2, "default": 16 },
+    { "type": "select", "id": "tone", "label": "Background",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "cream", "label": "Cream" },
+        { "value": "dark",  "label": "Dark" }
+      ], "default": "dark"
+    },
+    { "type": "range", "id": "padding_top",    "label": "Padding top",    "min": 0, "max": 60, "step": 4, "default": 16 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 60, "step": 4, "default": 16 }
+  ],
+  "presets": [
+    { "name": "Calvium — Marquee" }
+  ]
+}
+{% endschema %}

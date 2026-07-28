@@ -1,0 +1,1595 @@
+/* ==========================================================================
+   Calvium theme overrides — loaded LAST in global-css.liquid
+   Every selector here has been verified against the live HTML.
+
+   What was MOVED INTO SOURCE files (not in this file anymore):
+   - Head-cut fix → assets/component-card.css line ~191 + section-main-product.css .thumbnail img
+   - Brand button colors → config/settings_data.json (color schemes 6/7/8: primary_button=#000, primary_button_text=#fff)
+   - Floating widget recolor → sections/popup-group.json (secondary_background: "#1199bb" → "#000000")
+   - Variant swatches → config/settings_data.json (swatch_type: "variant_image" → "color" in 7 places)
+   - Collection-list button alignment → templates/index.json (padding-block-end normalized to 10)
+   - Testimonial autoplay + new copy → templates/index.json + blocks/testimonial.liquid schema
+   - Page title on policy pages → sections/main-page.liquid (auto-h1 for whitelisted handles)
+   - T&C checkbox → 9 templates/product*.json (agree_condition: false)
+   - FAQ Need Help links → templates/page.faqs.json (mailto: + /pages/contact)
+   - FIND A STORE button → templates/page.contact.json (linked to /pages/store-locator)
+   - Shipping calculator India-only + states + ZIP regex → snippets/cart-shipping-calculator.liquid
+   - Forgot password validation → sections/main-login.liquid (required + custom invalidity message)
+   - Login modal Forgot Password validation → main-login.liquid
+   - Cart drawer & lookbook fixes → sections/popup-group.json + blocks/_lookbook-item-all.liquid
+
+   What STAYS in this CSS file (cross-cutting / variable-cascade overrides):
+   1. Wishlist + share icon color in product form (SVG inherits via currentColor)
+   2. Defensive solid-color swatch (insurance vs. stale browser cache)
+   3. Shop By Style tab states (override base.css CSS-variable cascade)
+   4. Header heart icon stroke
+   5. Items-per-page hide on collection toolbars (uses ACTUAL class .facet-per-page)
+   6. Floating widget recolor for the .multi-t__button + .button__back-to-top (actual classes)
+   7. Lookbook hover-image swap (works with my custom _lookbook-item-all rewrite)
+   ========================================================================== */
+
+
+/* ----- 1. Add-to-cart + wishlist + share button cluster (PDP) -----
+   Brand button bg/text is already set via config/settings_data.json color scheme 6.
+   These rules ensure the wishlist + share icons next to ADD TO CART stay white
+   regardless of which scheme renders the section. */
+.product-form__submit:hover:not([disabled]):not([aria-disabled='true']) {
+  background: #1f1f1f !important;
+  color: #fff !important;
+  border-color: #1f1f1f !important;
+}
+
+.add-to-cart-button-inner .wishlist-button,
+.add-to-cart-button-inner .share-button,
+.product-form .wishlist-button,
+.product-form .share-button {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+.add-to-cart-button-inner .wishlist-button:hover,
+.add-to-cart-button-inner .share-button:hover,
+.product-form .wishlist-button:hover,
+.product-form .share-button:hover {
+  background: #1f1f1f !important;
+  border-color: #1f1f1f !important;
+}
+/* SVGs inside use currentColor — set parent color to white, let it flow through.
+   Do NOT set fill:none globally — icon-share-social.svg uses fill="currentColor". */
+.add-to-cart-button-inner .wishlist-button svg,
+.add-to-cart-button-inner .share-button svg,
+.product-form .wishlist-button svg,
+.product-form .share-button svg {
+  color: #fff !important;
+}
+/* Heart icon paths with explicit fill="none" → keep them as outlines with white stroke. */
+.product-form .wishlist-button svg path[fill="none"],
+.add-to-cart-button-inner .wishlist-button svg path[fill="none"] {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.5;
+}
+
+
+/* ----- 2. Third-party "Write a review" button (Judge.me / SPR / Yotpo) ----- */
+.spr-button-primary,
+.jdgm-write-rev-link,
+.yotpo-default-button {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+.spr-button-primary:hover,
+.jdgm-write-rev-link:hover {
+  background: #1f1f1f !important;
+}
+
+
+/* ----- 3. Variant swatches (PDP + cards) — defensive solid color rendering -----
+   Source-side fix is in config/settings_data.json (swatch_type: "color").
+   This CSS rule is insurance against any cached HTML with stale image URLs. */
+.swatch,
+.swatch-list .swatch,
+.product-form__input--swatch .swatch,
+.variant-option--swatches .swatch {
+  background-image: none !important;
+  background-color: var(--swatch--background-color, transparent) !important;
+}
+
+
+/* ----- 4. Floating widget (multitasking-bar / FAB) — recolor to brand black -----
+   Color set at JSON data level in sections/popup-group.json (secondary_background).
+   These CSS rules use the ACTUAL class names (.multi-t__button, .button__back-to-top)
+   as insurance for any state Shopify CSS may set inline. */
+.multi-t__button {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+.multi-t__button svg,
+.multi-t__button .icon {
+  color: #fff !important;
+  fill: currentColor !important;
+}
+.button__back-to-top {
+  background-color: #fff !important;
+  border-color: #000 !important;
+  color: #000 !important;
+}
+.button__back-to-top:hover {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+
+/* ----- 5. Header heart (wishlist) icon — match other header icons -----
+   .icon-heart sits inside .header__icon (singular) wrapper.
+   Heart is now a SOLID filled SVG (single subpath) matching icon-account /
+   icon-search / icon-cart. No stroke — pure fill — so the four header icons
+   share one visual style. */
+.icon-heart {
+  color: var(--color-foreground) !important;
+  opacity: 1 !important;
+}
+.icon-heart path {
+  fill: currentColor !important;
+  stroke: none !important;
+}
+
+
+/* ----- 6. "Shop By Style" tab states (featured-collection-list) -----
+   Actual class chain (verified): .tabs-product-header__item.button.tabs-component-panel-trigger
+   Active variant adds literal class `--active`.
+
+   Root cause being overridden: assets/base.css uses --color-primary-button-hover-*
+   CSS variables for both :hover and .--active states, and the scheme variables
+   render as black-on-black for the color scheme this section uses.
+   We force the variables, not just color/background, so the cascade short-circuits. */
+
+/* DEFAULT (idle) — white pill, black text, faint border */
+.tabs-product-header__item.tabs-component-panel-trigger,
+.tabs-product-header__item.tabs-component-panel-trigger.button {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  --button-color: #000 !important;
+  --button-background-color: #fff !important;
+  --button-border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* HOVER — solid black pill, white text */
+.tabs-product-header__item.tabs-component-panel-trigger:hover,
+.tabs-product-header__item.tabs-component-panel-trigger.button:hover {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+  --button-color: #fff !important;
+  --button-background-color: #000 !important;
+  --button-border-color: #000 !important;
+}
+.tabs-product-header__item.tabs-component-panel-trigger:hover *,
+.tabs-product-header__item.tabs-component-panel-trigger:hover .button-text-main {
+  color: #fff !important;
+}
+
+/* ACTIVE — same look as hover */
+.tabs-product-header__item.tabs-component-panel-trigger.--active,
+.tabs-product-header__item.tabs-component-panel-trigger.button.--active {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+  --button-color: #fff !important;
+  --button-background-color: #000 !important;
+  --button-border-color: #000 !important;
+}
+.tabs-product-header__item.tabs-component-panel-trigger.--active *,
+.tabs-product-header__item.tabs-component-panel-trigger.--active .button-text-main {
+  color: #fff !important;
+}
+
+/* Featured-collection-list heading — left aligned + bold */
+.tabs-product-header-wrapper {
+  justify-content: flex-start !important;
+}
+.section-global__header,
+.section-global__header h2,
+.section-global__header .text-block__text {
+  text-align: left !important;
+  font-weight: 700 !important;
+}
+
+
+/* ----- 7. Filter toolbar: HIDE the per-page selector on collection pages -----
+   Actual class confirmed in HTML: .facet-per-page wrapping
+   <label for="Products-per-page-N">. */
+.facet-per-page,
+.products-per-page,
+label[for^="Products-per-page-"] {
+  display: none !important;
+}
+
+
+/* ----- 8. Best-seller carousel: tighten product card spacing ----- */
+.card-information {
+  gap: 4px !important;
+  padding-block: 8px !important;
+}
+
+
+/* ----- 9. Collection page: reduce gap between title row and product grid ----- */
+.product-grid {
+  margin-block-start: 8px !important;
+}
+
+
+/* ----- 10. Breadcrumb to title gap — global tighten ----- */
+.breadcrumb {
+  padding-block: 6px !important;
+}
+.breadcrumb + * {
+  margin-block-start: 0 !important;
+}
+
+
+/* ----- 11. Page-title (rendered by sections/main-page.liquid for policy pages) ----- */
+.page-title {
+  font-family: var(--font-heading--family, inherit);
+  font-weight: 700;
+  font-size: 3.2rem;
+  line-height: 1.1;
+  text-transform: none;
+  margin-block: 0 24px;
+}
+
+
+/* ----- 12. Lookbook — second image on hover (works with my custom block rewrite) ----- */
+.lookbook-item-all .swiper-slide .card__media {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+}
+.lookbook-item-all .swiper-slide .card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+}
+.lookbook-item-all .swiper-slide .card__media .lookbook-hover-image {
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.lookbook-item-all .swiper-slide:hover .card__media .lookbook-hover-image {
+  opacity: 1;
+}
+.lookbook-product-link:hover .lookbook-product-info p:first-child {
+  text-decoration: underline;
+}
+
+/* ----- 13. Lookbook — show carousel arrows on mobile ----- */
+/* _lookbook-item-all.liquid wraps arrows in .small-hide (display:none below 750px).
+   When always_show_swiper_button data flag is on, override that on mobile so the
+   bottom-positioned arrows stay visible. Scoped to .lookbook-item-all so other
+   carousels still honour .small-hide. */
+@media screen and (max-width: 749px) {
+  .lookbook-item-all .swiper-btns-wrap.small-hide.always_show_swiper_button {
+    display: flex !important;
+  }
+}
+.lookbook-item-all .swiper-btns-wrap--bottom {
+  margin-top: var(--mt, 12px);
+  margin-bottom: var(--mb, 12px);
+}
+
+
+/* ----- 14. PDP quantity selector — visible border on white background -----
+   scheme-6.background is now #ffffff, so the white-on-white quantity input
+   becomes invisible. Border + subtle bg differentiation restore contrast. */
+.product-form .quantity,
+.product-form quantity-input.quantity,
+.product-form quantity-input.cart-quantity {
+  border: 1px solid #000 !important;
+  background-color: #ffffff;
+}
+.product-form .quantity__input {
+  background-color: transparent;
+}
+.product-form .quantity__button {
+  background-color: #ffffff;
+}
+.product-form .quantity__button:hover {
+  background-color: #f5f5f5;
+}
+
+
+/* ----- 15. PDP wishlist heart — RED-filled when added to wishlist -----
+   global.js adds .wishlist-added to the <button class="wishlist-button">.
+   Base.css fills the BUTTON bg with scheme hover colors (black), which makes
+   the white heart icon invisible. Override: keep the button black, but fill
+   the heart SVG itself with red so user sees a clear "added" signal. */
+.add-to-cart-button-inner .wishlist-button.wishlist-added,
+.product-form .wishlist-button.wishlist-added {
+  background-color: #000 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.add-to-cart-button-inner .wishlist-button.wishlist-added svg path,
+.product-form .wishlist-button.wishlist-added svg path,
+.add-to-cart-button-inner .wishlist-button.wishlist-added svg path[fill="none"],
+.product-form .wishlist-button.wishlist-added svg path[fill="none"] {
+  fill: #e63946 !important;
+  stroke: #e63946 !important;
+  stroke-width: 1.5;
+}
+
+
+/* ----- 16. Header heart count bubble — small red badge over the heart -----
+   Markup: <div class="wishlist-count-bubble" style="display:none"><span data-wishlist-count>0</span></div>
+   global.js toggles display + sets text. Style as compact red dot with white text. */
+.header__icon--wishlist .wishlist-count-bubble {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  left: auto;
+  transform: none;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background-color: #e63946;
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.header__icon--wishlist .wishlist-count-bubble:empty,
+.header__icon--wishlist .wishlist-count-bubble[style*="display: none"] {
+  display: none !important;
+}
+.header__icon--wishlist .wishlist-count-bubble span {
+  color: #ffffff;
+}
+
+
+/* ----- 17. Lookbook — top-align right carousel with left banner -----
+   Row renders with --vertical-alignment: center from inline group-block styles.
+   This makes the right product carousel float mid-height and VIEW MORE appear
+   to float with huge whitespace above it. Override to flex-start so both columns
+   share the same top Y position. Scoped to .section-lookbook so no other
+   group-block rows are affected. */
+.section-lookbook .lookbook-row.group-block .group-block-content {
+  align-items: flex-start !important;
+}
+
+
+/* ----- 18. Login modal — placeholder colors + LOGIN button hover -----
+   Email placeholder had no explicit CSS rule so it could render darker than
+   the Password placeholder. LOGIN button hover defaulted to grey from the theme's
+   button transition — user expects white-on-black inversion. */
+.section.login input[type="email"]::placeholder,
+.section.login input[type="password"]::placeholder {
+  color: #aaaaaa;
+  opacity: 1;
+}
+.section.login .button--login:hover {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
+}
+
+
+/* ----- 19. (reserved — rule removed: targeted .multi-t__button which is
+   also used by the FAB widget, breaking the black-circle icons) ----- */
+
+
+/* ----- 20. Cart ZIP (Postal code) input — fix floating-label issue in drawer -----
+   cart-shipping-calculator.liquid uses placeholder=" " for CSS floating-label.
+   customer.css floating-label CSS is NOT loaded inside the cart drawer, so both
+   the label text AND the input value appear inside the box simultaneously.
+   Static label approach is set in the Liquid file; this cleans up any residual
+   floating-label transforms that might still fire. */
+.shipping-calculator-form .field__label {
+  position: static !important;
+  transform: none !important;
+  font-size: 1.2rem !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  padding: 0 0 4px !important;
+  margin: 0 !important;
+}
+
+
+/* ----- 21. Recently-viewed — fix focal-point crop causing blank images -----
+   component-card.css sets object-position: center 18% globally for the head-cut
+   fix. Recently-viewed cards render at square aspect-ratio at small size, so the
+   18% offset pushes portrait model shots above the visible area → white blank.
+   Reset to center center for the recently-viewed section only. */
+.recently-viewed-products .card__media img,
+.recently-viewed-products .card__media .media img {
+  object-position: center center !important;
+}
+
+
+/* ----- 22. Contact form — placeholder light grey hint styling -----
+   Ensures all contact-form inputs/textareas show placeholder as a faint hint
+   rather than dark text that could be mistaken for actual content. */
+.block-contact-form input::placeholder,
+.block-contact-form textarea::placeholder {
+  color: #aaaaaa;
+  opacity: 1;
+}
+
+
+/* ----- 23. Recently-viewed — suppress hover image-swap when no secondary image -----
+   component-card.css line 295: .card__media:hover img:first-child:not(:only-child)
+   fades the primary image to opacity 0 whenever a sibling img exists — even if that
+   sibling src is blank (no second product photo uploaded). Result: card turns white
+   on hover. Fix: lock primary image at full opacity and hide any stray second img
+   inside the recently-viewed popup only. Cards elsewhere (collections, PDP recs)
+   still do the swap if they have two images. */
+.recently-viewed-products .card__media:hover .media.media--hover-effect > img:first-child:not(:only-child) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.recently-viewed-products .card__media:hover .media.media--hover-effect > img + img {
+  opacity: 0 !important;
+}
+.recently-viewed-products .media.media--hover-effect > img:first-child {
+  transition: none !important;
+}
+
+
+/* =====================================================================
+   BATCH 2 — 2026-07-08 change list (Google Doc from Anshuman)
+   ===================================================================== */
+
+
+/* ----- 24. Product reviews (Judge.me & native) — names in one line + wider ----- */
+.jdgm-rev__author,
+.jdgm-rev__timestamp,
+.spr-review-header-byline,
+.spr-review-header-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.jdgm-rev-widg,
+.jdgm-rev-widg__reviews,
+.jdgm-all-reviews-page,
+.spr-reviews {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+.jdgm-rev__body,
+.jdgm-rev__body p,
+.spr-review-content-body {
+  max-width: none !important;
+  width: 100%;
+  line-height: 1.6;
+}
+.jdgm-rev {
+  padding-block: 20px !important;
+}
+.jdgm-histogram {
+  max-width: 100%;
+}
+
+
+/* ----- 25. Cart APPLY button — tighter padding, sit flush with input ----- */
+.cart-discount__button,
+.cart-discount__form .button.button--primary {
+  padding: 0 18px !important;
+  min-width: unset !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.04em !important;
+  white-space: nowrap;
+}
+.cart-discount__form {
+  align-items: stretch !important;
+  gap: 8px !important;
+}
+.cart-discount__form .field {
+  flex: 1 1 auto;
+}
+.cart-discount__form .field__input {
+  height: 40px !important;
+  min-height: 40px !important;
+}
+
+
+/* ----- 26. Add-to-cart button — brand polish (subtle refinement) ----- */
+.product-form__submit,
+.product-form__buttons .button--primary {
+  letter-spacing: 0.06em !important;
+  min-height: 52px !important;
+  font-weight: 600 !important;
+  transition: background 0.2s ease, transform 0.15s ease !important;
+}
+.product-form__submit:hover:not([disabled]):not([aria-disabled='true']) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14) !important;
+}
+
+
+/* ----- 27b. Wishlist heart INLINE on every product card — hover-reveal top-right -----
+   Injected directly into _card-product-media(-flex).liquid so it renders on every card
+   regardless of block-JSON configuration. Absolute-positioned inside .card__content. */
+.card-wishlist-inline {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+/* Reveal on hover of the card OR whenever heart is already in wishlist */
+.card--block-media:hover .card-wishlist-inline,
+.card-product:hover .card-wishlist-inline,
+.card:hover .card-wishlist-inline,
+.card-wishlist-inline:has(.wishlist-added),
+.card-wishlist-inline:focus-within {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+/* Touch devices: no hover, so always show */
+@media (hover: none) {
+  .card-wishlist-inline {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+.wishlist-inline-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #000;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.wishlist-inline-btn:hover {
+  transform: scale(1.06);
+  border-color: rgba(0, 0, 0, 0.35);
+}
+.wishlist-inline-btn .wishlist-button__icon {
+  width: 18px !important;
+  height: 18px !important;
+  color: #000 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.6 !important;
+}
+.wishlist-inline-btn .wishlist-button__icon path {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.6 !important;
+}
+/* Added-to-wishlist state — red filled heart, keep button white */
+.wishlist-inline-btn.wishlist-added {
+  border-color: #e63946;
+}
+.wishlist-inline-btn.wishlist-added .wishlist-button__icon,
+.wishlist-inline-btn.wishlist-added svg {
+  color: #e63946 !important;
+}
+.wishlist-inline-btn.wishlist-added .wishlist-button__icon path,
+.wishlist-inline-btn.wishlist-added svg path {
+  fill: #e63946 !important;
+  stroke: #e63946 !important;
+}
+
+
+/* ----- 27. Wishlist heart on EVERY product card — white outline default, red fill when added -----
+   Card wishlist button is rendered by _card-product-group-button.liquid with
+   .card-product__group-btn.wishlist-button. It floats top-right of the card image. */
+.card-product__group-btn.wishlist-button,
+.card-wishlist .wishlist-button {
+  background-color: #ffffff !important;
+  color: #000 !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.card-product__group-btn.wishlist-button:hover,
+.card-wishlist .wishlist-button:hover {
+  background-color: #ffffff !important;
+  transform: scale(1.05);
+}
+.card-product__group-btn.wishlist-button .wishlist-button__icon,
+.card-wishlist .wishlist-button .wishlist-button__icon,
+.card-product__group-btn.wishlist-button svg,
+.card-wishlist .wishlist-button svg {
+  width: 18px !important;
+  height: 18px !important;
+  color: #000 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.6 !important;
+}
+.card-product__group-btn.wishlist-button .wishlist-button__icon path,
+.card-wishlist .wishlist-button svg path {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.6 !important;
+}
+/* .wishlist-added state applied by global.js when user clicks and item is in wishlist */
+.card-product__group-btn.wishlist-button.wishlist-added,
+.card-wishlist .wishlist-button.wishlist-added {
+  background-color: #ffffff !important;
+  border-color: #e63946 !important;
+}
+.card-product__group-btn.wishlist-button.wishlist-added svg,
+.card-product__group-btn.wishlist-button.wishlist-added .wishlist-button__icon,
+.card-wishlist .wishlist-button.wishlist-added svg,
+.card-wishlist .wishlist-button.wishlist-added .wishlist-button__icon {
+  color: #e63946 !important;
+}
+.card-product__group-btn.wishlist-button.wishlist-added svg path,
+.card-wishlist .wishlist-button.wishlist-added svg path {
+  fill: #e63946 !important;
+  stroke: #e63946 !important;
+}
+/* Make sure the button group stays visible (not hidden by default) */
+.card-product__group-wrapper,
+.card-product__group {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+
+/* ----- 28. Collection grid — tighter product spacing, no big empty gap after last row -----
+   Root cause: .product-grid uses justify-content: space-between which leaves huge
+   gap when last row has fewer than N products. Switch to flex-start + explicit gap. */
+.product-grid {
+  gap: 16px 12px !important;
+}
+.product-grid.grid {
+  justify-content: flex-start !important;
+  align-content: flex-start !important;
+}
+.collection .product-grid > * {
+  margin-bottom: 0 !important;
+}
+
+
+/* ----- 29. PDP image head-cut — stronger correction for portrait shots -----
+   Some products (calvium-vector-transit, ratio) render tall model shots where
+   the head sits above the 15%/18% object-position mark. Push it further up. */
+.section-main-product .product-media-container .media img,
+.section-main-product .product__media img,
+.product-media-item .media img,
+.product__media img {
+  object-position: center 10% !important;
+}
+/* Thumbnail strip — keep centered for icon consistency */
+.section-main-product .thumbnail-list img,
+.section-main-product .thumbnail img {
+  object-position: center 15% !important;
+}
+
+
+/* ----- 30. Collection page — reduce heading (collection title) gap to header -----
+   .collection__header / .collection-header renders with default 60px+ top padding.
+   User: "Upshift the totebag word has a lot of space from header". */
+.collection__title,
+.collection-header,
+.collection__header,
+main .breadcrumb + .collection-header,
+main .breadcrumb + .collection__header {
+  padding-block-start: 12px !important;
+  margin-block-start: 0 !important;
+}
+.template-collection main > .section:first-of-type,
+.template-collection main > section:first-of-type {
+  padding-block-start: 8px !important;
+}
+
+
+/* ----- 31. Facets (left filter sidebar) — cleaner spacing + heading typography ----- */
+.facets,
+.facets__form,
+.facets-container {
+  padding: 8px 0 !important;
+}
+.facets__heading,
+.facets summary,
+.facets__disclosure summary {
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  padding-block: 12px !important;
+}
+.facets__list,
+.facets__form-collapsible {
+  padding-block: 8px !important;
+}
+.facets__list label,
+.facets__list .facet-checkbox {
+  padding-block: 6px !important;
+}
+
+
+/* ----- 32. Login page — bigger polish pass (frame, spacing, heading) ----- */
+.section.login {
+  max-width: 480px;
+  margin: 60px auto;
+  padding: 40px 32px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+.section.login h1,
+.section.login .login__title {
+  font-size: 2.4rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-block-end: 28px;
+}
+.section.login .field {
+  margin-block-end: 16px;
+}
+.section.login .field__input {
+  height: 48px;
+  border-radius: 2px;
+  border: 1px solid #000;
+  padding: 0 14px;
+  font-size: 1.4rem;
+}
+.section.login .button--login,
+.section.login button[type="submit"] {
+  width: 100%;
+  height: 48px;
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000 !important;
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.section.login .login__forgot,
+.section.login a[href*="recover"] {
+  display: inline-block;
+  margin-block-start: 12px;
+  font-size: 1.2rem;
+  color: #000;
+  text-decoration: underline;
+}
+
+
+/* ----- 33. Search page — RK-style clean layout (search hero + result grid) ----- */
+.template-search main {
+  padding-block: 30px 60px;
+}
+.template-search .search__title,
+.template-search h1 {
+  font-size: 3.2rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-block-end: 24px;
+}
+.template-search .search__input-form,
+.template-search .search-form,
+.template-search predictive-search {
+  max-width: 640px;
+  margin: 0 auto 40px;
+  display: block;
+}
+.template-search .search__input,
+.template-search input[type="search"] {
+  height: 52px;
+  padding: 0 20px;
+  border: 1px solid #000;
+  border-radius: 999px;
+  font-size: 1.4rem;
+  width: 100%;
+  background: #fff;
+}
+.template-search .search__submit,
+.template-search .search-form__button {
+  background: transparent;
+  color: #000;
+  border: none;
+  padding: 0 16px;
+}
+.template-search .search__results-count,
+.template-search .search-summary {
+  text-align: center;
+  font-size: 1.3rem;
+  color: #666;
+  margin-block-end: 24px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+
+/* ----- 34. Contact page — MESSAGE US button black/white hover; email link styling ----- */
+.section-contact a[href^="mailto:"],
+.section-contact a[href^="tel:"],
+.footer a[href^="mailto:"],
+.footer a[href^="tel:"] {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.section-contact a[href^="mailto:"]:hover,
+.section-contact a[href^="tel:"]:hover,
+.footer a[href^="mailto:"]:hover,
+.footer a[href^="tel:"]:hover {
+  color: #000;
+  text-decoration: none;
+}
+/* MESSAGE US button — force black default + white hover on outline style */
+.section-contact .button--outline,
+.section-contact a.button[href*="wa.me"],
+.section-contact a[href*="wa.me"].button {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000 !important;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.section-contact .button--outline:hover,
+.section-contact a[href*="wa.me"]:hover {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-color: #000 !important;
+}
+
+
+/* ----- 35. Newsletter form — verify visual "works" state + polish ----- */
+.newsletter-form__checkbox,
+.email-signup__form {
+  max-width: 640px;
+  margin-inline: auto;
+}
+.email-signup__button {
+  min-height: 44px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+
+/* ----- 36. Footer — top-to-bottom alignment + font pass ----- */
+.footer .footer__column,
+.footer .footer__list,
+.footer .group-block-content > * {
+  align-items: flex-start !important;
+}
+.footer .footer__list {
+  padding: 0;
+  list-style: none;
+}
+.footer .footer__list li {
+  margin-block: 6px 0;
+}
+.footer .footer__heading,
+.footer .footer-block__heading,
+.footer .menu__heading {
+  font-family: var(--font-heading--family, inherit);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-block-end: 12px;
+}
+.footer__copyright,
+.copyright__content {
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+}
+
+
+/* ----- 37. Homepage editorial "The Art of Everyday Elegance" / CTAs — center + hover ----- */
+.section-editorial .button,
+.section-editorial a.button,
+.section .button.button--primary.centered-cta {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000 !important;
+  margin-inline: auto;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.section-editorial .button:hover,
+.section-editorial a.button:hover,
+.section .button.button--primary.centered-cta:hover {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+
+/* ----- 38. Product variant swatches / Color section — clearer selected state -----
+   User complaint: "Color / Sort this" on calvium-fluit. Selected swatch had
+   weak visual affordance. Give it a real outline and offset for clarity. */
+.product-form__input--swatch input:checked + label,
+.product-form__input--swatch input:checked + .swatch,
+.product-form__input--swatch .swatch.selected,
+.variant-picker__option--swatch input:checked + label {
+  outline: 2px solid #000 !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
+}
+.product-form__input--swatch label,
+.product-form__input--swatch .swatch {
+  transition: outline 0.15s ease, transform 0.15s ease;
+}
+
+
+/* ----- 39. PDP overall vertical rhythm — reduce large blank gaps between blocks ----- */
+.section-main-product .product-form,
+.section-main-product .product__info-wrapper,
+.section-main-product .product-info__content {
+  gap: 14px !important;
+}
+.section-main-product .product__info-wrapper > *,
+.section-main-product .product-info__content > * {
+  margin-block: 0 !important;
+}
+.section-main-product .product__title,
+.section-main-product .product-info__title {
+  margin-block-end: 8px !important;
+}
+.section-main-product .product__description {
+  margin-block: 8px 12px !important;
+}
+
+
+/* ----- 40. Page content pages (policies, info) — sensible typography rhythm ----- */
+.main-page-wrapper .rte,
+.template-page .page__content,
+.main-page-wrapper .page__content {
+  line-height: 1.7;
+  max-width: 820px;
+  margin-inline: auto;
+}
+.main-page-wrapper .rte h2,
+.main-page-wrapper .rte h3,
+.template-page .page__content h2,
+.template-page .page__content h3 {
+  margin-block: 24px 8px;
+  font-weight: 700;
+}
+.main-page-wrapper .rte p,
+.template-page .page__content p {
+  margin-block: 0 12px;
+}
+
+
+/* =====================================================================
+   BATCH 3 — Amazon/Flipkart/Zepto-style e-commerce polish (PDP + Cart + Collection)
+   ===================================================================== */
+
+
+/* ----- 41. PDP: two-button row (ADD TO CART + BUY NOW) side-by-side ----- */
+.product-form__buttons--calvium {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  align-items: stretch;
+}
+@media (max-width: 480px) {
+  .product-form__buttons--calvium {
+    grid-template-columns: 1fr !important;
+  }
+}
+.product-form__buttons--calvium .product-form__submit {
+  background-color: #ffffff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  min-height: 52px !important;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.product-form__buttons--calvium .product-form__submit:hover:not([disabled]):not([aria-disabled='true']) {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+.product-form__buy-now {
+  background-color: #f97316 !important; /* Flipkart-style orange */
+  color: #fff !important;
+  border: 1px solid #f97316 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  min-height: 52px !important;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.product-form__buy-now:hover:not([disabled]) {
+  background-color: #ea6408 !important;
+  border-color: #ea6408 !important;
+  transform: translateY(-1px);
+}
+.product-form__buy-now[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.product-form__buy-now.is-loading::after {
+  content: '…';
+  margin-left: 6px;
+}
+
+
+/* ----- 42. PDP trust badges strip — 4-column row of icons + copy ----- */
+.pdp-trust-badges {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 20px 0 16px;
+  padding: 16px;
+  background: #f8f8f7;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+}
+@media (max-width: 640px) {
+  .pdp-trust-badges {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.pdp-trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  line-height: 1.25;
+  color: #333;
+}
+.pdp-trust-badge__icon {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.pdp-trust-badge__text {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 1.1rem;
+}
+.pdp-trust-badge__text small {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #666;
+  margin-top: 2px;
+}
+
+
+/* ----- 43. PDP product highlights — key info bullets ----- */
+.pdp-highlights {
+  list-style: none;
+  padding: 14px 16px;
+  margin: 12px 0 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  font-size: 1.3rem;
+  line-height: 1.7;
+}
+.pdp-highlights li {
+  position: relative;
+  padding-left: 18px;
+  color: #333;
+}
+.pdp-highlights li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 12px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #000;
+}
+.pdp-highlights strong {
+  color: #000;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+
+/* ----- 44. PDP delivery estimate hint ----- */
+.pdp-delivery-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin: 10px 0 16px;
+  background: #e8f5e8;
+  border: 1px solid #a4d1a4;
+  border-radius: 4px;
+  font-size: 1.3rem;
+  color: #1a5c1a;
+}
+.pdp-delivery-hint strong {
+  font-weight: 700;
+}
+
+
+/* ----- 45. PDP price display — MRP strikethrough + discount % ----- */
+.section-main-product .price,
+.section-main-product .price-block,
+.section-main-product .product__price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.section-main-product .price__sale,
+.section-main-product .price-item--sale,
+.section-main-product .price__regular .price-item--regular {
+  font-size: 2.6rem !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+  letter-spacing: 0.02em;
+}
+.section-main-product .price__compare,
+.section-main-product .price-item--compare,
+.section-main-product s.price-item {
+  color: #888 !important;
+  font-size: 1.6rem !important;
+  text-decoration: line-through !important;
+  font-weight: 400 !important;
+}
+/* Auto-computed discount pill — expects a .price-discount element if theme provides;
+   otherwise CSS content on any [data-discount-pct] hint */
+.section-main-product .price-discount,
+.section-main-product .price__badge-sale {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #cbebd0;
+  color: #1a5c1a;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+/* ----- 46. Card discount badge — Flipkart-style green pill top-left ----- */
+.sale-badge.sale-badge--discount,
+.sale-badge {
+  background: #ffffff !important;
+  color: #1a5c1a !important;
+  font-weight: 800 !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.04em !important;
+  padding: 4px 8px !important;
+  border-radius: 3px !important;
+  border: 1px solid #1a5c1a !important;
+  text-transform: uppercase !important;
+  position: absolute !important;
+  top: 10px !important;
+  left: 10px !important;
+  z-index: 2;
+}
+/* When badge is inside .card__badge positioner (bottom-left variant), reset absolute */
+.card__badge.bottom-left .sale-badge,
+.card__badge.top-right .sale-badge {
+  position: static !important;
+}
+
+
+/* ----- 47. Card price display — bold sale + strikethrough MRP + savings ----- */
+.card-product .price-item--sale,
+.card-product .price__sale,
+.card-information .price__sale {
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  color: #000 !important;
+}
+.card-product .price-item--compare,
+.card-product .price__compare,
+.card-information .price__compare,
+.card-product s.price-item {
+  color: #888 !important;
+  font-size: 1.2rem !important;
+  text-decoration: line-through !important;
+  margin-inline-start: 6px;
+}
+.card-product .price,
+.card-information .price {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+}
+
+
+/* ----- 48. Sticky bottom Add-to-Cart bar (PDP) ----- */
+.pdp-sticky-atc {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  z-index: 60;
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 10px 0;
+}
+.pdp-sticky-atc.is-visible {
+  transform: translateY(0);
+}
+.pdp-sticky-atc__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pdp-sticky-atc__product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+.pdp-sticky-atc__product img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex: 0 0 48px;
+}
+.pdp-sticky-atc__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pdp-sticky-atc__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.pdp-sticky-atc__price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 1.2rem;
+}
+.pdp-sticky-atc__price strong {
+  color: #000;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+.pdp-sticky-atc__price s {
+  color: #888;
+  font-size: 1.1rem;
+}
+.pdp-sticky-atc__actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.pdp-sticky-atc__btn {
+  padding: 10px 18px;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  min-height: 44px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.pdp-sticky-atc__btn--cart {
+  background: #ffffff;
+  color: #000;
+  border-color: #000;
+}
+.pdp-sticky-atc__btn--cart:hover {
+  background: #000;
+  color: #fff;
+}
+.pdp-sticky-atc__btn--buy {
+  background: #f97316;
+  color: #fff;
+  border-color: #f97316;
+}
+.pdp-sticky-atc__btn--buy:hover {
+  background: #ea6408;
+  border-color: #ea6408;
+  transform: translateY(-1px);
+}
+@media (max-width: 480px) {
+  .pdp-sticky-atc__title { max-width: 140px; }
+  .pdp-sticky-atc__btn { padding: 10px 14px; font-size: 1.1rem; }
+  .pdp-sticky-atc__product img { width: 40px; height: 40px; flex-basis: 40px; }
+}
+
+
+/* ----- 49. Cart summary — savings-first, Zepto-style ----- */
+.totals {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 12px 0 !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  margin-block: 12px !important;
+}
+.totals__total {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin: 0 !important;
+}
+.totals__total-value {
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  color: #000 !important;
+}
+/* Only style discount containers when they actually have content — empty
+   containers were rendering as an empty green bar inside cart line items. */
+.cart-total-discount:not(:empty),
+.discounts:not(:empty):has(*) {
+  padding: 10px 12px !important;
+  background: #ebfbee !important;
+  border: 1px solid #a4d1a4 !important;
+  border-radius: 4px !important;
+  margin-block: 10px !important;
+  color: #1a5c1a !important;
+}
+.discounts:empty,
+.discounts:not(:has(*)) {
+  display: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+.discounts__discount-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #1a5c1a !important;
+  font-weight: 700 !important;
+}
+
+
+/* ----- 50. Free-shipping progress bar polish — bigger/clearer ----- */
+.haloCalculatorShipping,
+free-shipping-component {
+  display: block;
+  padding: 12px 14px;
+  background: #fff8e6;
+  border: 1px solid #f4d47a;
+  border-radius: 4px;
+  margin-block: 12px 16px;
+}
+.haloCalculatorShipping .progress .progress_shipping,
+free-shipping-component .progress .progress_shipping {
+  height: 6px;
+  background: #ffe6b3;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-block: 8px 0;
+}
+.haloCalculatorShipping .progress-meter,
+free-shipping-component .progress-meter {
+  height: 100%;
+  background: #f97316;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+.haloCalculatorShipping .message,
+free-shipping-component .message {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #7a4a00;
+  text-align: center;
+}
+
+
+/* ----- 51. Collection: sticky filter/sort toolbar on scroll ----- */
+.facets-toolbar,
+.collection-toolbar,
+.facets-container__toolbar,
+.product-grid-toolbar,
+[data-toolbar] {
+  position: sticky !important;
+  top: 60px;
+  z-index: 20;
+  background: #ffffff;
+  padding-block: 8px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ----- 52. Cart page — better item card layout ----- */
+.cart-items,
+.cart-item,
+.cart-page__items .line-item {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.cart-item__image,
+.cart-page__items img {
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.cart-item__name,
+.cart-page__items .product-title {
+  font-weight: 600 !important;
+  font-size: 1.4rem !important;
+  color: #000 !important;
+  margin-block-end: 4px !important;
+}
+.cart-item__variant,
+.cart-page__items .variant {
+  font-size: 1.2rem !important;
+  color: #666 !important;
+}
+
+
+/* ----- 53. Cart: recommended add-ons prominence ----- */
+.cart-popular-products,
+.cart-drawer__popular-products {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 4px;
+  margin-block: 16px;
+}
+.cart-popular-products h3,
+.cart-drawer__popular-products h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-block-end: 12px;
+}
+
+
+/* ----- 54. Collection: card hover-lift for visual delight ----- */
+.card-product,
+.card--block-media {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-product:hover,
+.card--block-media:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ----- 55. PDP variant picker — pill-shaped color+size for clarity ----- */
+.variant-picker__option,
+.product-form__input {
+  margin-block: 10px !important;
+}
+.variant-picker__option-label,
+.product-form__input .form__label {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #000 !important;
+  margin-block-end: 8px !important;
+}
+.product-form__input--pill input:checked + label,
+.product-form__input--pill label[aria-checked="true"],
+.variant-picker__option--pill input:checked + label {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+
+
+/* ----- 56. PDP main image — cleaner frame + subtle border ----- */
+.section-main-product .product__media-wrapper,
+.section-main-product .product__media-item {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+
+/* ----- 57. Search page — cleaner result cards + spacing ----- */
+.template-search .predictive-search-results,
+.template-search .search__results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px 16px;
+  margin-block-start: 20px;
+}
+.template-search .predictive-search-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+
+/* ----- 58. CALVIUM Most-Loved card — wishlist active state + wrapper reset -----
+   Root cause: cm-product-card.liquid heart button was decorative (no data-wishlist
+   attrs, no <wish-list> wrapper). Now wired to global.js Wishlist. This rule adds
+   the visible "added" (red) state that matches the PDP wishlist red heart. */
+.cm-card__wishlist-wrap {
+  display: contents;
+}
+.cm-card__wishlist {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #111;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+.cm-card__wishlist:hover {
+  color: #e63946;
+  border-color: #e63946;
+}
+.cm-card__wishlist.wishlist-added,
+.cm-card__wishlist.wishlist-added:hover {
+  background: #ffffff;
+  border-color: #e63946;
+  color: #e63946;
+}
+.cm-card__wishlist.wishlist-added svg,
+.cm-card__wishlist.wishlist-added .wishlist-button__icon {
+  fill: #e63946;
+  stroke: #e63946;
+}
+
+
+/* ----- 59. Cart drawer footer — strict horizontal alignment of totals row,
+   tax note, and CTA buttons.
+   Root cause: `.cart__ctas` inherits `text-align: center` (component-cart.css:147);
+   `.cart__checkout-button` capped at max-width: 36rem (line 142) and only unlocked
+   for the drawer via a single override; `.cart__viewcart-button` has no matching
+   full-width override; `.tax-note` is pushed right by `margin: … 0 … auto`.
+   Result: subtotal row, tax note, and CTA buttons all sit at slightly different
+   horizontal insets → visual misalignment the user flagged.
+   Fix: force identical inset on both footer + ctas containers, center the tax note,
+   size both CTAs to full width with zero side margin. */
+/* Cart footer inset — keep SUBTOTAL row aligned with drawer inner padding.
+   Cart CTA + button width is handled in calvium-miraggio.css (flex stretch,
+   no !important). */
+.cart-drawer .cart-drawer__footer,
+.cart-drawer .totals {
+  padding-inline: 0;
+  margin-inline: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cart-drawer .tax-note {
+  margin: 8px 0 14px;
+  padding: 0;
+  text-align: center;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+

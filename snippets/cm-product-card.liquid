@@ -1,0 +1,172 @@
+{%- comment -%}
+  Calvium — Miraggio-style product card.
+  Params:
+    product        — Product object
+    show_percent   — optional (default true)
+    show_swatches  — optional (default true)
+    max_swatches   — optional (default 4)
+    show_atc       — optional (default true)
+{%- endcomment -%}
+{%- liquid
+  if show_percent == blank
+    assign show_percent = true
+  endif
+  if show_swatches == blank
+    assign show_swatches = true
+  endif
+  if max_swatches == blank
+    assign max_swatches = 4
+  endif
+  if show_atc == blank
+    assign show_atc = true
+  endif
+
+  assign primary = product.featured_media
+  assign secondary = product.media[1]
+  assign compare = product.compare_at_price
+  assign on_sale = false
+  if compare > product.price
+    assign on_sale = true
+    assign percent_off = compare | minus: product.price | times: 100.0 | divided_by: compare | round
+  endif
+
+  assign is_new = false
+  if product.tags contains 'new' or product.tags contains 'New' or product.tags contains 'NEW'
+    assign is_new = true
+  endif
+
+  assign color_option = nil
+  for opt in product.options_with_values
+    assign lname = opt.name | downcase
+    if lname contains 'color' or lname contains 'colour'
+      assign color_option = opt
+    endif
+  endfor
+-%}
+<article class="cm-card {% if product.available == false %}is-sold-out{% endif %}" data-cm-card data-product-id="{{ product.id }}">
+  <div class="cm-card__figure">
+    <a class="cm-card__link" href="{{ product.url | within: collection }}" aria-label="{{ product.title | escape }}">
+      {%- if primary -%}
+        <img
+          class="cm-card__img cm-card__img--primary"
+          data-cm-card-img="primary"
+          src="{{ primary | image_url: width: 700 }}"
+          srcset="{{ primary | image_url: width: 300 }} 300w, {{ primary | image_url: width: 500 }} 500w, {{ primary | image_url: width: 700 }} 700w, {{ primary | image_url: width: 900 }} 900w"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          alt="{{ primary.alt | default: product.title | escape }}"
+          width="750" height="1000" loading="lazy"
+        >
+      {%- else -%}
+        <img class="cm-card__img cm-card__img--primary" src="" alt="" width="750" height="1000" data-cm-card-img="primary">
+      {%- endif -%}
+      {%- if secondary -%}
+        <img
+          class="cm-card__img cm-card__img--secondary"
+          data-cm-card-img="secondary"
+          src="{{ secondary | image_url: width: 700 }}"
+          srcset="{{ secondary | image_url: width: 300 }} 300w, {{ secondary | image_url: width: 500 }} 500w, {{ secondary | image_url: width: 700 }} 700w"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          alt="{{ secondary.alt | default: product.title | escape }}"
+          width="750" height="1000" loading="lazy"
+        >
+      {%- elsif primary -%}
+        <img class="cm-card__img cm-card__img--secondary" data-cm-card-img="secondary" src="{{ primary | image_url: width: 700 }}" alt="" width="750" height="1000" loading="lazy">
+      {%- endif -%}
+    </a>
+
+    <div class="cm-card__badges">
+      {%- if is_new -%}
+        <span class="cm-card__badge cm-card__badge--new">New</span>
+      {%- endif -%}
+      {%- if on_sale and show_percent -%}
+        <span class="cm-card__badge">{{ percent_off }}% OFF</span>
+      {%- endif -%}
+      {%- unless product.available -%}
+        <span class="cm-card__badge cm-card__badge--soldout">Sold out</span>
+      {%- endunless -%}
+    </div>
+
+    <wish-list class="cm-card__wishlist-wrap">
+      <button
+        type="button"
+        class="cm-card__wishlist wishlist-button"
+        data-wishlist
+        data-wishlist-handle="{{ product.handle }}"
+        data-product-id="{{ product.id }}"
+        aria-label="Add to wishlist"
+      >
+        <svg class="wishlist-button__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+      </button>
+    </wish-list>
+
+    {%- if show_atc -%}
+      {%- assign default_variant = product.selected_or_first_available_variant -%}
+      <button
+        type="button"
+        class="cm-card__atc"
+        data-cm-rec-add
+        data-variant-id="{{ default_variant.id }}"
+        {% unless product.available %}disabled{% endunless %}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6h15l-1.5 9H8L6.5 3H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/></svg>
+        <span>{% if product.available %}Add to Cart{% else %}Sold out{% endif %}</span>
+      </button>
+    {%- endif -%}
+  </div>
+
+  <a class="cm-card__title" href="{{ product.url | within: collection }}">{{ product.title }}</a>
+
+  <div class="cm-card__price-row">
+    {%- if on_sale -%}
+      <span class="cm-card__price">{{ product.price | money }}</span>
+      <span class="cm-card__price cm-card__price--regular">{{ compare | money }}</span>
+      {%- if show_percent -%}
+        <span class="cm-card__price cm-card__price--percent">{{ percent_off }}% OFF</span>
+      {%- endif -%}
+    {%- else -%}
+      <span class="cm-card__price">{{ product.price | money }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- if show_swatches and color_option and color_option.values.size > 1 -%}
+    <div class="cm-card__swatches" role="group" aria-label="{{ color_option.name }} variants">
+      {%- assign shown = 0 -%}
+      {%- for value in color_option.values -%}
+        {%- if shown >= max_swatches -%}{%- break -%}{%- endif -%}
+        {%- assign v_variant = nil -%}
+        {%- for v in product.variants -%}
+          {%- if v.options contains value -%}{%- assign v_variant = v -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+        {%- assign v_media = v_variant.featured_media -%}
+        {%- assign v_secondary_media = nil -%}
+        {%- if v_variant.metafields.custom.secondary_image -%}
+          {%- assign v_secondary_media = v_variant.metafields.custom.secondary_image.value -%}
+        {%- endif -%}
+        {%- if v_media -%}
+          {%- assign primary_url = v_media | image_url: width: 700 -%}
+          {%- assign secondary_url = primary_url -%}
+          {%- if v_secondary_media -%}
+            {%- assign secondary_url = v_secondary_media | image_url: width: 700 -%}
+          {%- endif -%}
+          <a
+            href="{{ v_variant.url | default: product.url }}?variant={{ v_variant.id }}"
+            class="cm-card__swatch {% if forloop.first %}is-active{% endif %}"
+            title="{{ value | escape }}"
+            data-cm-card-swatch
+            data-variant-img="{{ secondary_url }}"
+            data-primary-img="{{ primary_url }}"
+          >
+            <img src="{{ v_media | image_url: width: 100 }}" alt="{{ value | escape }}" width="34" height="44" loading="lazy">
+          </a>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- else -%}
+          <span class="cm-card__swatch cm-card__swatch--color {% if forloop.first %}is-active{% endif %}" title="{{ value | escape }}" style="background:#{{ value | downcase | handle }}"></span>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if color_option.values.size > max_swatches -%}
+        <span class="cm-card__swatch cm-card__swatch--more">+{{ color_option.values.size | minus: max_swatches }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</article>

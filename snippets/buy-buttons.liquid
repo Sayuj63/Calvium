@@ -1,0 +1,285 @@
+{% comment %}
+  Renders product buy-buttons.
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} product form id.
+  - section_id: {String} id of section to which this snippet belongs.
+  - show_pickup_availability: {Boolean} for the pickup availability. If true the pickup availability is rendered, false - not rendered (optional).
+
+  Usage:
+  {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true %}
+{% endcomment %}
+<div {{ block.shopify_attributes }}>
+  {%- if product != blank -%}
+    {%- liquid
+      assign gift_card_recipient_feature_active = false
+      if block.settings.show_gift_card_recipient and product.gift_card?
+        assign gift_card_recipient_feature_active = true
+      endif
+
+      assign show_dynamic_checkout = false
+      if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+        assign show_dynamic_checkout = true
+      endif
+    -%}
+
+    <product-form
+      class="product-form"
+      data-hide-errors="{{ gift_card_recipient_feature_active }}"
+      data-section-id="{{ section.id }}"
+    >
+      <div class="product-form__error-message-wrapper" role="alert" hidden>
+        <span class="svg-wrapper">
+          {{- 'icon-error.svg' | inline_asset_content -}}
+        </span>
+        <span class="product-form__error-message"></span>
+      </div>
+
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          {% if product.selected_or_first_available_variant.available == false
+            or quantity_rule_soldout
+            or product.selected_or_first_available_variant == nil
+          %}
+            disabled
+          {% endif %}
+          class="product-variant-id"
+        >
+
+        {%- if gift_card_recipient_feature_active -%}
+          {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
+        {%- endif -%}
+
+        <div class="product-form__buttons product-form__buttons--calvium">
+          {%- liquid
+            assign check_against_inventory = true
+            if product.selected_or_first_available_variant.inventory_management != 'shopify' or product.selected_or_first_available_variant.inventory_policy == 'continue'
+              assign check_against_inventory = false
+            endif
+            if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+              assign quantity_rule_soldout = true
+            endif
+            if product.selected_or_first_available_variant.inventory_quantity <= 0 and product.selected_or_first_available_variant.inventory_policy == 'continue'
+              assign check_pre_order = true
+            endif
+          -%}
+          <button
+            id="ProductSubmitButton-{{ section_id }}"
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button-secondary{% else %}button--primary{% endif %}"
+            {% if product.selected_or_first_available_variant.available == false
+              or quantity_rule_soldout
+              or product.selected_or_first_available_variant == nil
+            %}
+              disabled
+            {% endif %}
+          >
+            <span>
+              {%- if product.selected_or_first_available_variant == nil -%}
+                {{ 'products.product.unavailable' | t }}
+              {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                {{ 'products.product.sold_out' | t }}
+              {%- else -%}
+                {% if check_pre_order %}
+                  {{ 'products.product.pre_order' | t }}
+                {% else %}
+                  {{ 'products.product.add_to_cart' | t }}
+                {% endif %}
+              {%- endif -%}
+            </span>
+            {%- render 'loading-spinner' -%}
+          </button>
+          <button
+            type="button"
+            class="product-form__buy-now button button--full-width button-buy-now"
+            data-buy-now
+            data-form-id="{{ product_form_id }}"
+            {% if product.selected_or_first_available_variant.available == false
+              or quantity_rule_soldout
+              or product.selected_or_first_available_variant == nil
+            %}
+              disabled
+            {% endif %}
+            aria-label="Buy it now"
+          >
+            <span>BUY NOW</span>
+          </button>
+          {%- if show_dynamic_checkout -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      {%- endform -%}
+    </product-form>
+
+    {% comment %} Trust badges strip — Amazon/Flipkart-style row {% endcomment %}
+    <div class="pdp-trust-badges" aria-hidden="false">
+      <div class="pdp-trust-badge">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">🚚</span>
+        <span class="pdp-trust-badge__text">Free Delivery<br><small>Orders above ₹999</small></span>
+      </div>
+      <div class="pdp-trust-badge">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">💵</span>
+        <span class="pdp-trust-badge__text">Cash on Delivery<br><small>Available</small></span>
+      </div>
+      <div class="pdp-trust-badge">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">↩</span>
+        <span class="pdp-trust-badge__text">Easy Returns<br><small>7 days</small></span>
+      </div>
+      <div class="pdp-trust-badge">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">🔒</span>
+        <span class="pdp-trust-badge__text">Secure Checkout<br><small>100% safe</small></span>
+      </div>
+    </div>
+
+    {% comment %} Product highlights — bullet list {% endcomment %}
+    <ul class="pdp-highlights" aria-label="Product highlights">
+      {%- if product.type != blank -%}<li><strong>Type:</strong> {{ product.type }}</li>{%- endif -%}
+      {%- if product.vendor != blank and product.vendor != shop.name -%}<li><strong>Brand:</strong> {{ product.vendor }}</li>{%- endif -%}
+      {%- if product.metafields.custom.fabric -%}<li><strong>Fabric:</strong> {{ product.metafields.custom.fabric }}</li>{%- endif -%}
+      {%- if product.metafields.custom.fit -%}<li><strong>Fit:</strong> {{ product.metafields.custom.fit }}</li>{%- endif -%}
+      {%- if product.metafields.custom.care -%}<li><strong>Care:</strong> {{ product.metafields.custom.care }}</li>{%- endif -%}
+      <li><strong>Origin:</strong> India</li>
+      <li>Hand-picked quality. Timeless design.</li>
+    </ul>
+
+    {% comment %} Delivery pincode check hint {% endcomment %}
+    <div class="pdp-delivery-hint">
+      <span aria-hidden="true">📍</span>
+      <span>Delivery estimate: <strong>3–5 business days</strong> across India</span>
+    </div>
+
+    {% comment %} Sticky ATC bar — bottom-fixed, reveals when main ATC scrolls off {% endcomment %}
+    <div class="pdp-sticky-atc" id="pdpStickyAtc-{{ section_id }}" aria-hidden="true">
+      <div class="pdp-sticky-atc__inner page-width">
+        <div class="pdp-sticky-atc__product">
+          {%- if product.featured_media -%}
+            <img src="{{ product.featured_media | image_url: width: 120 }}" alt="" width="48" height="48" loading="lazy">
+          {%- endif -%}
+          <div class="pdp-sticky-atc__meta">
+            <span class="pdp-sticky-atc__title">{{ product.title | truncate: 50 }}</span>
+            <span class="pdp-sticky-atc__price">
+              {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+                <s>{{ product.selected_or_first_available_variant.compare_at_price | money }}</s>
+              {%- endif -%}
+              <strong>{{ product.selected_or_first_available_variant.price | money }}</strong>
+            </span>
+          </div>
+        </div>
+        <div class="pdp-sticky-atc__actions">
+          <button type="button" class="pdp-sticky-atc__btn pdp-sticky-atc__btn--cart" data-sticky-atc-trigger>ADD TO CART</button>
+          <button type="button" class="pdp-sticky-atc__btn pdp-sticky-atc__btn--buy" data-sticky-buy-trigger>BUY NOW</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        var btn = document.querySelector('[data-buy-now][data-form-id="{{ product_form_id }}"]');
+        if (btn) {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (btn.disabled) return;
+            var form = document.getElementById('{{ product_form_id }}');
+            if (!form) return;
+            btn.classList.add('is-loading');
+            var fd = new FormData(form);
+            fetch('/cart/add.js', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
+              .then(function(r) { return r.json().then(function(j){ return { ok: r.ok, body: j }; }); })
+              .then(function(res) {
+                if (!res.ok) { throw new Error(res.body && res.body.description ? res.body.description : 'Add to cart failed'); }
+                window.location.href = '/checkout';
+              })
+              .catch(function(err) {
+                btn.classList.remove('is-loading');
+                alert(err.message || 'Unable to proceed. Please try again.');
+              });
+          });
+        }
+
+        var stickyBar = document.getElementById('pdpStickyAtc-{{ section_id }}');
+        var mainSubmit = document.getElementById('ProductSubmitButton-{{ section_id }}');
+        var stickyCart = stickyBar && stickyBar.querySelector('[data-sticky-atc-trigger]');
+        var stickyBuy = stickyBar && stickyBar.querySelector('[data-sticky-buy-trigger]');
+
+        if (stickyBar && mainSubmit && 'IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                stickyBar.classList.remove('is-visible');
+              } else {
+                stickyBar.classList.add('is-visible');
+              }
+            });
+          }, { threshold: 0.1 });
+          io.observe(mainSubmit);
+        }
+        if (stickyCart && mainSubmit) {
+          stickyCart.addEventListener('click', function() { mainSubmit.click(); });
+        }
+        if (stickyBuy && btn) {
+          stickyBuy.addEventListener('click', function() { btn.click(); });
+        }
+      })();
+    </script>
+  {%- else -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--primary"
+          disabled
+        >
+          {{ 'products.product.sold_out' | t }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if show_pickup_availability -%}
+    <link rel="stylesheet" href="{{ 'component-pickup-availability.css' | asset_url }}" media="print" onload="this.media='all'">
+    <noscript>{{ 'component-pickup-availability.css' | asset_url | stylesheet_tag }}</noscript>
+
+    {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+      | where: 'pick_up_enabled', true
+    -%}
+
+    <pickup-availability
+      class="product__pickup-availabilities block quick-add-hidden no-js-hidden"
+      {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+        available
+      {% endif %}
+      data-root-url="{{ routes.root_url }}"
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      data-has-only-default-variant="{{ product.has_only_default_variant }}"
+      data-product-page-color-scheme="color-{{ section.settings.color_scheme }}"
+    >
+      <template>
+        <pickup-availability-preview class="pickup-availability-preview">
+          <span class="svg-wrapper">
+            {{- 'icon-unavailable.svg' | inline_asset_content -}}
+          </span>
+          <div class="pickup-availability-info">
+            <p class="caption-large">{{ 'products.product.pickup_availability.unavailable' | t }}</p>
+            <button class="pickup-availability-button link link--text underlined-link">
+              {{ 'products.product.pickup_availability.refresh' | t }}
+            </button>
+          </div>
+        </pickup-availability-preview>
+      </template>
+    </pickup-availability>
+
+    <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+</div>

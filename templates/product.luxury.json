@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "main": {
+      "type": "calvium-product-luxury",
+      "blocks": {
+        "story_material": {
+          "type": "story",
+          "settings": {
+            "eyebrow": "THE MATERIAL",
+            "heading": "Chosen to age well",
+            "body": "Premium leather with a matte finish that softens with wear — not scuffing, but settling in. Structured to hold its shape and quietly refine over years."
+          }
+        },
+        "story_craft": {
+          "type": "story",
+          "settings": {
+            "eyebrow": "CRAFT",
+            "heading": "Made in small runs",
+            "body": "Every piece is stitched, edge-painted and finished by hand in small runs. That means small variations — the hallmark of something made, not manufactured."
+          }
+        }
+      },
+      "block_order": [
+        "story_material",
+        "story_craft"
+      ],
+      "settings": {
+        "hero_index": 0,
+        "short_description": "Made from premium leather with matte hardware. Structured to hold its shape and quietly refine with wear.",
+        "show_buy_now": true,
+        "show_stub_rating": true
+      }
+    },
+    "recommendations": {
+      "type": "calvium-most-loved",
+      "settings": {
+        "heading": "YOU MAY ALSO LIKE",
+        "cta_label": "",
+        "max_products": 8,
+        "show_swatches": true,
+        "show_atc": true,
+        "tone": "light",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations"
+  ]
+}

@@ -1,0 +1,106 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Header group",
+  "type": "header",
+  "sections": {
+    "calvium_miraggio_announcement_rPUiNq": {
+      "type": "calvium-miraggio-announcement",
+      "blocks": {
+        "message_TnaNpx": {
+          "type": "message",
+          "settings": {
+            "text": "Free shipping across India above ₹999",
+            "link": ""
+          }
+        },
+        "message_tyBGKC": {
+          "type": "message",
+          "settings": {
+            "text": "Extra 5% OFF on prepaid orders",
+            "link": ""
+          }
+        },
+        "message_fLDdg8": {
+          "type": "message",
+          "settings": {
+            "text": "Easy 15-day returns",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "message_TnaNpx",
+        "message_tyBGKC",
+        "message_fLDdg8"
+      ],
+      "name": "Calvium — Announcement",
+      "settings": {
+        "default_text": "Free shipping across India above ₹999",
+        "auto_rotate": false,
+        "interval": 4,
+        "bg_color": "#0a0a0a",
+        "text_color": "#ffffff"
+      }
+    },
+    "calvium_miraggio_header_cKfWVC": {
+      "type": "calvium-miraggio-header",
+      "blocks": {
+        "link_rNHwzY": {
+          "type": "link",
+          "settings": {
+            "label": "New Arrivals",
+            "link": ""
+          }
+        },
+        "link_dqQa6y": {
+          "type": "link",
+          "settings": {
+            "label": "Shop by Category",
+            "link": ""
+          }
+        },
+        "link_TBFhPM": {
+          "type": "link",
+          "settings": {
+            "label": "Featured Collections",
+            "link": ""
+          }
+        },
+        "link_t3Fihd": {
+          "type": "link",
+          "settings": {
+            "label": "Gifting",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "link_rNHwzY",
+        "link_dqQa6y",
+        "link_TBFhPM",
+        "link_t3Fihd"
+      ],
+      "name": "Calvium — Header",
+      "settings": {
+        "menu": "main-menu",
+        "brand_name": "CALVIUM",
+        "logo": "shopify://shop_images/logo.png",
+        "logo_width": 130,
+        "wishlist_url": "",
+        "sticky": true
+      }
+    }
+  },
+  "order": [
+    "calvium_miraggio_announcement_rPUiNq",
+    "calvium_miraggio_header_cKfWVC"
+  ]
+}

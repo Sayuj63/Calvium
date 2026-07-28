@@ -1,0 +1,152 @@
+{%- comment -%}
+  Calvium — Shoppable Editorial Lookbook.
+  Clean 60/40 split (desktop): full-height editorial image on one side, a stack of
+  shoppable product cards on the other. Stacks vertically on mobile with a
+  horizontal-swipe product row. Replaces the OLD Swytch _lookbook block system.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign layout = section.settings.layout | default: 'split'
+  assign flip = section.settings.image_position | default: 'left'
+  assign coll = collections[section.settings.collection]
+  assign products_size = 0
+  if coll and coll.products.size > 0
+    assign products_size = coll.products.size
+  endif
+-%}
+
+<section
+  class="cm-lookbook cm-lookbook--{{ layout }} cm-lookbook--img-{{ flip }} {% if section.settings.tone == 'cream' %}cm-lookbook--cream{% elsif section.settings.tone == 'dark' %}cm-lookbook--dark{% endif %}"
+  data-cm-reveal
+  style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;"
+>
+  <div class="cm-container cm-lookbook__container">
+    <div class="cm-lookbook__grid">
+
+      {%- comment -%} ---------- Editorial media panel ---------- {%- endcomment -%}
+      <div class="cm-lookbook__media">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 1400 }}"
+            srcset="{{ section.settings.image | image_url: width: 700 }} 700w, {{ section.settings.image | image_url: width: 1000 }} 1000w, {{ section.settings.image | image_url: width: 1400 }} 1400w, {{ section.settings.image | image_url: width: 1800 }} 1800w"
+            sizes="(max-width: 749px) 100vw, 60vw"
+            alt="{{ section.settings.heading | escape }}"
+            width="1400" height="1750"
+            loading="lazy"
+          >
+        {%- else -%}
+          <div class="cm-lookbook__placeholder" aria-hidden="true"></div>
+        {%- endif -%}
+
+        {%- if section.settings.badge_text != blank -%}
+          <span class="cm-lookbook__badge">{{ section.settings.badge_text }}</span>
+        {%- endif -%}
+
+        <div class="cm-lookbook__caption">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="cm-lookbook__eyebrow">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="cm-lookbook__heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.body != blank -%}
+            <p class="cm-lookbook__body">{{ section.settings.body }}</p>
+          {%- endif -%}
+          {%- if section.settings.cta_label != blank -%}
+            <a href="{{ section.settings.cta_link | default: coll.url | default: '/collections/all' }}"
+               class="cm-lookbook__cta">
+              {{ section.settings.cta_label }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} ---------- Shoppable products panel ---------- {%- endcomment -%}
+      <div class="cm-lookbook__shop">
+        <div class="cm-lookbook__shop-head">
+          <p class="cm-lookbook__shop-title">{{ section.settings.shop_title | default: 'Shop the story' }}</p>
+          {%- if coll and section.settings.show_count and products_size > 0 -%}
+            <span class="cm-lookbook__shop-count">{{ products_size }} pieces</span>
+          {%- endif -%}
+        </div>
+
+        {%- if coll and products_size > 0 -%}
+          <div class="cm-lookbook__products">
+            {%- for p in coll.products limit: section.settings.max_products -%}
+              {%- render 'cm-product-card',
+                   product: p,
+                   show_percent: section.settings.show_percent,
+                   show_swatches: section.settings.show_swatches,
+                   max_swatches: section.settings.max_swatches,
+                   show_atc: section.settings.show_atc -%}
+            {%- endfor -%}
+          </div>
+          {%- comment -%}
+            Second "Shop the full edit" CTA removed — one CTA per lookbook to avoid
+            duplicate calls-to-action with the main "Explore the story" button on the
+            editorial panel. Schema fields kept for backwards compatibility.
+          {%- endcomment -%}
+        {%- else -%}
+          <p class="cm-lookbook__empty">Assign a collection in the theme editor to see products here.</p>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — Lookbook",
+  "class": "shopify-section--cm-lookbook",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Editorial media" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait 4:5 or taller works best (1400×1750+)." },
+    { "type": "text", "id": "badge_text", "label": "Badge (optional)", "default": "New Collection" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "THE EDIT" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Layered minimalism, crafted for every day." },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "A capsule of essentials — clean lines, soft palette, considered fabrics. Made to wear season after season." },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Explore the story" },
+    { "type": "url", "id": "cta_link", "label": "CTA link" },
+    { "type": "header", "content": "Shoppable products" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "text", "id": "shop_title", "label": "Panel title", "default": "Shop the story" },
+    { "type": "checkbox", "id": "show_count", "label": "Show product count", "default": true },
+    { "type": "range", "id": "max_products", "label": "Max products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_percent", "label": "Show % off badge", "default": true },
+    { "type": "checkbox", "id": "show_swatches", "label": "Show colour swatches", "default": true },
+    { "type": "range", "id": "max_swatches", "label": "Max swatches", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_atc", "label": "Show Add-to-Cart on hover", "default": true },
+    { "type": "text", "id": "viewall_label", "label": "View-all label", "default": "Shop the full collection" },
+    { "type": "url", "id": "viewall_url", "label": "View-all link" },
+    { "type": "header", "content": "Layout & tone" },
+    { "type": "select", "id": "layout", "label": "Layout",
+      "options": [
+        { "value": "split", "label": "60/40 editorial split" },
+        { "value": "wide",  "label": "70/30 wide editorial" }
+      ], "default": "split"
+    },
+    { "type": "select", "id": "image_position", "label": "Image side (desktop)",
+      "options": [
+        { "value": "left",  "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ], "default": "left"
+    },
+    { "type": "select", "id": "tone", "label": "Background",
+      "options": [
+        { "value": "light", "label": "White" },
+        { "value": "cream", "label": "Cream" },
+        { "value": "dark",  "label": "Dark" }
+      ], "default": "light"
+    },
+    { "type": "range", "id": "padding_top",    "label": "Padding top",    "min": 0, "max": 120, "step": 4, "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 60 }
+  ],
+  "presets": [
+    { "name": "Calvium — Lookbook" }
+  ]
+}
+{% endschema %}

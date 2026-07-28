@@ -1,0 +1,144 @@
+@media (max-width: 749px) {
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-padding-top"] {
+    padding-top: var(--editorial-padding-top-mb);
+  }
+
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-padding-bottom"] {
+    padding-bottom: var(--editorial-padding-bottom-mb);
+  }
+
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-padding-left"] {
+    padding-left: var(--editorial-padding-left-mb);
+  }
+
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-padding-right"] {
+    padding-right: var(--editorial-padding-right-mb);
+  }
+
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-margin-top"] {
+    margin-top: calc(var(--editorial-margin-top-mb) * 0.5);
+  }
+
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-margin-bottom"] {
+    margin-bottom: calc(var(--editorial-margin-bottom-mb) * 0.5);
+  }
+
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-margin-left"] {
+    margin-left: calc(var(--editorial-margin-left-mb) * 0.5);
+  }
+
+  .editorial-grid-layout:not(.has-swiper-mobile) [style*="--editorial-margin-right"] {
+    margin-right: calc(var(--editorial-margin-right-mb) * 0.5);
+  }
+}
+
+@media (min-width: 750px) {
+  [style*="--editorial-padding-top"] {
+    padding-top: calc(var(--editorial-padding-top) * 0.5);
+  }
+
+  [style*="--editorial-padding-bottom"] {
+    padding-bottom: calc(var(--editorial-padding-bottom) * 0.5);
+  }
+
+  [style*="--editorial-padding-left"] {
+    padding-left: calc(var(--editorial-padding-left) * 0.5);
+  }
+
+  [style*="--editorial-padding-right"] {
+    padding-right: calc(var(--editorial-padding-right) * 0.5);
+  }
+
+  [style*="--editorial-margin-top"] {
+    margin-top: calc(var(--editorial-margin-top) * 0.5);
+  }
+
+  [style*="--editorial-margin-bottom"] {
+    margin-bottom: calc(var(--editorial-margin-bottom) * 0.5);
+  }
+
+  [style*="--editorial-margin-left"] {
+    margin-left: calc(var(--editorial-margin-left) * 0.5);
+  }
+
+  [style*="--editorial-margin-right"] {
+    margin-right: calc(var(--editorial-margin-right) * 0.5);
+  }
+
+  .editorial-product__grid .swiper-slide {
+   display: contents; 
+  }
+}
+
+@media (min-width: 1025px) {
+  [style*="--editorial-padding-top"] {
+    padding-top: calc(var(--editorial-padding-top) * 0.75);
+  }
+
+  [style*="--editorial-padding-bottom"] {
+    padding-bottom: calc(var(--editorial-padding-bottom) * 0.75);
+  }
+
+  [style*="--editorial-padding-left"] {
+    padding-left: calc(var(--editorial-padding-left) * 0.75);
+  }
+
+  [style*="--editorial-padding-right"] {
+    padding-right: calc(var(--editorial-padding-right) * 0.75);
+  }
+
+  [style*="--editorial-margin-top"] {
+    margin-top: calc(var(--editorial-margin-top) * 0.75);
+  }
+
+  [style*="--editorial-margin-bottom"] {
+    margin-bottom: calc(var(--editorial-margin-bottom) * 0.75);
+  }
+
+  [style*="--editorial-margin-left"] {
+    margin-left: calc(var(--editorial-margin-left) * 0.75);
+  }
+
+  [style*="--editorial-margin-right"] {
+    margin-right: calc(var(--editorial-margin-right) * 0.75);
+  }
+
+  .section-content-wrapper:has(.swiper):has(.editorial-header-block) {
+    overflow: visible;
+  }
+}
+
+
+@media (min-width: 1400px) {
+  [style*="--editorial-padding-top"] {
+    padding-top: var(--editorial-padding-top);
+  }
+
+  [style*="--editorial-padding-bottom"] {
+    padding-bottom: var(--editorial-padding-bottom);
+  }
+
+  [style*="--editorial-padding-left"] {
+    padding-left: var(--editorial-padding-left);
+  }
+
+  [style*="--editorial-padding-right"] {
+    padding-right: var(--editorial-padding-right);
+  }
+
+  [style*="--editorial-margin-top"] {
+    margin-top: var(--editorial-margin-top);
+  }
+
+  [style*="--editorial-margin-bottom"] {
+    margin-bottom: var(--editorial-margin-bottom);
+  }
+
+  [style*="--editorial-margin-left"] {
+    margin-left: var(--editorial-margin-left);
+  }
+
+  [style*="--editorial-margin-right"] {
+    margin-right: var(--editorial-margin-right);
+  }
+}

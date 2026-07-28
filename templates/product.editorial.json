@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "main": {
+      "type": "calvium-product-editorial",
+      "blocks": {
+        "story_material": {
+          "type": "story",
+          "settings": {
+            "eyebrow": "THE DETAILS",
+            "heading": "Built to be lived in",
+            "body": "Interior pockets sized for everyday carry, hardware that doesn't rattle, and a footprint that fits a laptop without turning the strap into a project."
+          }
+        }
+      },
+      "block_order": [
+        "story_material"
+      ],
+      "settings": {}
+    },
+    "recommendations": {
+      "type": "calvium-most-loved",
+      "settings": {
+        "heading": "MORE FROM THIS EDIT",
+        "cta_label": "",
+        "max_products": 8,
+        "show_swatches": true,
+        "show_atc": true,
+        "tone": "cream",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations"
+  ]
+}

@@ -1,0 +1,19 @@
+{%- comment -%}
+  Calvium — Wishlist card view.
+  Used ONLY by /products/{handle}?view=block_wishlist_card. Renders a single
+  cm-product-card so the JS-driven wishlist page (calvium-wishlist-page.liquid)
+  can pull each saved product's markup and inline it in the grid.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<div class="cm-wishlist-card-wrap" data-cm-wishlist-card>
+  {%- render 'cm-product-card', product: product, show_percent: true, show_swatches: true, max_swatches: 4, show_atc: true -%}
+</div>
+
+{% schema %}
+{
+  "name": "Calvium — Wishlist card",
+  "class": "shopify-section--cm-wishlist-card",
+  "tag": "div",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,181 @@
+{%- comment -%}
+  Calvium — Premium cart drawer.
+  Include from any page/section with `{% render 'cm-cart-drawer' %}`.
+  Best-of features:
+    - Free-shipping progress bar
+    - Line items with qty +/- and remove
+    - Optional add-ons (gift wrap, warranty) — configurable via metaobjects/settings
+    - Cross-sell recommendations rail (from Shopify's /recommendations/products or a curated collection)
+    - Cart note toggle
+    - Trust icons row (shipping / returns / warranty)
+    - Sticky footer with subtotal + checkout CTA
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
+
+{%- assign free_ship_threshold = settings.cm_free_shipping_threshold | default: 99900 -%}
+{%- assign cart_total_display = cart.total_price -%}
+{%- assign remaining = free_ship_threshold | minus: cart_total_display -%}
+{%- if remaining < 0 -%}{%- assign remaining = 0 -%}{%- endif -%}
+{%- assign progress = cart_total_display | times: 100 | divided_by: free_ship_threshold -%}
+{%- if progress > 100 -%}{%- assign progress = 100 -%}{%- endif -%}
+
+{%- assign rec_handle = settings.cm_cart_rec_collection | default: 'frontpage' -%}
+{%- assign rec_coll = collections[rec_handle] -%}
+
+<aside class="cm-cart" data-cm-cart aria-hidden="true" role="dialog" aria-modal="true" aria-label="Shopping cart">
+  <div class="cm-cart__overlay" data-cm-cart-overlay></div>
+  <div class="cm-cart__panel" role="document">
+
+    <header class="cm-cart__head">
+      <p class="cm-cart__title">Your Bag ({{ cart.item_count }})</p>
+      <button type="button" class="cm-icon-btn" data-cm-cart-close aria-label="Close cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+      </button>
+    </header>
+
+    {%- if cart.item_count > 0 -%}
+      <div class="cm-cart__ship">
+        {%- if remaining > 0 -%}
+          <p class="cm-cart__ship-copy">You're <strong>{{ remaining | money }}</strong> away from <strong>Free Shipping</strong> ✨</p>
+        {%- else -%}
+          <p class="cm-cart__ship-copy">🎉 You've unlocked <strong>Free Shipping</strong></p>
+        {%- endif -%}
+        <div class="cm-cart__ship-bar" aria-hidden="true">
+          <span class="cm-cart__ship-fill" style="width: {{ progress }}%;"></span>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="cm-cart__body">
+      {%- if cart.item_count > 0 -%}
+        {%- for item in cart.items -%}
+          <div class="cm-cart__line" data-cm-line data-key="{{ item.key }}">
+            <a href="{{ item.url }}" class="cm-cart__line-media" aria-label="{{ item.title | escape }}">
+              {%- if item.image -%}
+                <img src="{{ item.image | image_url: width: 220 }}" alt="{{ item.title | escape }}" width="84" height="112" loading="lazy">
+              {%- endif -%}
+            </a>
+            <div class="cm-cart__line-info">
+              <a href="{{ item.url }}" class="cm-cart__line-name">{{ item.product.title }}</a>
+              {%- unless item.product.has_only_default_variant -%}
+                <span class="cm-cart__line-variant">{{ item.variant.title }}</span>
+              {%- endunless -%}
+              <span class="cm-cart__line-price">{{ item.final_line_price | money }}</span>
+              <div class="cm-cart__line-tools">
+                <span class="cm-cart__qty" role="group" aria-label="Quantity">
+                  <button type="button" data-cm-cart-qty data-dir="-1" aria-label="Decrease">–</button>
+                  <input type="number" value="{{ item.quantity }}" min="0" aria-label="Quantity">
+                  <button type="button" data-cm-cart-qty data-dir="1" aria-label="Increase">+</button>
+                </span>
+                <button type="button" class="cm-cart__remove" data-cm-cart-remove data-key="{{ item.key }}">Remove</button>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+
+        {%- comment -%} Add-ons: gift wrap / warranty {%- endcomment -%}
+        {%- if settings.cm_addon_gift_variant_id != blank or settings.cm_addon_warranty_variant_id != blank -%}
+          <section class="cm-cart__addons" aria-labelledby="cm-addon-title">
+            <p class="cm-cart__addons-title" id="cm-addon-title">Add to your order</p>
+            {%- if settings.cm_addon_gift_variant_id != blank -%}
+              <div class="cm-cart__addon">
+                <img src="{{ 'gift-wrap.svg' | asset_url }}" alt="Gift wrap" onerror="this.style.display='none'">
+                <div class="cm-cart__addon-info">
+                  <p class="cm-cart__addon-name">Signature gift wrap</p>
+                  <p class="cm-cart__addon-desc">Hand-tied ribbon &middot; ₹149</p>
+                </div>
+                <button type="button" class="cm-cart__addon-btn" data-cm-addon-add data-variant-id="{{ settings.cm_addon_gift_variant_id }}">Add</button>
+              </div>
+            {%- endif -%}
+            {%- if settings.cm_addon_warranty_variant_id != blank -%}
+              <div class="cm-cart__addon">
+                <img src="{{ 'shield.svg' | asset_url }}" alt="Warranty" onerror="this.style.display='none'">
+                <div class="cm-cart__addon-info">
+                  <p class="cm-cart__addon-name">Extended 2-year warranty</p>
+                  <p class="cm-cart__addon-desc">Repair or replace &middot; ₹299</p>
+                </div>
+                <button type="button" class="cm-cart__addon-btn" data-cm-addon-add data-variant-id="{{ settings.cm_addon_warranty_variant_id }}">Add</button>
+              </div>
+            {%- endif -%}
+          </section>
+        {%- endif -%}
+
+        {%- comment -%} Recommendations rail {%- endcomment -%}
+        {%- if rec_coll and rec_coll.products.size > 0 -%}
+          <section class="cm-cart__recs" aria-labelledby="cm-recs-title">
+            <p class="cm-cart__recs-title" id="cm-recs-title">Pair it with</p>
+            <div class="cm-cart__recs-track">
+              {%- for p in rec_coll.products limit: 8 -%}
+                {%- assign in_cart = false -%}
+                {%- for i in cart.items -%}
+                  {%- if i.product_id == p.id -%}{%- assign in_cart = true -%}{%- endif -%}
+                {%- endfor -%}
+                {%- unless in_cart -%}
+                  {%- assign rec_variant = p.selected_or_first_available_variant -%}
+                  <a href="{{ p.url }}" class="cm-cart__rec">
+                    <div class="cm-cart__rec-media">
+                      {%- if p.featured_media -%}
+                        <img src="{{ p.featured_media | image_url: width: 400 }}" alt="{{ p.title | escape }}" width="200" height="266" loading="lazy">
+                      {%- endif -%}
+                      {%- if p.available -%}
+                        <button type="button" class="cm-cart__rec-add" data-cm-rec-add data-variant-id="{{ rec_variant.id }}">+ Add</button>
+                      {%- endif -%}
+                    </div>
+                    <span class="cm-cart__rec-name">{{ p.title | truncatewords: 4 }}</span>
+                    <span class="cm-cart__rec-price">{{ p.price | money }}</span>
+                  </a>
+                {%- endunless -%}
+              {%- endfor -%}
+            </div>
+          </section>
+        {%- endif -%}
+
+        {%- comment -%} Cart note {%- endcomment -%}
+        <div class="cm-cart__note">
+          <details>
+            <summary>+ Add a note or special instruction</summary>
+            <textarea name="note" rows="3" placeholder="Anything we should know?"></textarea>
+          </details>
+        </div>
+
+        {%- comment -%} Trust row {%- endcomment -%}
+        <div class="cm-cart__trust">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 4v2h-7"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>
+            <span>Free ship &gt; ₹999</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+            <span>15-day returns</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 3 4 6v6c0 5 4 8 8 9 4-1 8-4 8-9V6l-8-3Z"/></svg>
+            <span>Secure checkout</span>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="cm-cart__empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" width="40" height="40" aria-hidden="true"><path d="M6 6h15l-1.5 9H8L6.5 3H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/></svg>
+          <p>Your bag is empty</p>
+          <a href="{{ routes.root_url }}" class="cm-button cm-button--solid">Continue shopping</a>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+      <footer class="cm-cart__foot">
+        <div class="cm-cart__subtotal">
+          <span>Subtotal</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+        <p class="cm-cart__taxnote">Taxes &amp; shipping calculated at checkout</p>
+        <form action="{{ routes.cart_url }}" method="post">
+          <input type="hidden" name="checkout" value="1">
+          <button type="submit" name="checkout" class="cm-cart__checkout">Secure checkout · {{ cart.total_price | money }}</button>
+        </form>
+        <a href="{{ routes.cart_url }}" class="cm-cart__viewcart">View cart</a>
+      </footer>
+    {%- endif -%}
+  </div>
+</aside>

@@ -1,0 +1,77 @@
+{%- comment -%}
+  Calvium — "TRENDING NOW" 4-up tile grid with bottom-left captions.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
+
+<section
+  class="cm-section {% if section.settings.tone == 'cream' %}cm-section--cream{% elsif section.settings.tone == 'dark' %}cm-section--dark{% endif %}"
+  data-cm-reveal
+  style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;"
+>
+  <div class="cm-container">
+    <div class="cm-section__head">
+      <h2 class="cm-section__title">{{ section.settings.heading | default: 'TRENDING NOW' }}</h2>
+    </div>
+
+    <div class="cm-trend">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link | default: '#' }}" class="cm-trend__tile" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <img src="{{ block.settings.image | image_url: width: 900 }}"
+                 srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 700 }} 700w, {{ block.settings.image | image_url: width: 900 }} 900w, {{ block.settings.image | image_url: width: 1200 }} 1200w"
+                 sizes="(max-width: 900px) 50vw, 25vw"
+                 alt="{{ block.settings.caption | escape }}"
+                 width="600" height="800" loading="lazy">
+          {%- endif -%}
+          {%- if block.settings.caption != blank -%}
+            <span class="cm-trend__caption">{{ block.settings.caption }}</span>
+          {%- endif -%}
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — Trending Now",
+  "class": "shopify-section--cm-trending",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "TRENDING NOW" },
+    { "type": "select", "id": "tone", "label": "Background tone",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "cream", "label": "Cream" },
+        { "value": "dark", "label": "Dark" }
+      ], "default": "light"
+    },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 60 }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Trend tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image (3:4)" },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "Autumn essentials" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Calvium — Trending Now",
+      "blocks": [
+        { "type": "tile", "settings": { "caption": "Autumn essentials" } },
+        { "type": "tile", "settings": { "caption": "Travel edit" } },
+        { "type": "tile", "settings": { "caption": "Under ₹2000" } },
+        { "type": "tile", "settings": { "caption": "New crossbodies" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

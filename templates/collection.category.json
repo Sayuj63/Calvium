@@ -1,0 +1,78 @@
+{
+  "sections": {
+    "category_grid": {
+      "type": "calvium-collection-category",
+      "blocks": {
+        "chip_all": {
+          "type": "chip",
+          "settings": {
+            "label": "All",
+            "link": "/collections/all"
+          }
+        },
+        "chip_tote": {
+          "type": "chip",
+          "settings": {
+            "label": "Tote bags",
+            "link": "/collections/tote-bags"
+          }
+        },
+        "chip_cross": {
+          "type": "chip",
+          "settings": {
+            "label": "Crossbody",
+            "link": "/collections/crossbody"
+          }
+        },
+        "chip_shoulder": {
+          "type": "chip",
+          "settings": {
+            "label": "Shoulder",
+            "link": "/collections/shoulder"
+          }
+        },
+        "chip_backpacks": {
+          "type": "chip",
+          "settings": {
+            "label": "Backpacks",
+            "link": "/collections/backpacks"
+          }
+        },
+        "chip_wallets": {
+          "type": "chip",
+          "settings": {
+            "label": "Wallets",
+            "link": "/collections/wallets"
+          }
+        },
+        "chip_weekenders": {
+          "type": "chip",
+          "settings": {
+            "label": "Weekenders",
+            "link": "/collections/weekenders"
+          }
+        }
+      },
+      "block_order": [
+        "chip_all",
+        "chip_tote",
+        "chip_cross",
+        "chip_shoulder",
+        "chip_backpacks",
+        "chip_wallets",
+        "chip_weekenders"
+      ],
+      "settings": {
+        "products_per_page": 32,
+        "show_breadcrumb": true,
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true
+      }
+    }
+  },
+  "order": [
+    "category_grid"
+  ]
+}

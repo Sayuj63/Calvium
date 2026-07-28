@@ -1,0 +1,112 @@
+{%- comment -%}
+  Calvium — USP / Trust strip.
+  4-column icon+text row of trust signals. Front-loads shipping / returns / COD /
+  security so new visitors see reasons to trust checkout immediately.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign tone_class = 'cm-usp--light'
+  case section.settings.tone
+    when 'cream' then assign tone_class = 'cm-usp--cream'
+    when 'dark'  then assign tone_class = 'cm-usp--dark'
+    when 'ink'   then assign tone_class = 'cm-usp--ink'
+  endcase
+-%}
+
+<section
+  class="cm-usp {{ tone_class }} {% if section.settings.bordered %}cm-usp--bordered{% endif %}"
+  style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;"
+  aria-label="Store benefits"
+>
+  <div class="cm-container">
+    {%- if section.blocks.size > 0 -%}
+      <ul class="cm-usp__row" role="list">
+        {%- for block in section.blocks -%}
+          <li class="cm-usp__item" {{ block.shopify_attributes }}>
+            <span class="cm-usp__icon" aria-hidden="true">
+              {%- case block.settings.icon -%}
+                {%- when 'shipping' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>
+                {%- when 'returns' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                {%- when 'cod' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="1"/><circle cx="12" cy="12" r="3"/><path d="M6 9v.01M18 15v.01"/></svg>
+                {%- when 'secure' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+                {%- when 'authentic' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+                {%- when 'support' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 1 16 0v4a2 2 0 0 1-2 2h-2v-6h4M4 12v4a2 2 0 0 0 2 2h2v-6H4"/></svg>
+                {%- when 'craft' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6l-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/></svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+              {%- endcase -%}
+            </span>
+            <div class="cm-usp__text">
+              <span class="cm-usp__title">{{ block.settings.title | default: 'Benefit' }}</span>
+              {%- if block.settings.subtitle != blank -%}
+                <span class="cm-usp__sub">{{ block.settings.subtitle }}</span>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — USP strip",
+  "class": "shopify-section--cm-usp",
+  "tag": "section",
+  "settings": [
+    { "type": "select", "id": "tone", "label": "Background",
+      "options": [
+        { "value": "light", "label": "White" },
+        { "value": "cream", "label": "Cream" },
+        { "value": "ink",   "label": "Off-white ink" },
+        { "value": "dark",  "label": "Dark" }
+      ], "default": "cream"
+    },
+    { "type": "checkbox", "id": "bordered", "label": "Add hairline borders", "default": true },
+    { "type": "range", "id": "padding_top",    "label": "Padding top",    "min": 8, "max": 80, "step": 4, "default": 20 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 8, "max": 80, "step": 4, "default": 20 }
+  ],
+  "blocks": [
+    {
+      "type": "usp",
+      "name": "USP",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon",
+          "options": [
+            { "value": "shipping",  "label": "Shipping truck" },
+            { "value": "returns",   "label": "Easy returns" },
+            { "value": "cod",       "label": "Cash on Delivery" },
+            { "value": "secure",    "label": "Secure payments" },
+            { "value": "authentic", "label": "100% Authentic" },
+            { "value": "support",   "label": "24×7 Support" },
+            { "value": "craft",     "label": "Handcrafted" }
+          ], "default": "shipping"
+        },
+        { "type": "text", "id": "title",    "label": "Title",    "default": "Free Shipping" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "On orders above ₹999" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Calvium — USP strip",
+      "blocks": [
+        { "type": "usp", "settings": { "icon": "shipping",  "title": "Free Shipping",     "subtitle": "On orders above ₹999" } },
+        { "type": "usp", "settings": { "icon": "returns",   "title": "Easy Returns",      "subtitle": "7-day hassle-free" } },
+        { "type": "usp", "settings": { "icon": "cod",       "title": "Cash on Delivery",  "subtitle": "Available across India" } },
+        { "type": "usp", "settings": { "icon": "secure",    "title": "Secure Checkout",   "subtitle": "100% safe payments" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

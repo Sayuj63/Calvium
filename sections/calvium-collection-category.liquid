@@ -1,0 +1,270 @@
+{%- comment -%}
+  Calvium — Category collection page.
+  Layout: LEFT sidebar (facet filter panel) + RIGHT product grid.
+  Mobile: sidebar collapses into a slide-in drawer.
+  Facet list styled after the miraggio-clone reference (details + checkbox rows
+  with count in parentheses).
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
+
+{%- paginate collection.products by section.settings.products_per_page -%}
+
+{%- if section.blocks.size > 0 and section.settings.show_chips -%}
+  <div class="cm-chips" data-cm-chips>
+    <div class="cm-container">
+      <div class="cm-chips__row">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'chip' -%}
+            {%- assign chip_link = block.settings.link | default: '#' -%}
+            {%- assign is_active = false -%}
+            {%- assign path_only = request.path | split: '?' | first -%}
+            {%- if chip_link == path_only or chip_link == request.path -%}{%- assign is_active = true -%}{%- endif -%}
+            <a href="{{ chip_link }}" class="cm-chip {% if is_active %}is-active{% endif %}" {{ block.shopify_attributes }}>
+              <span>{{ block.settings.label | default: 'Category' }}</span>
+              {%- if block.settings.count > 0 -%}
+                <span class="cm-chip__count">{{ block.settings.count }}</span>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+<section class="cm-section cm-collcat" style="padding-block: 24px 60px;" data-cm-reveal>
+  <div class="cm-container">
+
+    {%- comment -%} ---------- HEAD: breadcrumb + title + description ---------- {%- endcomment -%}
+    <div class="cm-collcat__hero">
+      {%- if section.settings.show_breadcrumb -%}
+        <p class="cm-collcat__crumb">
+          <a href="{{ routes.root_url }}">Home</a>
+          <span aria-hidden="true">/</span>
+          <span>{{ collection.title }}</span>
+        </p>
+      {%- endif -%}
+      <h1 class="cm-collcat__title">{{ collection.title | default: 'Products' }}</h1>
+      {%- if collection.description != blank and section.settings.show_description -%}
+        <p class="cm-collcat__desc">{{ collection.description }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="cm-collcat__layout">
+      {%- comment -%} ---------- SIDEBAR: facet filter panel ---------- {%- endcomment -%}
+      <aside class="cm-facetsbar" aria-label="Filters" data-cm-facetsbar>
+        <div class="cm-facetsbar__head">
+          <p class="cm-facetsbar__title">Filters</p>
+          {%- assign has_active = false -%}
+          {%- for f in collection.filters -%}
+            {%- if f.active_values.size > 0 or f.min_value.value or f.max_value.value -%}{%- assign has_active = true -%}{%- endif -%}
+          {%- endfor -%}
+          {%- if has_active -%}
+            <a href="{{ collection.url }}" class="cm-facetsbar__clear">Clear all</a>
+          {%- endif -%}
+          <button type="button" class="cm-facetsbar__close" data-cm-facetsbar-close aria-label="Close filters">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+
+        <form method="get" action="{{ collection.url }}" data-cm-facet-form class="cm-facetsbar__form">
+          <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by }}">
+
+          {%- for filter in collection.filters -%}
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <details class="cm-facetgroup" {% if filter.min_value.value or filter.max_value.value %}open{% endif %}>
+                  <summary>
+                    <span>{{ filter.label }}</span>
+                    {%- if filter.min_value.value or filter.max_value.value -%}<span class="cm-facetgroup__badge">•</span>{%- endif -%}
+                  </summary>
+                  <div class="cm-facetgroup__body">
+                    <div class="cm-facetgroup__price">
+                      <label>
+                        <span class="cm-facetgroup__lbl">Min</span>
+                        <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency }}">
+                      </label>
+                      <label>
+                        <span class="cm-facetgroup__lbl">Max</span>
+                        <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="{{ filter.range_max | money_without_currency }}" min="0" max="{{ filter.range_max | money_without_currency }}">
+                      </label>
+                      <button type="submit" class="cm-facetgroup__apply">Apply</button>
+                    </div>
+                  </div>
+                </details>
+
+              {%- else -%}
+                {%- if filter.values.size > 0 -%}
+                  <details class="cm-facetgroup" {% if filter.active_values.size > 0 %}open{% endif %}>
+                    <summary>
+                      <span>{{ filter.label }}</span>
+                      {%- if filter.active_values.size > 0 -%}
+                        <span class="cm-facetgroup__badge">{{ filter.active_values.size }}</span>
+                      {%- endif -%}
+                    </summary>
+                    <div class="cm-facetgroup__body">
+                      <ul class="cm-facetgroup__list" role="list">
+                        {%- for value in filter.values -%}
+                          <li>
+                            <label class="cm-facetopt {% if value.count == 0 and value.active == false %}is-disabled{% endif %}">
+                              <input
+                                type="checkbox"
+                                name="{{ value.param_name }}"
+                                value="{{ value.value }}"
+                                {% if value.active %}checked{% endif %}
+                                {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                              >
+                              <span class="cm-facetopt__label">{{ value.label }}</span>
+                              <span class="cm-facetopt__count">({{ value.count }})</span>
+                            </label>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  </details>
+                {%- endif -%}
+            {%- endcase -%}
+          {%- endfor -%}
+
+          {%- if collection.filters.size == 0 -%}
+            <p class="cm-facetsbar__empty">No filters configured for this collection.<br><span>Enable filters in Shopify Admin → Search &amp; discovery.</span></p>
+          {%- endif -%}
+
+          <div class="cm-facetsbar__foot">
+            <button type="submit" class="cm-facetsbar__submit">Show {{ collection.products_count }} products</button>
+          </div>
+        </form>
+      </aside>
+
+      {%- comment -%} ---------- MAIN: sort bar + grid ---------- {%- endcomment -%}
+      <div class="cm-collcat__main">
+        <div class="cm-collcat__sortbar">
+          <button type="button" class="cm-collcat__mobilefilter" data-cm-facetsbar-open aria-controls="cm-facetsbar" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+            <span>Filter</span>
+            {%- assign active_count = 0 -%}
+            {%- for f in collection.filters -%}{%- assign active_count = active_count | plus: f.active_values.size -%}{%- endfor -%}
+            {%- if active_count > 0 -%}
+              <span class="cm-collcat__mobilefilter-badge">{{ active_count }}</span>
+            {%- endif -%}
+          </button>
+
+          <span class="cm-collcat__count">{{ collection.products_count }} products</span>
+
+          <label class="cm-collcat__sortwrap">
+            <span class="visually-hidden">Sort by</span>
+            <select class="cm-collcat__sort" data-cm-sort>
+              {%- for opt in collection.sort_options -%}
+                <option value="{{ opt.value }}" {% if opt.value == collection.sort_by %}selected{% endif %}>{{ opt.name }}</option>
+              {%- endfor -%}
+            </select>
+          </label>
+        </div>
+
+        <div class="cm-grid cm-grid--dense cm-collcat__grid">
+          {%- for p in collection.products -%}
+            {%- render 'cm-product-card',
+                 product: p,
+                 show_percent: section.settings.show_percent,
+                 show_swatches: section.settings.show_swatches,
+                 max_swatches: section.settings.max_swatches,
+                 show_atc: section.settings.show_atc -%}
+          {%- else -%}
+            <div class="cm-collcat__empty">
+              <p class="cm-collcat__empty-title">No products match those filters</p>
+              <a href="{{ collection.url }}" class="cm-collcat__reset">Reset filters</a>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="cm-paginate" aria-label="Pagination">
+            {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" aria-label="Previous">‹</a>{%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}
+                <span class="{% if part.title == paginate.current_page %}is-active{% endif %}">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}<a href="{{ paginate.next.url }}" aria-label="Next">›</a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{%- endpaginate -%}
+
+<script>
+  (function () {
+    var root = document.querySelector('.cm-collcat');
+    if (!root) return;
+
+    var sidebar = root.querySelector('[data-cm-facetsbar]');
+    var openBtns = root.querySelectorAll('[data-cm-facetsbar-open]');
+    var closeBtn = sidebar && sidebar.querySelector('[data-cm-facetsbar-close]');
+
+    function setOpen(open) {
+      if (!sidebar) return;
+      sidebar.classList.toggle('is-open', open);
+      openBtns.forEach(function (b) { b.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+      document.documentElement.classList.toggle('cm-facetsbar-open', open);
+    }
+    openBtns.forEach(function (btn) { btn.addEventListener('click', function () { setOpen(true); }); });
+    if (closeBtn) closeBtn.addEventListener('click', function () { setOpen(false); });
+    if (sidebar) sidebar.addEventListener('click', function (e) { if (e.target === sidebar) setOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+
+    // Auto-submit form on any checkbox change (progressive enhancement)
+    var form = root.querySelector('[data-cm-facet-form]');
+    if (form) {
+      form.addEventListener('change', function (e) {
+        if (e.target.matches('input[type="checkbox"]')) {
+          if (typeof form.requestSubmit === 'function') form.requestSubmit();
+          else form.submit();
+        }
+      });
+    }
+
+    // Sort dropdown → reload with sort_by param
+    var sortEl = root.querySelector('[data-cm-sort]');
+    if (sortEl) {
+      sortEl.addEventListener('change', function (e) {
+        var url = new URL(window.location.href);
+        url.searchParams.set('sort_by', e.target.value);
+        window.location.href = url.toString();
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Calvium — Category",
+  "class": "shopify-section--cm-collection-cat",
+  "tag": "div",
+  "settings": [
+    { "type": "range",    "id": "products_per_page",  "label": "Products per page",     "min": 12, "max": 60, "step": 4, "default": 32 },
+    { "type": "checkbox", "id": "show_chips",         "label": "Show category chip strip", "default": true },
+    { "type": "checkbox", "id": "show_breadcrumb",    "label": "Show breadcrumb",      "default": true },
+    { "type": "checkbox", "id": "show_description",   "label": "Show collection description", "default": true },
+    { "type": "checkbox", "id": "show_percent",       "label": "Show % OFF",           "default": true },
+    { "type": "checkbox", "id": "show_swatches",      "label": "Show colour swatches", "default": true },
+    { "type": "range",    "id": "max_swatches",       "label": "Max swatches",         "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_atc",           "label": "Show hover Add-to-Cart", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "chip",
+      "name": "Category chip",
+      "settings": [
+        { "type": "text",   "id": "label", "label": "Label", "default": "All" },
+        { "type": "url",    "id": "link",  "label": "Link" },
+        { "type": "number", "id": "count", "label": "Product count (optional)" }
+      ]
+    }
+  ]
+}
+{% endschema %}

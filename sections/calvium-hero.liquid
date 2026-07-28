@@ -1,0 +1,154 @@
+{%- comment -%}
+  Calvium — Editorial Hero.
+  Full-bleed image with overlay text + dual CTAs. Sales-focused, mobile-optimised.
+  Optional inline countdown / announcement chip for urgency.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign tone_class = ''
+  case section.settings.tone
+    when 'light'
+      assign tone_class = 'cm-hero--light-text'
+    when 'dark'
+      assign tone_class = 'cm-hero--dark-text'
+  endcase
+
+  assign position_class = 'cm-hero--pos-' | append: section.settings.text_position
+  assign align_class    = 'cm-hero--align-' | append: section.settings.text_align
+
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+-%}
+
+<section
+  class="cm-hero {{ tone_class }} {{ position_class }} {{ align_class }}"
+  data-cm-reveal
+  style="
+    --cm-hero-h-d: {{ section.settings.height_desktop }}svh;
+    --cm-hero-h-m: {{ section.settings.height_mobile }}svh;
+    --cm-hero-overlay: {{ overlay_alpha }};
+  "
+>
+  <picture class="cm-hero__media">
+    {%- if section.settings.image_mobile != blank -%}
+      <source
+        media="(max-width: 749px)"
+        srcset="{{ section.settings.image_mobile | image_url: width: 900 }} 900w, {{ section.settings.image_mobile | image_url: width: 1200 }} 1200w"
+        sizes="100vw"
+      >
+    {%- endif -%}
+    {%- if section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1800 }}"
+        srcset="{{ section.settings.image | image_url: width: 900 }} 900w, {{ section.settings.image | image_url: width: 1400 }} 1400w, {{ section.settings.image | image_url: width: 1800 }} 1800w, {{ section.settings.image | image_url: width: 2400 }} 2400w"
+        sizes="100vw"
+        alt="{{ section.settings.heading | escape }}"
+        width="1800"
+        height="1000"
+        fetchpriority="high"
+        loading="eager"
+      >
+    {%- else -%}
+      <div class="cm-hero__placeholder" aria-hidden="true"></div>
+    {%- endif -%}
+  </picture>
+
+  <div class="cm-hero__overlay" aria-hidden="true"></div>
+
+  <div class="cm-hero__body">
+    <div class="cm-container cm-hero__container">
+      <div class="cm-hero__inner">
+        {%- if section.settings.chip_text != blank -%}
+          <span class="cm-hero__chip">{{ section.settings.chip_text }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="cm-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h1 class="cm-hero__heading">{{ section.settings.heading }}</h1>
+        {%- endif -%}
+
+        {%- if section.settings.subheading != blank -%}
+          <p class="cm-hero__sub">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.cta_label != blank or section.settings.cta2_label != blank -%}
+          <div class="cm-hero__ctas">
+            {%- if section.settings.cta_label != blank -%}
+              <a
+                href="{{ section.settings.cta_link | default: '/collections/all' }}"
+                class="cm-hero__btn cm-hero__btn--primary"
+              >
+                {{ section.settings.cta_label }}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.cta2_label != blank -%}
+              <a
+                href="{{ section.settings.cta2_link | default: '#' }}"
+                class="cm-hero__btn cm-hero__btn--secondary"
+              >
+                {{ section.settings.cta2_label }}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.microcopy != blank -%}
+          <p class="cm-hero__micro">{{ section.settings.microcopy }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — Hero",
+  "class": "shopify-section--cm-hero",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "image", "label": "Desktop image", "info": "Recommended 2400×1200" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (optional)", "info": "Recommended 1200×1500 portrait" },
+    { "type": "range", "id": "height_desktop", "label": "Desktop height (svh)", "min": 50, "max": 100, "step": 5, "default": 85 },
+    { "type": "range", "id": "height_mobile", "label": "Mobile height (svh)", "min": 50, "max": 100, "step": 5, "default": 80 },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity (%)", "min": 0, "max": 80, "step": 5, "default": 25 },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "chip_text", "label": "Announcement chip (optional)", "default": "New Season 2026 · Live Now" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "CALVIUM" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Timeless style, made for modern lives." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Handcrafted essentials in premium fabrics — designed to layer, made to last." },
+    { "type": "text", "id": "microcopy", "label": "Microcopy below CTAs (optional)", "default": "Free shipping on orders above ₹999 · 7-day easy returns" },
+    { "type": "select", "id": "text_position", "label": "Text position",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right" }
+      ], "default": "left"
+    },
+    { "type": "select", "id": "text_align", "label": "Text alignment",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ], "default": "left"
+    },
+    { "type": "select", "id": "tone", "label": "Text tone",
+      "options": [
+        { "value": "light", "label": "Light text (for dark image)" },
+        { "value": "dark",  "label": "Dark text (for light image)" }
+      ], "default": "light"
+    },
+    { "type": "header", "content": "Primary CTA" },
+    { "type": "text", "id": "cta_label", "label": "Label", "default": "Shop the Edit" },
+    { "type": "url",  "id": "cta_link",  "label": "Link" },
+    { "type": "header", "content": "Secondary CTA (optional)" },
+    { "type": "text", "id": "cta2_label", "label": "Label", "default": "New Arrivals" },
+    { "type": "url",  "id": "cta2_link",  "label": "Link" }
+  ],
+  "presets": [
+    { "name": "Calvium — Hero" }
+  ]
+}
+{% endschema %}

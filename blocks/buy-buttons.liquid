@@ -1,0 +1,419 @@
+{% liquid
+  assign block_settings = block.settings
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+
+  assign variant = product.selected_or_first_available_variant
+  assign inventory_quantity = variant.inventory_quantity
+  assign inventory_policy = variant.inventory_policy
+
+  if variant.inventory_management == 'shopify'
+    assign inventory_managed = true
+  endif
+
+  if variant.quantity_rule.min > variant.inventory_quantity and inventory_managed and inventory_policy == 'deny'
+    assign quantity_rule_soldout = true
+  endif
+
+  if product.selected_or_first_available_variant.inventory_quantity <= 0 and product.selected_or_first_available_variant.inventory_policy == 'continue'
+    assign check_pre_order = true
+  endif
+
+  if inventory_managed
+    if inventory_quantity <= 0 and inventory_policy == 'deny' or quantity_rule_soldout
+      assign can_add_to_cart = false
+      assign add_to_cart_text = 'products.product.sold_out' | t
+    elsif check_pre_order
+      assign can_add_to_cart = true
+      assign add_to_cart_text = 'products.product.pre_order' | t
+    else
+      assign can_add_to_cart = true
+      assign add_to_cart_text = 'products.product.add_to_cart' | t
+    endif
+  else
+    if product.selected_or_first_available_variant != null
+      assign can_add_to_cart = true
+      assign add_to_cart_text = 'products.product.add_to_cart' | t
+    elsif check_pre_order
+      assign can_add_to_cart = true
+      assign add_to_cart_text = 'products.product.pre_order' | t
+    else
+      assign can_add_to_cart = false
+      assign add_to_cart_text = 'products.product.unavailable' | t
+    endif
+  endif
+%}
+
+<span
+  class="buy-buttons-block buy-buttons-block--{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  {%- if product != blank -%}
+    {%- liquid
+      assign product_form_id = 'product-form-' | append: section.id
+      assign gift_card_recipient_feature_active = false
+      if block_settings.gift_card_form and product.gift_card?
+        assign gift_card_recipient_feature_active = true
+      endif
+    -%}
+    <product-form-component
+      class="product-form"
+      data-section-id="{{ section.id }}"
+      data-product-id="{{ product.id }}"
+      data-product-url="{{ product.url }}"
+      data-hide-errors="{{ gift_card_recipient_feature_active }}"
+      data-quantity-default="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
+    >
+      <div class="product-form__error-message-wrapper" role="alert" hidden>
+        <span class="svg-wrapper">
+          {{- 'icon-error.svg' | inline_asset_content -}}
+        </span>
+        <span class="product-form__error-message"></span>
+      </div>
+      <div
+        class="visually-hidden"
+        aria-live="assertive"
+        role="status"
+        aria-atomic="true"
+        ref="liveRegion"
+      ></div>
+      {%- form 'product', 
+        product, 
+        id: product_form_id, 
+        class: 'form', 
+        novalidate: 'novalidate', 
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          ref="variantId"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          {% unless can_add_to_cart %}
+            disabled
+          {% endunless %}
+          class="product-variant-id"
+        >
+        {%- if gift_card_recipient_feature_active -%}
+          {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
+        {%- endif -%}
+        <div
+          class="product-form__buttons spacing-style{% if block_settings.stacking %} product-form__buttons--stacked{% endif %}"
+          style="
+            {% render 'spacing-style', settings: block_settings %}
+            --gap: {{ block_settings.gap }}px;
+          "
+        >
+          {% content_for 'block',
+            type: 'quantity',
+            id: 'quantity'
+          %}
+          {% content_for 'block',
+            type: 'add-to-cart',
+            id: 'add-to-cart',
+            can_add_to_cart: can_add_to_cart,
+            add_to_cart_text: add_to_cart_text
+          %}
+          {%- unless gift_card_recipient_feature_active -%}
+            <span
+              class="product-form-text__error hidden"
+              ref="addToCartTextError"
+            >
+              <span class="svg-wrapper product-form-icon--error">
+                {{- 'icon-error.svg' | inline_asset_content -}}
+              </span>
+            </span>
+          {%- endunless -%}
+          {% content_for 'block',
+            type: 'accelerated-checkout',
+            id: 'accelerated-checkout',
+            can_add_to_cart: can_add_to_cart,
+            form_obj: form
+          %}
+          {% comment %} Calvium: BUY NOW button (Flipkart-style, next to ATC) {% endcomment %}
+          <button
+            type="button"
+            class="product-form__buy-now button button--full-width button-buy-now"
+            data-calvium-buy-now
+            data-form-id="{{ product_form_id }}"
+            {% unless can_add_to_cart %}disabled{% endunless %}
+            aria-label="Buy it now"
+          >
+            <span>BUY NOW</span>
+          </button>
+        </div>
+      {%- endform -%}
+    </product-form-component>
+
+    {% comment %} Calvium: Trust badges strip (Amazon/Flipkart-style) {% endcomment %}
+    <div class="pdp-trust-badges" role="list">
+      <div class="pdp-trust-badge" role="listitem">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">🚚</span>
+        <span class="pdp-trust-badge__text">Free Delivery<small>Orders above ₹999</small></span>
+      </div>
+      <div class="pdp-trust-badge" role="listitem">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">💵</span>
+        <span class="pdp-trust-badge__text">Cash on Delivery<small>Available</small></span>
+      </div>
+      <div class="pdp-trust-badge" role="listitem">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">↩</span>
+        <span class="pdp-trust-badge__text">Easy Returns<small>7 days</small></span>
+      </div>
+      <div class="pdp-trust-badge" role="listitem">
+        <span class="pdp-trust-badge__icon" aria-hidden="true">🔒</span>
+        <span class="pdp-trust-badge__text">Secure Checkout<small>100% safe</small></span>
+      </div>
+    </div>
+
+    {% comment %} Calvium: Product highlights bullets {% endcomment %}
+    <ul class="pdp-highlights" aria-label="Product highlights">
+      {%- if product.type != blank -%}<li><strong>Type:</strong> {{ product.type }}</li>{%- endif -%}
+      {%- if product.vendor != blank and product.vendor != shop.name -%}<li><strong>Brand:</strong> {{ product.vendor }}</li>{%- endif -%}
+      {%- if product.metafields.custom.fabric -%}<li><strong>Fabric:</strong> {{ product.metafields.custom.fabric }}</li>{%- endif -%}
+      {%- if product.metafields.custom.fit -%}<li><strong>Fit:</strong> {{ product.metafields.custom.fit }}</li>{%- endif -%}
+      {%- if product.metafields.custom.care -%}<li><strong>Care:</strong> {{ product.metafields.custom.care }}</li>{%- endif -%}
+      <li><strong>Origin:</strong> India</li>
+      <li>Hand-picked quality. Timeless design.</li>
+    </ul>
+
+    {% comment %} Calvium: Delivery estimate hint {% endcomment %}
+    <div class="pdp-delivery-hint">
+      <span aria-hidden="true">📍</span>
+      <span>Delivery estimate: <strong>3–5 business days</strong> across India</span>
+    </div>
+
+    {% comment %} Calvium: Sticky bottom ATC bar {% endcomment %}
+    <div class="pdp-sticky-atc" id="pdpStickyAtc-{{ section.id }}" aria-hidden="true">
+      <div class="pdp-sticky-atc__inner page-width">
+        <div class="pdp-sticky-atc__product">
+          {%- if product.featured_media -%}
+            <img src="{{ product.featured_media | image_url: width: 120 }}" alt="" width="48" height="48" loading="lazy">
+          {%- endif -%}
+          <div class="pdp-sticky-atc__meta">
+            <span class="pdp-sticky-atc__title">{{ product.title | truncate: 50 }}</span>
+            <span class="pdp-sticky-atc__price">
+              {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+                <s>{{ product.selected_or_first_available_variant.compare_at_price | money }}</s>
+              {%- endif -%}
+              <strong>{{ product.selected_or_first_available_variant.price | money }}</strong>
+            </span>
+          </div>
+        </div>
+        <div class="pdp-sticky-atc__actions">
+          <button type="button" class="pdp-sticky-atc__btn pdp-sticky-atc__btn--cart" data-calvium-sticky-cart>ADD TO CART</button>
+          <button type="button" class="pdp-sticky-atc__btn pdp-sticky-atc__btn--buy" data-calvium-sticky-buy>BUY NOW</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        var buyBtn = document.querySelector('[data-calvium-buy-now][data-form-id="{{ product_form_id }}"]');
+        var form = document.getElementById('{{ product_form_id }}');
+        function buyNow() {
+          if (!form || !buyBtn || buyBtn.disabled) return;
+          buyBtn.classList.add('is-loading');
+          var fd = new FormData(form);
+          fetch('/cart/add.js', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.json().then(function(j){ return { ok: r.ok, body: j }; }); })
+            .then(function(res) {
+              if (!res.ok) { throw new Error(res.body && res.body.description ? res.body.description : 'Add to cart failed'); }
+              window.location.href = '/checkout';
+            })
+            .catch(function(err) {
+              buyBtn.classList.remove('is-loading');
+              alert(err.message || 'Unable to proceed. Please try again.');
+            });
+        }
+        if (buyBtn) buyBtn.addEventListener('click', function(e) { e.preventDefault(); buyNow(); });
+
+        var stickyBar = document.getElementById('pdpStickyAtc-{{ section.id }}');
+        var mainSubmit = document.querySelector('[ref="addToCartButton"], .add-to-cart-button__submit, .add-to-cart-button button, .add-to-cart-button-inner button[type="submit"]');
+        if (!mainSubmit) mainSubmit = form && form.querySelector('button[type="submit"]');
+        var stickyCartBtn = stickyBar && stickyBar.querySelector('[data-calvium-sticky-cart]');
+        var stickyBuyBtn = stickyBar && stickyBar.querySelector('[data-calvium-sticky-buy]');
+
+        if (stickyBar && mainSubmit && 'IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                stickyBar.classList.remove('is-visible');
+              } else {
+                stickyBar.classList.add('is-visible');
+              }
+            });
+          }, { threshold: 0.1 });
+          io.observe(mainSubmit);
+        }
+        if (stickyCartBtn && mainSubmit) stickyCartBtn.addEventListener('click', function() { mainSubmit.click(); });
+        if (stickyBuyBtn) stickyBuyBtn.addEventListener('click', function() { buyNow(); });
+      })();
+    </script>
+  {%- else -%}
+    <div class="product-form__buttons spacing-style{% if block_settings.stacking %} product-form__buttons--stacked{% endif %}"
+      style="
+        {% render 'spacing-style', settings: block_settings %}
+        --gap: {{ block_settings.gap }}px;
+      "
+    >
+      <button
+        type="submit"
+        name="add"
+        class="button"
+        disabled
+      >
+        {{ 'products.product.sold_out' | t }}
+      </button>
+    </div>
+  {%- endif -%}
+</span>
+
+{%- if block_settings.show_pickup_availability -%}
+  <link rel="stylesheet" href="{{ 'component-pickup-availability.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'component-pickup-availability.css' | asset_url | stylesheet_tag }}</noscript>
+
+  {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+    | where: 'pick_up_enabled', true
+  -%}
+
+  <pickup-availability
+    class="product__pickup-availabilities block quick-add-hidden no-js-hidden"
+    {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+      available
+    {% endif %}
+    data-root-url="{{ routes.root_url }}"
+    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+    data-has-only-default-variant="{{ product.has_only_default_variant }}"
+    data-product-page-color-scheme="color-{{ section.settings.color_scheme }}"
+  >
+    <template>
+      <pickup-availability-preview class="pickup-availability-preview">
+        <span class="svg-wrapper">
+          {{- 'icon-unavailable.svg' | inline_asset_content -}}
+        </span>
+        <div class="pickup-availability-info">
+          <p class="caption-large">{{ 'products.product.pickup_availability.unavailable' | t }}</p>
+          <button class="pickup-availability-button link link--text underlined-link">
+            {{ 'products.product.pickup_availability.refresh' | t }}
+          </button>
+        </div>
+      </pickup-availability-preview>
+    </template>
+  </pickup-availability>
+
+  <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.product_buy_buttons",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.resource_reference_product"
+    },
+    {
+      "type": "checkbox",
+      "id": "stacking",
+      "label": "t:settings.always_stack_buttons",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pickup_availability",
+      "label": "t:settings.show_pickup_availability",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_card_form",
+      "label": "t:settings.gift_card_form",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "t:content.gift_card_form_description"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.product_buy_buttons",
+      "category": "t:categories.product",
+      "blocks": {
+        "quantity": {
+          "type": "quantity",
+          "static": true
+        },
+        "add-to-cart": {
+          "type": "add-to-cart",
+          "static": true,
+          "settings": {
+            "style_class": "button-secondary"
+          }
+        },
+        "accelerated-checkout": {
+          "type": "accelerated-checkout",
+          "static": true
+        }
+      }
+    }
+  ]
+}
+{% endschema %}

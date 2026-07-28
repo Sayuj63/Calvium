@@ -1,0 +1,66 @@
+/* ============================================================
+   Calvium — swatch box refinements.
+   Non-destructive overrides for the existing product-swatch snippet.
+   Loaded from layout/theme.liquid.
+   ============================================================ */
+
+/* Product card swatches — make them smaller and rectangular
+   (matches Miraggio's compact thumbnail feel). */
+.card__swatch,
+.card-product .card__swatch,
+[id^="product-swatch-"] {
+  --swatch-input--size: 2.4rem;
+  --swatch--size: 2.4rem;
+}
+
+.card__swatch .swatch-list,
+[id^="product-swatch-"] .swatch-list {
+  --gap: 0.5rem;
+  gap: 0.5rem;
+  row-gap: 0.5rem;
+}
+
+.card__swatch .swatch-item,
+[id^="product-swatch-"] .swatch-item {
+  padding: 0.15rem;
+  box-shadow: none;
+  border-width: 1px;
+  border-radius: 2px;
+}
+
+.card__swatch .swatch,
+[id^="product-swatch-"] .swatch {
+  --swatch--size: 2.4rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 2px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* When the swatch uses a variant image (rectangular thumbnail feel),
+   keep it a tidy square rather than a tall pill. */
+.card__swatch .swatch-item:has(.swatch:not(.swatch--unavailable):not([style*="background-color"])),
+[id^="product-swatch-"] .swatch-item:has(.swatch:not(.swatch--unavailable):not([style*="background-color"])) {
+  border-radius: 2px;
+}
+
+.card__swatch .item-swatch-more .number-showmore,
+[id^="product-swatch-"] .item-swatch-more .number-showmore {
+  font-size: 1.1rem;
+  color: rgba(10, 10, 10, 0.6);
+  padding: 0 0.5rem;
+  min-height: 2.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Tooltip stays as-is but a little tighter */
+.card__swatch .swatch-item .tooltip,
+[id^="product-swatch-"] .swatch-item .tooltip {
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  min-width: unset;
+}

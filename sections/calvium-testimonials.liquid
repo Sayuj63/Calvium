@@ -1,0 +1,176 @@
+{%- comment -%}
+  Calvium — Testimonials / Reviews.
+  Grid of review cards with star rating, quote, reviewer, location + optional
+  product tag. Autoplay carousel on mobile via horizontal snap-scroll.
+  Replaces the OLD generic Swytch "section" testimonials layout.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="cm-section cm-testimonials {% if section.settings.tone == 'cream' %}cm-section--cream{% elsif section.settings.tone == 'dark' %}cm-section--dark{% endif %}"
+  data-cm-reveal
+  style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;"
+>
+  <div class="cm-container">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <div class="cm-testimonials__head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="cm-testimonials__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="cm-testimonials__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.summary != blank -%}
+          <div class="cm-testimonials__summary">
+            <span class="cm-testimonials__stars" aria-hidden="true">★★★★★</span>
+            <span>{{ section.settings.summary }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="cm-testimonials__grid">
+        {%- for block in section.blocks -%}
+          <article class="cm-testimonial" {{ block.shopify_attributes }}>
+            <div class="cm-testimonial__stars" aria-label="Rated {{ block.settings.rating }} out of 5">
+              {%- assign r = block.settings.rating | plus: 0 -%}
+              {%- for i in (1..5) -%}
+                {%- if i <= r -%}
+                  <span class="cm-testimonial__star is-on" aria-hidden="true">★</span>
+                {%- else -%}
+                  <span class="cm-testimonial__star" aria-hidden="true">★</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+
+            {%- if block.settings.headline != blank -%}
+              <h3 class="cm-testimonial__headline">{{ block.settings.headline }}</h3>
+            {%- endif -%}
+
+            <blockquote class="cm-testimonial__quote">
+              <p>{{ block.settings.quote | default: 'Loved every piece I bought.' }}</p>
+            </blockquote>
+
+            <footer class="cm-testimonial__meta">
+              {%- if block.settings.avatar != blank -%}
+                <img
+                  class="cm-testimonial__avatar"
+                  src="{{ block.settings.avatar | image_url: width: 96 }}"
+                  alt="{{ block.settings.name | escape }}"
+                  width="40" height="40" loading="lazy"
+                >
+              {%- else -%}
+                <span class="cm-testimonial__avatar cm-testimonial__avatar--initials" aria-hidden="true">
+                  {{ block.settings.name | default: 'Anonymous' | slice: 0, 1 | upcase }}
+                </span>
+              {%- endif -%}
+              <div class="cm-testimonial__author">
+                <span class="cm-testimonial__name">{{ block.settings.name | default: 'Anonymous' }}</span>
+                {%- if block.settings.location != blank -%}
+                  <span class="cm-testimonial__loc">{{ block.settings.location }}</span>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.verified -%}
+                <span class="cm-testimonial__badge" aria-label="Verified buyer">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+                  Verified
+                </span>
+              {%- endif -%}
+            </footer>
+
+            {%- if block.settings.product_label != blank -%}
+              <a href="{{ block.settings.product_link | default: '/collections/all' }}"
+                 class="cm-testimonial__product">
+                Bought · {{ block.settings.product_label }}
+              </a>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — Testimonials",
+  "class": "shopify-section--cm-testimonials",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "REAL PEOPLE, REAL REVIEWS" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Loved by 10,000+ customers across India" },
+    { "type": "text", "id": "summary", "label": "Summary line", "default": "4.8 average from verified buyers" },
+    { "type": "select", "id": "tone", "label": "Background",
+      "options": [
+        { "value": "light", "label": "White" },
+        { "value": "cream", "label": "Cream" },
+        { "value": "dark",  "label": "Dark" }
+      ], "default": "cream"
+    },
+    { "type": "range", "id": "padding_top",    "label": "Padding top",    "min": 0, "max": 120, "step": 4, "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 60 }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating (stars)", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "text", "id": "headline", "label": "Headline (optional)", "default": "Elevated everyday pieces" },
+        { "type": "textarea", "id": "quote", "label": "Review", "default": "Beautiful fabric, perfect fit. I get compliments every single time I wear this." },
+        { "type": "text", "id": "name", "label": "Reviewer name", "default": "Aanya M." },
+        { "type": "text", "id": "location", "label": "Location", "default": "Mumbai" },
+        { "type": "image_picker", "id": "avatar", "label": "Avatar (optional)" },
+        { "type": "checkbox", "id": "verified", "label": "Verified buyer badge", "default": true },
+        { "type": "text", "id": "product_label", "label": "Product name (optional)" },
+        { "type": "url",  "id": "product_link",  "label": "Product link" }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "Calvium — Testimonials",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Elevated everyday pieces",
+            "quote": "The fabric feels premium, the cut is spot on, and it layers beautifully. I've reordered twice.",
+            "name": "Aanya Mehta",
+            "location": "Mumbai",
+            "verified": true,
+            "product_label": "Calvium Cubus"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Best minimalist brand I've bought from",
+            "quote": "Clean design, thoughtful details, and the delivery was quick. This is what I want in my wardrobe.",
+            "name": "Rohan Iyer",
+            "location": "Bengaluru",
+            "verified": true,
+            "product_label": "Calvium Arcus"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Timeless style, easy returns",
+            "quote": "Fell in love with the neutrals. Sizing was accurate, returns policy is a breeze. Highly recommend.",
+            "name": "Priya Sharma",
+            "location": "New Delhi",
+            "verified": true,
+            "product_label": "Calvium Magna"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

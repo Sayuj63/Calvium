@@ -1,0 +1,154 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "category_grid": {
+      "type": "calvium-collection-category",
+      "blocks": {
+        "chip_all": {
+          "type": "chip",
+          "settings": {
+            "label": "All",
+            "link": "/collections/all"
+          }
+        },
+        "chip_tote": {
+          "type": "chip",
+          "settings": {
+            "label": "Tote bags",
+            "link": "/collections/tote-bags"
+          }
+        },
+        "chip_cross": {
+          "type": "chip",
+          "settings": {
+            "label": "Crossbody",
+            "link": "/collections/crossbody"
+          }
+        },
+        "chip_shoulder": {
+          "type": "chip",
+          "settings": {
+            "label": "Shoulder",
+            "link": "/collections/shoulder"
+          }
+        },
+        "chip_backpacks": {
+          "type": "chip",
+          "settings": {
+            "label": "Backpacks",
+            "link": "/collections/backpacks"
+          }
+        },
+        "chip_wallets": {
+          "type": "chip",
+          "settings": {
+            "label": "Wallets",
+            "link": "/collections/wallets"
+          }
+        },
+        "chip_weekenders": {
+          "type": "chip",
+          "settings": {
+            "label": "Weekenders",
+            "link": "/collections/weekenders"
+          }
+        }
+      },
+      "block_order": [
+        "chip_all",
+        "chip_tote",
+        "chip_cross",
+        "chip_shoulder",
+        "chip_backpacks",
+        "chip_wallets",
+        "chip_weekenders"
+      ],
+      "settings": {
+        "products_per_page": 32,
+        "show_breadcrumb": true,
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true
+      }
+    },
+    "coll_usp": {
+      "type": "calvium-usp-strip",
+      "blocks": {
+        "u1": {
+          "type": "usp",
+          "settings": {
+            "icon": "shipping",
+            "title": "Free Shipping",
+            "subtitle": "Orders above ₹999"
+          }
+        },
+        "u2": {
+          "type": "usp",
+          "settings": {
+            "icon": "returns",
+            "title": "Easy Returns",
+            "subtitle": "7-day hassle-free"
+          }
+        },
+        "u3": {
+          "type": "usp",
+          "settings": {
+            "icon": "cod",
+            "title": "Cash on Delivery",
+            "subtitle": "Available across India"
+          }
+        },
+        "u4": {
+          "type": "usp",
+          "settings": {
+            "icon": "authentic",
+            "title": "100% Authentic",
+            "subtitle": "Handcrafted in India"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ],
+      "settings": {
+        "tone": "cream",
+        "bordered": true,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "coll_ml": {
+      "type": "calvium-most-loved",
+      "settings": {
+        "heading": "MOST-LOVED IN THIS EDIT",
+        "max_products": 10,
+        "cta_label": "View all bestsellers",
+        "cta_url": "/collections/best-sellers",
+        "tone": "light",
+        "padding_top": 48,
+        "padding_bottom": 60,
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true
+      }
+    }
+  },
+  "order": [
+    "coll_usp",
+    "category_grid",
+    "coll_ml"
+  ]
+}

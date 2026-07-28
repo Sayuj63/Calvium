@@ -1,0 +1,21 @@
+{%- comment -%}
+  Calvium — Premium cart drawer (section wrapper).
+  Add via the "general" or "popup" section group, or include on any page.
+  The trigger is the Calvium header's cart icon (data-cm-cart-open).
+{%- endcomment -%}
+{% render 'cm-cart-drawer' %}
+
+{% schema %}
+{
+  "name": "Calvium — Cart Drawer",
+  "class": "shopify-section--cm-cart-drawer",
+  "tag": "aside",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The cart drawer opens when any element with `data-cm-cart-open` is clicked (e.g. the Calvium header cart icon). Configure add-ons and the recommendations collection in Theme settings → Calvium — Cart."
+    }
+  ],
+  "presets": [ { "name": "Calvium — Cart Drawer" } ]
+}
+{% endschema %}
