@@ -1,46 +1,41 @@
 {%- comment -%}
   Cross-product color swatches.
 
-  Renders swatches linking to sibling per-color products that share a
-  `color-group:X` tag with this product. Each swatch: image thumb + color
-  name label below.
+  Reads `product.metafields.custom.color_siblings` (comma-separated handles),
+  looks each one up via `all_products[handle]`, and renders a swatch. Each
+  swatch = image thumb + color name label below.
 
-  Include with:
-    {% render 'cm-cross-product-swatches', product: product %}
+  Falls back to iterating `collections.all.products` if the metafield isn't
+  set (works only if siblings are within the first ~50 products).
 {%- endcomment -%}
 
 {%- liquid
-  assign group_id = ''
   assign this_color_label = ''
   for t in product.tags
-    if t contains 'color-group:'
-      assign group_id = t | remove: 'color-group:' | strip
-    elsif t contains 'color:'
-      assign this_color_label = t | remove: 'color:' | replace: '-', ' ' | capitalize
+    if t contains 'color:'
+      unless t contains 'color-group'
+        assign this_color_label = t | remove: 'color:' | replace: '-', ' ' | capitalize
+      endunless
     endif
   endfor
+
+  assign siblings_csv = product.metafields.custom.color_siblings
 -%}
 
-{%- if group_id != blank -%}
-  {%- assign target_tag = 'color-group:' | append: group_id -%}
+{%- if siblings_csv != blank -%}
+  {%- assign sibling_handles = siblings_csv | split: ',' -%}
 
-  {%- comment -%} Count siblings first (so we only render the row when >1 exists). {%- endcomment -%}
-  {%- assign sibling_count = 0 -%}
-  {%- for p in collections.all.products limit: 250 -%}
-    {%- if p.tags contains target_tag -%}
-      {%- assign sibling_count = sibling_count | plus: 1 -%}
-    {%- endif -%}
-  {%- endfor -%}
-
-  {%- if sibling_count > 1 -%}
-    <div class="cm-picker cm-cross-swatches" data-cm-cross-group="{{ group_id }}">
+  {%- if sibling_handles.size > 1 -%}
+    <div class="cm-picker cm-cross-swatches">
       <p class="cm-picker__label" style="text-align:center;">
         <span>Color:</span>
         <strong>{{ this_color_label | default: 'Select' }}</strong>
       </p>
       <div class="cm-cross-swatches__row">
-        {%- for sib in collections.all.products -%}
-          {%- if sib.tags contains target_tag -%}
+        {%- for handle in sibling_handles -%}
+          {%- assign h = handle | strip -%}
+          {%- assign sib = all_products[h] -%}
+          {%- if sib != empty -%}
             {%- assign sib_color_label = '' -%}
             {%- for t in sib.tags -%}
               {%- if t contains 'color:' -%}
@@ -70,5 +65,53 @@
         {%- endfor -%}
       </div>
     </div>
+  {%- endif -%}
+{%- else -%}
+  {%- comment -%} Fallback: iterate collections.all (limited to first 250 products). {%- endcomment -%}
+  {%- assign group_id = '' -%}
+  {%- for t in product.tags -%}
+    {%- if t contains 'color-group:' -%}
+      {%- assign group_id = t | remove: 'color-group:' | strip -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if group_id != blank -%}
+    {%- assign target_tag = 'color-group:' | append: group_id -%}
+    {%- assign sibling_count = 0 -%}
+    {%- for p in collections.all.products limit: 250 -%}
+      {%- if p.tags contains target_tag -%}
+        {%- assign sibling_count = sibling_count | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if sibling_count > 1 -%}
+      <div class="cm-picker cm-cross-swatches">
+        <p class="cm-picker__label" style="text-align:center;">
+          <span>Color:</span>
+          <strong>{{ this_color_label | default: 'Select' }}</strong>
+        </p>
+        <div class="cm-cross-swatches__row">
+          {%- for sib in collections.all.products limit: 250 -%}
+            {%- if sib.tags contains target_tag -%}
+              {%- assign sib_color_label = '' -%}
+              {%- for t in sib.tags -%}
+                {%- if t contains 'color:' -%}
+                  {%- unless t contains 'color-group' -%}
+                    {%- assign sib_color_label = t | remove: 'color:' | replace: '-', ' ' | capitalize -%}
+                  {%- endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+              <a href="{{ sib.url }}" class="cm-cross-swatch {% if sib.id == product.id %}is-active{% endif %}"
+                 title="{{ sib_color_label | default: sib.title | escape }}">
+                <span class="cm-cross-swatch__thumb">
+                  {%- if sib.featured_image -%}
+                    <img src="{{ sib.featured_image | image_url: width: 120 }}" alt="{{ sib_color_label | escape }}" width="48" height="60" loading="lazy">
+                  {%- endif -%}
+                </span>
+                <span class="cm-cross-swatch__name">{{ sib_color_label | default: sib.title }}</span>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
   {%- endif -%}
 {%- endif -%}
