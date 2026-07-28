@@ -19,11 +19,13 @@
 !assets/**/*.jpeg
 !assets/**/*.gif
 
-# Spreadsheets and CSV imports
+# Spreadsheets and CSV imports (local working files only)
 *.xlsx
 *.xls
 *.csv
 *.backup.csv
+# Exception: the split-by-color CSV is a shipped artifact for the store admin to import
+!products_split_by_color.csv
 
 # Reference / clone theme (kept locally, not pushed)
 miraggio-clone/

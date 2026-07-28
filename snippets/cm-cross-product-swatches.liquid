@@ -1,0 +1,88 @@
+{%- comment -%}
+  Cross-product color swatches.
+
+  Renders swatches for OTHER products in the same "color-group". Each swatch
+  is an anchor <a href="{{ sibling.url }}"> so clicking navigates to the other
+  color's product page (rather than switching a variant inside the same product).
+
+  How grouping works
+  ------------------
+  When a product is split by color (e.g. "Calvium Arcus" → "Calvium Arcus - Black"
+  and "Calvium Arcus - Tan"), each per-color product is tagged with a shared tag:
+    color-group:calvium-arcus
+  A per-color tag is also applied for the label:
+    color:black   /   color:tan
+
+  This snippet:
+    1. reads the current product's `color-group:X` tag
+    2. finds sibling products carrying the same tag via `collections.all.products`
+       (Shopify caches this — no perf hit on a small catalog)
+    3. renders a swatch for each, using the sibling's featured image as thumbnail
+    4. marks the current product as .is-active
+    5. renders nothing if no color-group is present (safe fallback)
+
+  Include with:
+    {% render 'cm-cross-product-swatches', product: product %}
+{%- endcomment -%}
+
+{%- liquid
+  assign group_id = ''
+  for t in product.tags
+    if t contains 'color-group:'
+      assign group_id = t | remove: 'color-group:' | strip
+      break
+    endif
+  endfor
+-%}
+
+{%- if group_id != blank -%}
+  {%- assign siblings = collections.all.products | where_exp: 'p', 'p.tags contains group_id' -%}
+  {%- comment -%} `where_exp` above returns products whose tags array contains ANY string matching
+     the group_id — Shopify's `contains` on an array does substring match on stringified tags,
+     which is what we want (color-group:calvium-arcus is a unique-enough substring). {%- endcomment -%}
+
+  {%- if siblings.size > 1 -%}
+    <div class="cm-picker cm-cross-swatches" data-cm-cross-group="{{ group_id }}">
+      <p class="cm-picker__label" style="text-align:center;">
+        <span>Color:</span>
+        <strong>
+          {%- for t in product.tags -%}
+            {%- if t contains 'color:' -%}
+              {%- unless t contains 'color-group' -%}
+                {{- t | remove: 'color:' | replace: '-', ' ' | capitalize -}}
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </strong>
+      </p>
+      <div class="cm-picker__row" style="justify-content:center;">
+        {%- for sib in siblings -%}
+          {%- assign sib_color_label = '' -%}
+          {%- for t in sib.tags -%}
+            {%- if t contains 'color:' -%}
+              {%- unless t contains 'color-group' -%}
+                {%- assign sib_color_label = t | remove: 'color:' | replace: '-', ' ' | capitalize -%}
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+          <a
+            href="{{ sib.url }}"
+            class="cm-picker__thumb {% if sib.id == product.id %}is-active{% endif %}"
+            title="{{ sib_color_label | default: sib.title | escape }}"
+            aria-label="{{ sib_color_label | default: sib.title | escape }}"
+            {% if sib.id == product.id %}aria-current="page"{% endif %}
+          >
+            {%- if sib.featured_image -%}
+              <img
+                src="{{ sib.featured_image | image_url: width: 120 }}"
+                alt="{{ sib_color_label | default: sib.title | escape }}"
+                width="44" height="58" loading="lazy">
+            {%- else -%}
+              <span class="cm-picker__fallback">{{ sib_color_label | slice: 0, 2 }}</span>
+            {%- endif -%}
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

@@ -1593,3 +1593,62 @@ free-shipping-component .message {
   max-width: 100%;
 }
 
+/* ----- 20. Header dropdown caret — Shop by Category / any nav parent -----
+   Requested 2026-07-28: caret next to "Shop by Category" (and any other
+   parent nav link with a submenu) reads as too heavy. Base rule sets 8x5px
+   already, but on live it still visually competes with the label. Slim it
+   to a whisper: 5x3px, thinner stroke, lower opacity, tighter gap. */
+.cm-nav__trigger svg,
+.cm-nav__caret {
+  width: 5px !important;
+  height: 3px !important;
+  opacity: 0.4 !important;
+  stroke-width: 1 !important;
+}
+.cm-nav__caret path {
+  stroke-width: 1 !important;
+}
+.cm-nav__trigger:has(.cm-nav__caret) { gap: 3px !important; }
+.cm-nav__item:hover .cm-nav__caret,
+.cm-nav__item:focus-within .cm-nav__caret { opacity: 0.7 !important; }
+
+/* ----- 21. PDP gallery — stop cropping the product -----
+   Requested 2026-07-28: product images on PDP look "too zoomed". Root cause:
+   editorial + luxury gallery both use `object-fit: cover` with aspect-ratio 3/4,
+   which crops wider product photography. Switch to `contain` + subtle cream
+   background so the full product is always visible. */
+.cm-pdp-ed__gallery img,
+.cm-pdp-lux__gallery img,
+.cm-pdp-lux__hero img {
+  object-fit: contain !important;
+  background: #f7f4ee !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+}
+.cm-pdp-lux__hero img {
+  padding: 0 !important;
+  object-fit: cover !important; /* hero can stay wide-crop for editorial impact */
+}
+
+/* ----- 22. Cross-product color swatches -----
+   Snippet `cm-cross-product-swatches.liquid` renders <a> anchors styled to
+   match the existing .cm-picker__thumb buttons. Applied to the swatches when
+   a product has a `color-group:X` tag (i.e. after the SKU split). */
+.cm-cross-swatches a.cm-picker__thumb {
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cm-cross-swatches a.cm-picker__thumb.is-active {
+  outline: 2px solid var(--cm-ink, #000);
+  outline-offset: 2px;
+}
+.cm-cross-swatches .cm-picker__fallback {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+

@@ -157,9 +157,25 @@
     </p>
     <p class="cm-eyebrow">MRP inclusive of all taxes</p>
 
+    {%- comment -%}
+      Cross-product color swatches: renders only if this product has a `color-group:X`
+      tag (i.e. has been split into per-color individual products). Anchors link to
+      each sibling color's URL. Safe fallback: renders nothing if no group tag exists,
+      in which case the loop below still shows the legacy in-variant Color swatches.
+    {%- endcomment -%}
+    {% render 'cm-cross-product-swatches', product: product %}
+
     <form class="cm-pdp-ed__form" method="post" action="{{ routes.cart_add_url }}" data-cm-picker>
       {%- for option in product.options_with_values -%}
         {%- assign lower_name = option.name | downcase -%}
+        {%- comment -%} Skip legacy in-variant Color picker when we have a cross-product group. {%- endcomment -%}
+        {%- assign has_cross_group = false -%}
+        {%- for tg in product.tags -%}
+          {%- if tg contains 'color-group:' -%}{%- assign has_cross_group = true -%}{%- endif -%}
+        {%- endfor -%}
+        {%- if has_cross_group and (lower_name contains 'color' or lower_name contains 'colour') -%}
+          {%- continue -%}
+        {%- endif -%}
         <div class="cm-picker" data-cm-picker-group>
           <p class="cm-picker__label" style="text-align:center;">
             <span>{{ option.name }}:</span> <strong data-cm-picker-value>{{ option.selected_value }}</strong>

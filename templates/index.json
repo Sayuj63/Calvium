@@ -214,55 +214,6 @@
         "tone": "light"
       }
     },
-    "calvium_trending_hp": {
-      "type": "calvium-trending-now",
-      "blocks": {
-        "t_1": {
-          "type": "tile",
-          "settings": {
-            "image": "shopify://shop_images/4_323ad305-a7d0-4c32-aeab-a17d4040c203.png",
-            "caption": "Silhouettes",
-            "link": ""
-          }
-        },
-        "t_2": {
-          "type": "tile",
-          "settings": {
-            "image": "shopify://shop_images/01_3d03e34f-cded-43b0-af34-2346f71599e1.jpg",
-            "caption": "Layering",
-            "link": ""
-          }
-        },
-        "t_3": {
-          "type": "tile",
-          "settings": {
-            "image": "shopify://shop_images/01_d935c23c-4b8a-489a-baec-d94cb7fd5f3a.jpg",
-            "caption": "Neutrals",
-            "link": ""
-          }
-        },
-        "t_4": {
-          "type": "tile",
-          "settings": {
-            "image": "shopify://shop_images/01_90b6faa6-746c-42cf-acf0-51f16353712f.jpg",
-            "caption": "Denim",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "t_1",
-        "t_2",
-        "t_3",
-        "t_4"
-      ],
-      "settings": {
-        "heading": "TRENDING NOW",
-        "tone": "light",
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
     "calvium_testimonials_hp": {
       "type": "calvium-testimonials",
       "blocks": {
@@ -490,7 +441,6 @@
     "calvium_most_loved_main",
     "calvium_new_in_tiles_hp",
     "calvium_spotlight_hp",
-    "calvium_trending_hp",
     "calvium_testimonials_hp",
     "calvium_lookbook_hp",
     "calvium_marquee_hp",
