@@ -12,6 +12,7 @@
     "calvium_hero": {
       "type": "calvium-hero",
       "settings": {
+        "image": "shopify://shop_images/Home_page_banner__1_all_collection.png",
         "height_desktop": 85,
         "height_mobile": 80,
         "overlay_opacity": 25,
