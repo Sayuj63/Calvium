@@ -94,11 +94,13 @@
   font-size: 13px;
   letter-spacing: 0.01em;
   height: 42px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .cm-ann__track {
@@ -171,11 +173,15 @@
 .cm-header {
   position: sticky;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 40;
   background: #fff;
   border-bottom: 1px solid var(--cm-ink-08);
   transition: transform 240ms var(--cm-ease-out), box-shadow 240ms var(--cm-ease-out);
   font-family: var(--cm-font-body);
+  box-sizing: border-box;
 }
 .cm-header.is-hidden { transform: translateY(-100%); }
 .cm-header.is-scrolled { box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04); }
@@ -684,7 +690,9 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  width: 100%;
 }
+.cm-cats__track { width: 100%; }
 @media (min-width: 900px) {
   .cm-cats { grid-template-columns: repeat(4, 1fr); gap: 20px; }
 }
@@ -2987,11 +2995,43 @@
 }
 
 /* ------------------------------------------------------------
-   Mobile horizontal-overflow guard
-   Prevents any section wider than the viewport from pushing
-   the whole page to the left on small screens.
+   Global viewport normalize
+   Ensures every top-level container spans the full viewport
+   width — prevents the mobile "shifted-left" bug caused by any
+   ancestor being narrower than the viewport.
    ------------------------------------------------------------ */
-html, body { overflow-x: clip; max-width: 100%; }
+html {
+  overflow-x: clip;
+  width: 100%;
+}
+body {
+  overflow-x: clip;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+body *,
+body *::before,
+body *::after {
+  box-sizing: border-box;
+}
+main#MainContent,
+#header-group,
+#header-group > * {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+}
 @media (max-width: 899px) {
   main#MainContent { overflow-x: clip; }
+  /* Any shopify-section wrapper renders full-width on mobile */
+  main#MainContent > .shopify-section,
+  #header-group > .shopify-section {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
