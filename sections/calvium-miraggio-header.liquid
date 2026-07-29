@@ -92,9 +92,18 @@
                                   {%- assign parts = trimmed | split: '|' -%}
                                   {%- assign label = parts[0] | strip -%}
                                   {%- assign href = parts[1] | default: '#' | strip -%}
-                                  {%- assign row_image = parts[2] | default: col_img | strip -%}
+                                  {%- assign row_image = parts[2] | strip -%}
+                                  {%- comment -%} Auto: if no manual image AND href is a collection URL, use its first product's featured image. {%- endcomment -%}
+                                  {%- if row_image == blank and href contains '/collections/' -%}
+                                    {%- assign _handle_tail = href | split: '/collections/' | last -%}
+                                    {%- assign coll_handle = _handle_tail | split: '/' | first | split: '?' | first -%}
+                                    {%- if coll_handle != blank and collections[coll_handle].products.size > 0 -%}
+                                      {%- assign row_image = collections[coll_handle].products.first.featured_image | image_url: width: 600 | prepend: 'https:' -%}
+                                    {%- endif -%}
+                                  {%- endif -%}
+                                  {%- if row_image == blank -%}{%- assign row_image = col_img -%}{%- endif -%}
                                   {%- assign row_is_url = false -%}
-                                  {%- if row_image contains '://' -%}{%- assign row_is_url = true -%}{%- endif -%}
+                                  {%- if row_image contains '://' or row_image contains '//' -%}{%- assign row_is_url = true -%}{%- endif -%}
                                   {%- if row_image != blank and row_is_url == false and row_image contains '.' -%}
                                     {%- assign row_image = row_image | asset_url -%}
                                   {%- endif -%}

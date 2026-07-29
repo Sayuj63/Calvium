@@ -304,8 +304,8 @@
 
 .cm-mega__cols {
   display: grid;
-  grid-template-columns: repeat(var(--cm-mega-cols, 3), minmax(0, 1fr)) minmax(300px, 400px);
-  gap: 44px;
+  grid-template-columns: repeat(var(--cm-mega-cols, 3), minmax(0, 1fr)) minmax(200px, 260px);
+  gap: 36px;
   align-items: start;
 }
 .cm-mega--1 { --cm-mega-cols: 1; }
