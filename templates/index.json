@@ -18,7 +18,7 @@
         "chip_text": "New Season 2026 · Live Now",
         "eyebrow": "CALVIUM",
         "heading": "Timeless style, made for modern lives.",
-        "subheading": "Handcrafted essentials in premium fabrics — designed to layer, made to last.",
+        "subheading": "",
         "microcopy": "Free shipping on orders above ₹999 · 7-day easy returns",
         "text_position": "left",
         "text_align": "left",
@@ -264,7 +264,7 @@
       ],
       "settings": {
         "eyebrow": "REAL PEOPLE, REAL REVIEWS",
-        "heading": "Loved by 10,000+ customers across India",
+        "heading": "Loved by 100,000+ customers across India",
         "summary": "4.8 average from verified buyers",
         "tone": "cream",
         "padding_top": 60,
@@ -278,7 +278,7 @@
         "badge_text": "The Edit",
         "eyebrow": "THE STORY",
         "heading": "Layered minimalism, crafted for every day.",
-        "body": "A capsule of essentials — clean lines, soft palette, considered fabrics. Made to wear season after season.",
+        "body": "",
         "cta_label": "Explore the Collection",
         "cta_link": "/pages/about",
         "collection": "everyday",
@@ -296,18 +296,6 @@
         "tone": "light",
         "padding_top": 60,
         "padding_bottom": 60
-      }
-    },
-    "calvium_marquee_hp": {
-      "type": "calvium-marquee",
-      "settings": {
-        "phrases": "NEW ARRIVALS | FREE SHIPPING ABOVE ₹999 | EASY 7-DAY RETURNS | CASH ON DELIVERY AVAILABLE | HANDCRAFTED IN INDIA",
-        "separator": "diamond",
-        "speed": 45,
-        "font_size": 16,
-        "tone": "dark",
-        "padding_top": 16,
-        "padding_bottom": 16
       }
     },
     "calvium_ig_hp": {
@@ -443,7 +431,6 @@
     "calvium_spotlight_hp",
     "calvium_testimonials_hp",
     "calvium_lookbook_hp",
-    "calvium_marquee_hp",
     "calvium_ig_hp",
     "17714969651fbe9c80"
   ]

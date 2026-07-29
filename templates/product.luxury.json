@@ -1,14 +1,14 @@
 {
   "sections": {
     "main": {
-      "type": "calvium-product-luxury",
+      "type": "calvium-product-editorial",
       "blocks": {
         "story_material": {
           "type": "story",
           "settings": {
-            "eyebrow": "THE MATERIAL",
-            "heading": "Chosen to age well",
-            "body": "Premium leather with a matte finish that softens with wear — not scuffing, but settling in. Structured to hold its shape and quietly refine over years."
+            "eyebrow": "THE DETAILS",
+            "heading": "Built to be lived in",
+            "body": "Interior pockets sized for everyday carry, hardware that doesn't rattle, and a footprint that fits a laptop without turning the strap into a project."
           }
         },
         "story_craft": {
@@ -24,11 +24,55 @@
         "story_material",
         "story_craft"
       ],
+      "settings": {}
+    },
+    "pdp_usp": {
+      "type": "calvium-usp-strip",
+      "blocks": {
+        "u1": {
+          "type": "usp",
+          "settings": {
+            "icon": "shipping",
+            "title": "Free Shipping",
+            "subtitle": "On orders above ₹999"
+          }
+        },
+        "u2": {
+          "type": "usp",
+          "settings": {
+            "icon": "returns",
+            "title": "Easy Returns",
+            "subtitle": "7-day hassle-free"
+          }
+        },
+        "u3": {
+          "type": "usp",
+          "settings": {
+            "icon": "cod",
+            "title": "Cash on Delivery",
+            "subtitle": "Available across India"
+          }
+        },
+        "u4": {
+          "type": "usp",
+          "settings": {
+            "icon": "authentic",
+            "title": "100% Authentic",
+            "subtitle": "Handcrafted in India"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ],
       "settings": {
-        "hero_index": 0,
-        "short_description": "Made from premium leather with matte hardware. Structured to hold its shape and quietly refine with wear.",
-        "show_buy_now": true,
-        "show_stub_rating": true
+        "tone": "cream",
+        "bordered": true,
+        "padding_top": 20,
+        "padding_bottom": 20
       }
     },
     "recommendations": {
@@ -43,10 +87,63 @@
         "padding_top": 40,
         "padding_bottom": 40
       }
+    },
+    "pdp_testimonials": {
+      "type": "calvium-testimonials",
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Fabric feels premium",
+            "quote": "The cut is beautiful, layered easily, and the delivery was faster than promised.",
+            "name": "Aanya M.",
+            "location": "Mumbai",
+            "verified": true
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "True to size",
+            "quote": "Ordered my usual size — fit was spot on. Will reorder in other colours.",
+            "name": "Rohan I.",
+            "location": "Bengaluru",
+            "verified": true
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "headline": "Beautiful minimalist basics",
+            "quote": "Exactly what I was looking for. Very well made and worth the price.",
+            "name": "Priya S.",
+            "location": "New Delhi",
+            "verified": true
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "settings": {
+        "eyebrow": "BUYER REVIEWS",
+        "heading": "Trusted by 100,000+ across India",
+        "summary": "4.8 verified rating",
+        "tone": "light",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     }
   },
   "order": [
     "main",
-    "recommendations"
+    "pdp_usp",
+    "recommendations",
+    "pdp_testimonials"
   ]
 }

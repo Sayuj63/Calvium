@@ -80,13 +80,28 @@
             "label": "Gifting",
             "link": ""
           }
+        },
+        "mega_shop_by_category": {
+          "type": "mega",
+          "settings": {
+            "parent_label": "Shop By Category",
+            "col1_heading": "By Style",
+            "col1_links": "Everyday | /collections/everyday\nWork Essential | /collections/work-essential\nAfter Hours | /collections/after-hours\nNew Collection | /collections/hobo-bags",
+            "col2_heading": "By Type",
+            "col2_links": "Tote Bags | /collections/tote-bags\nCrossbody Bags | /collections/crossbody-bags\nShoulder Bags | /collections/shoulder-bags\nHobo Bags | /collections/hobo-bags",
+            "col3_heading": "Small Leather",
+            "col3_links": "Wallets & Card Holders | /collections/wallets\nClutches | /collections/clutches\nPouches | /collections/pouches",
+            "col4_heading": "Shop All",
+            "col4_links": "New Arrivals | /collections/new-arrivals\nBest Sellers | /collections/best-sellers\nAll Products | /collections/all"
+          }
         }
       },
       "block_order": [
         "link_rNHwzY",
         "link_dqQa6y",
         "link_TBFhPM",
-        "link_t3Fihd"
+        "link_t3Fihd",
+        "mega_shop_by_category"
       ],
       "name": "Calvium — Header",
       "settings": {
