@@ -268,13 +268,7 @@
 .cm-nav__trigger > span { white-space: nowrap; }
 .cm-nav__trigger svg,
 .cm-nav__caret {
-  width: 8px !important;
-  height: 5px !important;
-  flex-shrink: 0;
-  display: inline-block;
-  vertical-align: middle;
-  opacity: 0.55;
-  transition: transform 240ms var(--cm-ease-out), opacity 200ms var(--cm-ease-out);
+  display: none !important;
 }
 .cm-nav__item:hover .cm-nav__caret,
 .cm-nav__item:focus-within .cm-nav__caret { opacity: 0.9; }
@@ -1663,7 +1657,8 @@
   color: var(--cm-black);
   border-color: var(--cm-white);
 }
-.cm-hero .cm-hero__btn--primary:hover { background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black); transform: translateY(-1px); }
+.cm-hero .cm-hero__btn--primary:hover,
+.cm-hero a.cm-hero__btn--primary:hover { background: var(--cm-black) !important; color: var(--cm-white) !important; border-color: var(--cm-black) !important; transform: translateY(-1px); text-decoration: none !important; }
 .cm-hero .cm-hero__btn--secondary {
   background: transparent;
   color: currentColor;
@@ -1950,7 +1945,8 @@
   transition: background 200ms var(--cm-ease-out), color 200ms var(--cm-ease-out), transform 200ms var(--cm-ease-out);
 }
 .cm-lookbook__cta svg { width: 16px; height: 16px; transition: transform 200ms var(--cm-ease-out); }
-.cm-lookbook .cm-lookbook__cta:hover { background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black); transform: translateY(-1px); }
+.cm-lookbook .cm-lookbook__cta:hover,
+.cm-lookbook a.cm-lookbook__cta:hover { background: var(--cm-black) !important; color: var(--cm-white) !important; border-color: var(--cm-black) !important; transform: translateY(-1px); text-decoration: none !important; }
 .cm-lookbook .cm-lookbook__cta:hover svg { transform: translateX(3px); }
 
 .cm-lookbook__shop {
