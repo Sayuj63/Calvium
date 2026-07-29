@@ -80,55 +80,6 @@
         "show_atc": true
       }
     },
-    "coll_usp": {
-      "type": "calvium-usp-strip",
-      "blocks": {
-        "u1": {
-          "type": "usp",
-          "settings": {
-            "icon": "shipping",
-            "title": "Free Shipping",
-            "subtitle": "Orders above ₹999"
-          }
-        },
-        "u2": {
-          "type": "usp",
-          "settings": {
-            "icon": "returns",
-            "title": "Easy Returns",
-            "subtitle": "7-day hassle-free"
-          }
-        },
-        "u3": {
-          "type": "usp",
-          "settings": {
-            "icon": "cod",
-            "title": "Cash on Delivery",
-            "subtitle": "Available across India"
-          }
-        },
-        "u4": {
-          "type": "usp",
-          "settings": {
-            "icon": "authentic",
-            "title": "100% Authentic",
-            "subtitle": "Handcrafted in India"
-          }
-        }
-      },
-      "block_order": [
-        "u1",
-        "u2",
-        "u3",
-        "u4"
-      ],
-      "settings": {
-        "tone": "cream",
-        "bordered": true,
-        "padding_top": 16,
-        "padding_bottom": 16
-      }
-    },
     "coll_ml": {
       "type": "calvium-most-loved",
       "settings": {
@@ -147,7 +98,6 @@
     }
   },
   "order": [
-    "coll_usp",
     "category_grid",
     "coll_ml"
   ]
