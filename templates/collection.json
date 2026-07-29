@@ -30,14 +30,14 @@
           "type": "chip",
           "settings": {
             "label": "Crossbody",
-            "link": "/collections/crossbody"
+            "link": "/collections/crossbody-bags"
           }
         },
         "chip_shoulder": {
           "type": "chip",
           "settings": {
             "label": "Shoulder",
-            "link": "/collections/shoulder"
+            "link": "/collections/shoulder-bags"
           }
         },
         "chip_backpacks": {
@@ -47,18 +47,25 @@
             "link": "/collections/backpacks"
           }
         },
+        "chip_clutches": {
+          "type": "chip",
+          "settings": {
+            "label": "Clutches",
+            "link": "/collections/clutches"
+          }
+        },
+        "chip_pouches": {
+          "type": "chip",
+          "settings": {
+            "label": "Pouches",
+            "link": "/collections/pouches"
+          }
+        },
         "chip_wallets": {
           "type": "chip",
           "settings": {
             "label": "Wallets",
             "link": "/collections/wallets"
-          }
-        },
-        "chip_weekenders": {
-          "type": "chip",
-          "settings": {
-            "label": "Weekenders",
-            "link": "/collections/weekenders"
           }
         }
       },
@@ -68,8 +75,9 @@
         "chip_cross",
         "chip_shoulder",
         "chip_backpacks",
-        "chip_wallets",
-        "chip_weekenders"
+        "chip_clutches",
+        "chip_pouches",
+        "chip_wallets"
       ],
       "settings": {
         "products_per_page": 32,
