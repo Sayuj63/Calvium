@@ -2985,3 +2985,13 @@
 .cm-header {
   top: 42px;
 }
+
+/* ------------------------------------------------------------
+   Mobile horizontal-overflow guard
+   Prevents any section wider than the viewport from pushing
+   the whole page to the left on small screens.
+   ------------------------------------------------------------ */
+html, body { overflow-x: clip; max-width: 100%; }
+@media (max-width: 899px) {
+  main#MainContent { overflow-x: clip; }
+}

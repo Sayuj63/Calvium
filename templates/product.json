@@ -19,6 +19,7 @@
       "type": "calvium-most-loved",
       "settings": {
         "heading": "YOU MAY ALSO LIKE",
+        "collection": "best-sellers",
         "cta_label": "",
         "max_products": 8,
         "show_swatches": true,

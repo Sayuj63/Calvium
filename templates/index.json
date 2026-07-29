@@ -112,7 +112,7 @@
           "settings": {
             "image": "shopify://shop_images/EVERYDAY.jpg",
             "label": "Everyday",
-            "link": ""
+            "link": "/collections/everyday"
           }
         },
         "tile_2": {
@@ -120,7 +120,7 @@
           "settings": {
             "image": "shopify://shop_images/WORK-ESSENTIAL.jpg",
             "label": "Work Essential",
-            "link": ""
+            "link": "/collections/tote-bags"
           }
         },
         "tile_3": {
@@ -128,7 +128,7 @@
           "settings": {
             "image": "shopify://shop_images/AFTER-HOURS.jpg",
             "label": "After Hours",
-            "link": ""
+            "link": "/collections/clutches"
           }
         },
         "tile_4": {
@@ -136,7 +136,7 @@
           "settings": {
             "image": "shopify://shop_images/NEW-COLLECTION.jpg",
             "label": "New Collection",
-            "link": ""
+            "link": "/collections/new-arrivals"
           }
         }
       },

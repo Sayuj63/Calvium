@@ -6,6 +6,16 @@
 <script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
 
 {%- assign coll = collections[section.settings.collection] -%}
+{%- if coll == blank or coll.products.size == 0 -%}
+  {%- assign coll = collections['best-sellers'] -%}
+{%- endif -%}
+{%- if coll == blank or coll.products.size == 0 -%}
+  {%- assign coll = collections['new-arrivals'] -%}
+{%- endif -%}
+{%- if coll == blank or coll.products.size == 0 -%}
+  {%- assign coll = collections.all -%}
+{%- endif -%}
+{%- comment -%} Exclude the current product on PDPs so recommendations are relevant. {%- endcomment -%}
 <section
   class="cm-section {% if section.settings.tone == 'cream' %}cm-section--cream{% elsif section.settings.tone == 'dark' %}cm-section--dark{% endif %}"
   data-cm-reveal
@@ -24,8 +34,12 @@
     <div class="cm-slider__viewport">
       <div class="cm-slider__track">
         {%- if coll and coll.products.size > 0 -%}
-          {%- for p in coll.products limit: section.settings.max_products -%}
+          {%- assign shown = 0 -%}
+          {%- for p in coll.products -%}
+            {%- if shown >= section.settings.max_products -%}{%- break -%}{%- endif -%}
+            {%- if product and p.id == product.id -%}{%- continue -%}{%- endif -%}
             {%- render 'cm-product-card', product: p, show_percent: section.settings.show_percent, show_swatches: section.settings.show_swatches, max_swatches: section.settings.max_swatches, show_atc: section.settings.show_atc -%}
+            {%- assign shown = shown | plus: 1 -%}
           {%- endfor -%}
         {%- else -%}
           {%- for i in (1..8) -%}
