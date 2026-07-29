@@ -10,30 +10,10 @@
 {
   "sections": {
     "main": {
-      "type": "calvium-product-editorial",
-      "blocks": {
-        "story_material": {
-          "type": "story",
-          "settings": {
-            "eyebrow": "THE DETAILS",
-            "heading": "Built to be lived in",
-            "body": "Interior pockets sized for everyday carry, hardware that doesn't rattle, and a footprint that fits a laptop without turning the strap into a project."
-          }
-        },
-        "story_craft": {
-          "type": "story",
-          "settings": {
-            "eyebrow": "CRAFT",
-            "heading": "Made in small runs",
-            "body": "Every piece is stitched, edge-painted and finished by hand in small runs. That means small variations — the hallmark of something made, not manufactured."
-          }
-        }
-      },
-      "block_order": [
-        "story_material",
-        "story_craft"
-      ],
-      "settings": {}
+      "type": "calvium-product-immersive",
+      "settings": {
+        "show_stub_rating": true
+      }
     },
     "recommendations": {
       "type": "calvium-most-loved",

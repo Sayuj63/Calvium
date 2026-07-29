@@ -1,0 +1,348 @@
+{%- comment -%}
+  Calvium — PDP "Immersive" (default template).
+  Two-column: gallery (left, thumbnails + main media) + info (right, sticky on desktop).
+  Includes optional top banner, cross-product colour swatches, and PDP accordions.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign compare = current_variant.compare_at_price -%}
+{%- assign on_sale = false -%}
+{%- if compare > current_variant.price -%}
+  {%- assign on_sale = true -%}
+  {%- assign percent_off = compare | minus: current_variant.price | times: 100.0 | divided_by: compare | round -%}
+{%- endif -%}
+
+{%- assign has_cross_group = false -%}
+{%- for tg in product.tags -%}
+  {%- if tg contains 'color-group:' -%}{%- assign has_cross_group = true -%}{%- endif -%}
+{%- endfor -%}
+
+<style>
+  .cm-pdp-im { color: var(--cm-ink); font-family: var(--cm-font-body); background: #fff; }
+  .cm-pdp-im__banner { position: relative; width: 100%; overflow: hidden; line-height: 0; }
+  .cm-pdp-im__banner img { display: block; width: 100%; height: auto; max-height: 340px; object-fit: cover; }
+  .cm-pdp-im__banner-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: clamp(14px, 1.4vw, 18px); font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 12px 24px; text-align: center;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+  .cm-pdp-im__banner:not(:has(img)) .cm-pdp-im__banner-text {
+    position: static; color: inherit; text-shadow: none; padding: 20px 24px;
+  }
+  .cm-pdp-im__crumb {
+    padding: 20px clamp(16px, 3vw, 32px) 12px;
+    font-size: 12px; letter-spacing: 0.06em; color: var(--cm-ink-50);
+  }
+  .cm-pdp-im__crumb a { color: inherit; text-decoration: none; }
+
+  .cm-pdp-im__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 0 clamp(16px, 3vw, 32px) 40px;
+    max-width: 1360px;
+    margin: 0 auto;
+  }
+  @media (min-width: 900px) {
+    .cm-pdp-im__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 48px;
+      padding-bottom: 72px;
+    }
+  }
+
+  .cm-pdp-im__gallery { display: flex; flex-direction: column; gap: 12px; }
+  .cm-pdp-im__main {
+    background: var(--cm-cream-deep);
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+  .cm-pdp-im__main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cm-pdp-im__thumbs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .cm-pdp-im__thumb {
+    padding: 0; border: 1px solid var(--cm-ink-08); background: var(--cm-cream);
+    aspect-ratio: 3 / 4; overflow: hidden; cursor: pointer;
+    transition: border-color 120ms ease, transform 150ms ease;
+  }
+  .cm-pdp-im__thumb:hover { transform: translateY(-1px); }
+  .cm-pdp-im__thumb.is-active { border-color: var(--cm-ink); border-width: 2px; }
+  .cm-pdp-im__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .cm-pdp-im__info {
+    display: flex; flex-direction: column; gap: 14px;
+    padding-top: 8px;
+  }
+  @media (min-width: 900px) {
+    .cm-pdp-im__info {
+      position: sticky; top: 100px;
+      align-self: start;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    .cm-pdp-im__info::-webkit-scrollbar { width: 6px; }
+    .cm-pdp-im__info::-webkit-scrollbar-thumb { background: var(--cm-ink-15); border-radius: 3px; }
+  }
+  .cm-pdp-im__vendor {
+    font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--cm-ink-70); margin: 0;
+  }
+  .cm-pdp-im__title {
+    font-family: var(--cm-font-heading);
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-weight: 600; line-height: 1.15;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    margin: 0;
+  }
+  .cm-pdp-im__reviews {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--cm-ink-70);
+  }
+  .cm-pdp-im__stars {
+    display: inline-flex; gap: 1px; color: var(--cm-ink);
+  }
+  .cm-pdp-im__stars svg { width: 14px; height: 14px; fill: currentColor; }
+  .cm-pdp-im__price { display: flex; gap: 10px; align-items: baseline; font-size: 20px; margin-top: 4px; }
+  .cm-pdp-im__price strong { font-weight: 600; }
+  .cm-pdp-im__price .compare { text-decoration: line-through; color: var(--cm-ink-50); font-size: 15px; }
+  .cm-pdp-im__price .percent { color: var(--cm-sale, #b12704); font-weight: 600; font-size: 13px; }
+  .cm-pdp-im__mrp { font-size: 12px; color: var(--cm-ink-50); margin: 0 0 4px; }
+  .cm-pdp-im__short { font-size: 14px; color: var(--cm-ink-70); line-height: 1.6; margin: 0; }
+  .cm-pdp-im__form { display: flex; flex-direction: column; gap: 16px; margin-top: 4px; }
+  .cm-pdp-im__cta-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 4px;
+  }
+  .cm-pdp-im__wish {
+    width: 52px; height: 52px;
+    border: 1px solid var(--cm-ink-15);
+    background: #fff; display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: border-color 120ms ease;
+  }
+  .cm-pdp-im__wish:hover { border-color: var(--cm-ink); }
+  .cm-pdp-im__wish svg { width: 20px; height: 20px; }
+
+  .cm-pdp-im__accord { display: flex; flex-direction: column; margin-top: 12px; }
+  .cm-pdp-im__accord details { border-top: 1px solid var(--cm-ink-08); }
+  .cm-pdp-im__accord details:last-child { border-bottom: 1px solid var(--cm-ink-08); }
+  .cm-pdp-im__accord summary {
+    padding: 16px 4px; font-family: var(--cm-font-heading);
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    list-style: none;
+  }
+  .cm-pdp-im__accord summary::after { content: "+"; font-size: 18px; font-weight: 300; }
+  .cm-pdp-im__accord details[open] summary::after { content: "−"; }
+  .cm-pdp-im__accord-body {
+    padding: 0 4px 18px;
+    color: var(--cm-ink-70); line-height: 1.7; font-size: 14px;
+  }
+
+  .cm-picker__thumb-fallback {
+    display: flex; width: 100%; height: 100%;
+    align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.02em; padding: 0 4px; text-align: center;
+  }
+</style>
+
+<section class="cm-pdp-im" data-cm-reveal>
+  {%- if section.settings.banner_image != blank or section.settings.banner_text != blank -%}
+    <div class="cm-pdp-im__banner" {% if section.settings.banner_bg != blank %}style="background-color: {{ section.settings.banner_bg }};"{% endif %}>
+      {%- if section.settings.banner_image != blank -%}
+        <img
+          src="{{ section.settings.banner_image | image_url: width: 2400 }}"
+          srcset="{{ section.settings.banner_image | image_url: width: 800 }} 800w, {{ section.settings.banner_image | image_url: width: 1600 }} 1600w, {{ section.settings.banner_image | image_url: width: 2400 }} 2400w"
+          sizes="100vw"
+          alt="{{ section.settings.banner_image.alt | default: section.settings.banner_text | escape }}"
+          width="{{ section.settings.banner_image.width }}"
+          height="{{ section.settings.banner_image.height }}"
+          loading="eager"
+        >
+      {%- endif -%}
+      {%- if section.settings.banner_text != blank -%}
+        <div class="cm-pdp-im__banner-text">{{ section.settings.banner_text }}</div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <nav class="cm-pdp-im__crumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a> &nbsp;/&nbsp; <span>{{ product.title }}</span>
+  </nav>
+
+  <div class="cm-pdp-im__grid">
+    <div class="cm-pdp-im__gallery">
+      <div class="cm-pdp-im__main" data-cm-pdp-main>
+        {%- if product.featured_media -%}
+          <img
+            src="{{ product.featured_media | image_url: width: 1400 }}"
+            srcset="{{ product.featured_media | image_url: width: 700 }} 700w, {{ product.featured_media | image_url: width: 1100 }} 1100w, {{ product.featured_media | image_url: width: 1400 }} 1400w"
+            sizes="(max-width: 900px) 100vw, 55vw"
+            alt="{{ product.featured_media.alt | escape }}"
+            width="1400" height="1866"
+            fetchpriority="high" data-cm-pdp-main-img
+          >
+        {%- endif -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <div class="cm-pdp-im__thumbs">
+          {%- for media in product.media limit: 10 -%}
+            <button type="button" class="cm-pdp-im__thumb {% if forloop.first %}is-active{% endif %}" data-cm-pdp-thumb data-src="{{ media | image_url: width: 1400 }}">
+              <img src="{{ media | image_url: width: 240 }}" alt="{{ media.alt | escape }}" width="240" height="320" loading="lazy">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="cm-pdp-im__info">
+      {%- if product.vendor != blank -%}
+        <p class="cm-pdp-im__vendor">{{ product.vendor }}</p>
+      {%- endif -%}
+      <h1 class="cm-pdp-im__title">{{ product.title }}</h1>
+
+      {%- if section.settings.show_stub_rating -%}
+        <div class="cm-pdp-im__reviews">
+          <span class="cm-pdp-im__stars">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+            {%- endfor -%}
+          </span>
+          <span>{{ product.metafields.reviews.rating.value | default: '4.8' }} · {{ product.metafields.reviews.rating_count.value | default: '120' }} reviews</span>
+        </div>
+      {%- endif -%}
+
+      <p class="cm-pdp-im__price">
+        <strong data-cm-price>{{ current_variant.price | money }}</strong>
+        {%- if on_sale -%}
+          <span class="compare">{{ compare | money }}</span>
+          <span class="percent">{{ percent_off }}% OFF</span>
+        {%- endif -%}
+      </p>
+      <p class="cm-pdp-im__mrp">MRP inclusive of all taxes</p>
+
+      {%- if section.settings.short_description != blank -%}
+        <p class="cm-pdp-im__short">{{ section.settings.short_description }}</p>
+      {%- endif -%}
+
+      {% render 'cm-cross-product-swatches', product: product %}
+
+      <form class="cm-pdp-im__form" method="post" action="{{ routes.cart_add_url }}" data-cm-picker>
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            {%- assign lower_name = option.name | downcase -%}
+            {%- if has_cross_group -%}
+              {%- if lower_name contains 'color' or lower_name contains 'colour' -%}{%- continue -%}{%- endif -%}
+              {%- if lower_name == 'title' -%}{%- continue -%}{%- endif -%}
+            {%- endif -%}
+            {%- if lower_name == 'title' and option.values.size == 1 and option.selected_value == 'Default Title' -%}
+              {%- continue -%}
+            {%- endif -%}
+            <div class="cm-picker" data-cm-picker-group>
+              <p class="cm-picker__label">
+                <span>{{ option.name }}:</span> <strong data-cm-picker-value>{{ option.selected_value }}</strong>
+              </p>
+              <div class="cm-picker__row">
+                {%- if lower_name contains 'color' or lower_name contains 'colour' -%}
+                  {%- for value in option.values -%}
+                    {%- assign v_variant = nil -%}
+                    {%- for v in product.variants -%}
+                      {%- if v.options contains value -%}{%- assign v_variant = v -%}{%- break -%}{%- endif -%}
+                    {%- endfor -%}
+                    <button type="button" class="cm-picker__thumb {% if value == option.selected_value %}is-active{% endif %}" data-option-name="{{ option.name | escape }}" data-option-value="{{ value | escape }}" title="{{ value }}">
+                      {%- if v_variant.featured_image -%}
+                        <img src="{{ v_variant.featured_image | image_url: width: 120 }}" alt="{{ value | escape }}" width="44" height="58" loading="lazy">
+                      {%- else -%}
+                        <span class="cm-picker__thumb-fallback">{{ value }}</span>
+                      {%- endif -%}
+                    </button>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for value in option.values -%}
+                    <button type="button" class="cm-picker__pill {% if value == option.selected_value %}is-active{% endif %}" data-option-name="{{ option.name | escape }}" data-option-value="{{ value | escape }}">{{ value }}</button>
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+        <input type="hidden" name="quantity" value="1">
+        <script type="application/json" data-cm-variants>{{ product.variants | json }}</script>
+
+        <div class="cm-pdp-im__cta-row">
+          <button type="submit" class="cm-pdp-lux__atc" data-cm-atc {% unless current_variant.available %}disabled{% endunless %}>
+            {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+          </button>
+          <button type="button" class="cm-pdp-im__wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <div class="cm-pdp-im__accord">
+        <details open>
+          <summary>Why You'll Love It?</summary>
+          <div class="cm-pdp-im__accord-body">
+            {{ product.description | default: 'Structured silhouette, refined hardware, and interiors laid out for the way you actually carry.' }}
+          </div>
+        </details>
+        <details>
+          <summary>Details &amp; Dimensions</summary>
+          <div class="cm-pdp-im__accord-body">
+            {{ product.metafields.custom.dimensions | default: 'Refer to product images for size details. Contact us for exact measurements.' }}
+          </div>
+        </details>
+        <details>
+          <summary>Shipping &amp; Returns</summary>
+          <div class="cm-pdp-im__accord-body">Standard delivery 3–7 business days. Free shipping over ₹999. Easy 15-day returns.</div>
+        </details>
+        <details>
+          <summary>Care</summary>
+          <div class="cm-pdp-im__accord-body">Wipe with a soft, damp cloth. Store in the dust bag. Avoid direct sunlight and prolonged moisture.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var gallery = document.querySelector('.cm-pdp-im__gallery');
+    if (!gallery) return;
+    var mainImg = gallery.querySelector('[data-cm-pdp-main-img]');
+    gallery.querySelectorAll('[data-cm-pdp-thumb]').forEach(function(t) {
+      t.addEventListener('click', function() {
+        gallery.querySelectorAll('[data-cm-pdp-thumb]').forEach(function(x) { x.classList.remove('is-active'); });
+        t.classList.add('is-active');
+        if (mainImg) mainImg.src = t.dataset.src;
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Calvium — PDP Immersive",
+  "class": "shopify-section--cm-pdp-im",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Top banner (constant, above PDP)" },
+    { "type": "image_picker", "id": "banner_image", "label": "Banner image (full-width)" },
+    { "type": "text", "id": "banner_text", "label": "Banner text (optional, overlays image)" },
+    { "type": "color", "id": "banner_bg", "label": "Banner background (fallback if no image)" },
+    { "type": "header", "content": "Product info" },
+    { "type": "checkbox", "id": "show_stub_rating", "label": "Show placeholder rating", "default": true },
+    { "type": "textarea", "id": "short_description", "label": "Short intro (above ATC)" }
+  ],
+  "presets": [ { "name": "Calvium — PDP Immersive" } ]
+}
+{% endschema %}
