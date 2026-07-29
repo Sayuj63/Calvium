@@ -287,11 +287,12 @@
 .cm-nav__item:focus-within .cm-nav__trigger svg { transform: rotate(180deg); }
 
 .cm-mega {
-  position: absolute;
-  top: 100%;
+  position: fixed;
+  top: calc(var(--cm-header-offset, 122px) + 6px);
   left: 50%;
-  transform: translate(-50%, 12px);
-  min-width: min(1120px, 92vw);
+  transform: translateX(-50%) translateY(6px);
+  width: min(1120px, 92vw);
+  max-width: 92vw;
   padding: 32px 40px;
   background: #fff;
   border: 1px solid var(--cm-ink-08);
@@ -305,7 +306,7 @@
 .cm-nav__item:focus-within .cm-mega {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, 4px);
+  transform: translateX(-50%) translateY(0);
 }
 
 .cm-mega__cols {
@@ -496,6 +497,45 @@
   text-decoration: none;
 }
 .cm-mobile-drawer__link svg { width: 14px; height: 14px; opacity: 0.5; }
+
+/* Expandable submenu groups inside the mobile drawer */
+.cm-mobile-drawer__group { border-bottom: 1px solid var(--cm-ink-08); }
+.cm-mobile-drawer__group .cm-mobile-drawer__link { border-bottom: 0; }
+.cm-mobile-drawer__summary {
+  list-style: none;
+  cursor: pointer;
+}
+.cm-mobile-drawer__summary::-webkit-details-marker { display: none; }
+.cm-mobile-drawer__chev {
+  width: 14px; height: 14px;
+  opacity: 0.6;
+  transition: transform 220ms var(--cm-ease-out);
+}
+.cm-mobile-drawer__group[open] > .cm-mobile-drawer__summary .cm-mobile-drawer__chev {
+  transform: rotate(180deg);
+}
+.cm-mobile-drawer__submenu {
+  padding: 0 4px 14px 16px;
+  display: grid;
+  gap: 2px;
+}
+.cm-mobile-drawer__subheading {
+  font-family: var(--cm-font-heading);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cm-ink-50);
+  margin: 12px 0 6px;
+}
+.cm-mobile-drawer__sublink {
+  display: block;
+  padding: 10px 0;
+  color: var(--cm-ink);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.cm-mobile-drawer__sublink:active { color: var(--cm-ink-70); }
 
 /* ------------------------------------------------------------
    Most-Loved Styles slider (premium small font)

@@ -220,10 +220,76 @@
     </div>
     {%- if menu != blank -%}
       {%- for link in menu.links -%}
-        <a href="{{ link.url }}" class="cm-mobile-drawer__link">
-          <span>{{ link.title }}</span>
-          <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        {%- comment -%} Match any mega block by parent label (same logic as desktop). {%- endcomment -%}
+        {%- assign mega_block = nil -%}
+        {%- assign link_key = link.title | downcase | strip | replace: ' ', '-' | replace: '&', 'and' -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'mega' -%}
+            {%- assign block_key = block.settings.parent_label | default: '' | downcase | strip | replace: ' ', '-' | replace: '&', 'and' -%}
+            {%- if block_key == link_key -%}{%- assign mega_block = block -%}{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign has_mega = false -%}
+        {%- if mega_block != nil -%}
+          {%- for i in (1..4) -%}
+            {%- assign head_k = 'col' | append: i | append: '_heading' -%}
+            {%- assign links_k = 'col' | append: i | append: '_links' -%}
+            {%- if mega_block.settings[head_k] != blank or mega_block.settings[links_k] != blank -%}
+              {%- assign has_mega = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+        {%- assign has_children = false -%}
+        {%- if link.links.size > 0 -%}{%- assign has_children = true -%}{%- endif -%}
+
+        {%- if has_mega -%}
+          <details class="cm-mobile-drawer__group">
+            <summary class="cm-mobile-drawer__link cm-mobile-drawer__summary">
+              <span>{{ link.title }}</span>
+              <svg class="cm-mobile-drawer__chev" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="cm-mobile-drawer__submenu">
+              {%- for i in (1..4) -%}
+                {%- assign head_k = 'col' | append: i | append: '_heading' -%}
+                {%- assign links_k = 'col' | append: i | append: '_links' -%}
+                {%- if mega_block.settings[head_k] != blank or mega_block.settings[links_k] != blank -%}
+                  {%- if mega_block.settings[head_k] != blank -%}
+                    <p class="cm-mobile-drawer__subheading">{{ mega_block.settings[head_k] }}</p>
+                  {%- endif -%}
+                  {%- if mega_block.settings[links_k] != blank -%}
+                    {%- assign lines = mega_block.settings[links_k] | newline_to_br | split: '<br />' -%}
+                    {%- for line in lines -%}
+                      {%- assign trimmed = line | strip -%}
+                      {%- if trimmed != blank -%}
+                        {%- assign parts = trimmed | split: '|' -%}
+                        {%- assign label = parts[0] | strip -%}
+                        {%- assign href = parts[1] | default: '#' | strip -%}
+                        <a href="{{ href }}" class="cm-mobile-drawer__sublink">{{ label }}</a>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- elsif has_children -%}
+          <details class="cm-mobile-drawer__group">
+            <summary class="cm-mobile-drawer__link cm-mobile-drawer__summary">
+              <span>{{ link.title }}</span>
+              <svg class="cm-mobile-drawer__chev" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="cm-mobile-drawer__submenu">
+              {%- for child in link.links -%}
+                <a href="{{ child.url }}" class="cm-mobile-drawer__sublink">{{ child.title }}</a>
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- else -%}
+          <a href="{{ link.url }}" class="cm-mobile-drawer__link">
+            <span>{{ link.title }}</span>
+            <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        {%- endif -%}
       {%- endfor -%}
     {%- else -%}
       {%- for block in section.blocks -%}
