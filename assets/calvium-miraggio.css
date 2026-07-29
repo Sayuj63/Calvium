@@ -1658,23 +1658,23 @@
   transition: transform 200ms var(--cm-ease-out), background 200ms var(--cm-ease-out), color 200ms var(--cm-ease-out), border-color 200ms var(--cm-ease-out);
   cursor: pointer;
 }
-.cm-hero__btn--primary {
+.cm-hero .cm-hero__btn--primary {
   background: var(--cm-white);
   color: var(--cm-black);
   border-color: var(--cm-white);
 }
-.cm-hero__btn--primary:hover { background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black); transform: translateY(-1px); }
-.cm-hero__btn--secondary {
+.cm-hero .cm-hero__btn--primary:hover { background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black); transform: translateY(-1px); }
+.cm-hero .cm-hero__btn--secondary {
   background: transparent;
   color: currentColor;
   border-color: currentColor;
 }
-.cm-hero__btn--secondary:hover { background: currentColor; color: var(--cm-black); }
-.cm-hero--dark-text .cm-hero__btn--secondary:hover { color: var(--cm-white); }
-.cm-hero--dark-text .cm-hero__btn--primary {
+.cm-hero .cm-hero__btn--secondary:hover { background: currentColor; color: var(--cm-black); }
+.cm-hero.cm-hero--dark-text .cm-hero__btn--secondary:hover { color: var(--cm-white); }
+.cm-hero.cm-hero--dark-text .cm-hero__btn--primary {
   background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black);
 }
-.cm-hero--dark-text .cm-hero__btn--primary:hover {
+.cm-hero.cm-hero--dark-text .cm-hero__btn--primary:hover {
   background: var(--cm-white); color: var(--cm-black);
 }
 .cm-hero__micro {
@@ -1950,8 +1950,8 @@
   transition: background 200ms var(--cm-ease-out), color 200ms var(--cm-ease-out), transform 200ms var(--cm-ease-out);
 }
 .cm-lookbook__cta svg { width: 16px; height: 16px; transition: transform 200ms var(--cm-ease-out); }
-.cm-lookbook__cta:hover { background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black); transform: translateY(-1px); }
-.cm-lookbook__cta:hover svg { transform: translateX(3px); }
+.cm-lookbook .cm-lookbook__cta:hover { background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black); transform: translateY(-1px); }
+.cm-lookbook .cm-lookbook__cta:hover svg { transform: translateX(3px); }
 
 .cm-lookbook__shop {
   display: flex;

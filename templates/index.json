@@ -29,55 +29,6 @@
         "cta2_link": "/collections/new-arrivals"
       }
     },
-    "calvium_usp": {
-      "type": "calvium-usp-strip",
-      "blocks": {
-        "usp_1": {
-          "type": "usp",
-          "settings": {
-            "icon": "shipping",
-            "title": "Free Shipping",
-            "subtitle": "On orders above ₹999"
-          }
-        },
-        "usp_2": {
-          "type": "usp",
-          "settings": {
-            "icon": "returns",
-            "title": "Easy Returns",
-            "subtitle": "7-day hassle-free"
-          }
-        },
-        "usp_3": {
-          "type": "usp",
-          "settings": {
-            "icon": "cod",
-            "title": "Cash on Delivery",
-            "subtitle": "Available across India"
-          }
-        },
-        "usp_4": {
-          "type": "usp",
-          "settings": {
-            "icon": "secure",
-            "title": "Secure Checkout",
-            "subtitle": "100% safe payments"
-          }
-        }
-      },
-      "block_order": [
-        "usp_1",
-        "usp_2",
-        "usp_3",
-        "usp_4"
-      ],
-      "settings": {
-        "tone": "cream",
-        "bordered": true,
-        "padding_top": 20,
-        "padding_bottom": 20
-      }
-    },
     "calvium_shop_by_style": {
       "type": "calvium-shop-by-style",
       "blocks": {
@@ -264,7 +215,7 @@
       ],
       "settings": {
         "eyebrow": "REAL PEOPLE, REAL REVIEWS",
-        "heading": "Loved by 100,000+ customers across India",
+        "heading": "Loved by 100+ customers across India",
         "summary": "4.8 average from verified buyers",
         "tone": "cream",
         "padding_top": 60,
@@ -424,7 +375,6 @@
   },
   "order": [
     "calvium_hero",
-    "calvium_usp",
     "calvium_shop_by_style",
     "calvium_most_loved_main",
     "calvium_new_in_tiles_hp",
