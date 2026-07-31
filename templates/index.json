@@ -286,7 +286,7 @@
         "t4": {
           "type": "tile",
           "settings": {
-            "image": "shopify://shop_images/post_4.png",
+            "image": "shopify://shop_images/post5.png",
             "link": "",
             "alt": "Calvium look 4",
             "caption": "",
@@ -296,7 +296,7 @@
         "t5": {
           "type": "tile",
           "settings": {
-            "image": "shopify://shop_images/post_4.png",
+            "image": "shopify://shop_images/post2.png",
             "link": "",
             "alt": "Calvium look 5",
             "caption": "",
