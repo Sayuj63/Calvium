@@ -256,6 +256,7 @@
         "t1": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/CalviumBags.jpg",
             "link": "",
             "alt": "Calvium look 1",
             "caption": "",
@@ -265,6 +266,7 @@
         "t2": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/IG_-02.jpg",
             "link": "",
             "alt": "Calvium look 2",
             "caption": "",
@@ -274,6 +276,7 @@
         "t3": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/post_3.png",
             "link": "",
             "alt": "Calvium look 3",
             "caption": "",
@@ -283,6 +286,7 @@
         "t4": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/post_4.png",
             "link": "",
             "alt": "Calvium look 4",
             "caption": "",
