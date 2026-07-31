@@ -750,7 +750,7 @@
                           "type": "text",
                           "name": "Text",
                           "settings": {
-                            "text": "<p>Senior compound, Narayan Nagar, Ghatkopar West <br/>Mumbai - 400 086</p>",
+                            "text": "<p><a href=\"https://maps.google.com/?q=Senior+compound+Narayan+Nagar+Ghatkopar+West+Mumbai\" target=\"_blank\" rel=\"noopener\">Senior compound, Narayan Nagar, Ghatkopar West<br/>Mumbai - 400 086</a></p>\n<p><a href=\"https://wa.me/919999999999\" target=\"_blank\" rel=\"noopener\">📱 WhatsApp: +91 99999 99999</a></p>",
                             "collection_description_only": false,
                             "collapse_text": false,
                             "typing_text": false,

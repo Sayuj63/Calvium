@@ -17,7 +17,7 @@
           "name": "Breadcrumb",
           "settings": {
             "separator": "caret",
-            "horizontal_alignment": "center",
+            "horizontal_alignment": "start",
             "gap": 12,
             "font_size": "1.2rem",
             "width": "fill",
@@ -733,7 +733,7 @@
                         "input_width": 100,
                         "input_type_preset": "paragraph",
                         "is_required": false,
-                        "placeholder": "JOHN DOE",
+                        "placeholder": "Type your name",
                         "padding_left": 15,
                         "padding_right": 15,
                         "padding_top": 12,

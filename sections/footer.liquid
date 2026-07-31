@@ -2,14 +2,35 @@
   /* Force enlarged footer logo — overrides JSON block setting */
   footer .logo-block,
   [data-section-type="footer"] .logo-block,
-  .shopify-section-group-footer-group .logo-block { --logo-width: 140px !important; --logo-width-mobile: 110px !important; }
+  .shopify-section-group-footer-group .logo-block { --logo-width: 220px !important; --logo-width-mobile: 160px !important; }
   footer .logo-block__image,
   [data-section-type="footer"] .logo-block__image,
-  .shopify-section-group-footer-group .logo-block__image { width: 100% !important; height: auto !important; max-width: 140px; }
+  .shopify-section-group-footer-group .logo-block__image { width: 100% !important; height: auto !important; max-width: 220px; }
   @media (max-width: 749px) {
     footer .logo-block__image,
-    .shopify-section-group-footer-group .logo-block__image { max-width: 110px; }
+    .shopify-section-group-footer-group .logo-block__image { max-width: 160px; }
   }
+
+  /* Auto-link plain-text emails and phone numbers in the footer text blocks */
+  footer .text-block a[href^="mailto:"],
+  footer .text-block a[href^="tel:"],
+  footer .text-block a[href^="https://wa.me/"] {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  /* WhatsApp / contact line — inline row with icon */
+  footer .cm-contact-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1.5;
+  }
+  footer .cm-contact-line + .cm-contact-line { margin-top: 6px; }
+  footer .cm-contact-line svg { width: 16px; height: 16px; flex-shrink: 0; }
+  footer .cm-contact-line span { text-decoration: underline; text-underline-offset: 3px; }
 </style>
 <{% if section.settings.animation_type == 'parallax' %}footer-parallax class="block"{% else %}div{% endif %}>
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>

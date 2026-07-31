@@ -198,49 +198,66 @@
   doc.querySelectorAll("[data-cm-cart-close], [data-cm-cart-overlay]").forEach((b) => b.addEventListener("click", closeCart));
   doc.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
 
-  // qty and remove buttons — best-effort AJAX to Shopify's cart API
+  // qty and remove buttons — AJAX to Shopify's cart API with an in-flight
+  // lock so rapid double-clicks can't queue multiple mutations against a stale
+  // input.value (was the source of "random qty" behaviour on repeated clicks).
+  let cartActionInFlight = false;
   doc.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-cm-cart-qty], [data-cm-cart-remove], [data-cm-addon-add], [data-cm-rec-add]");
     if (!btn) return;
     e.preventDefault();
-    if (btn.hasAttribute("data-cm-cart-qty")) {
-      const line = btn.closest("[data-cm-line]");
-      const key = line?.dataset.key;
-      const input = line?.querySelector("input[type=number]");
-      const dir = btn.dataset.dir === "-1" ? -1 : 1;
-      const nextQty = Math.max(0, Number(input?.value || 1) + dir);
-      if (!key) return;
-      await updateLine(key, nextQty);
-      window.location.reload();
-    } else if (btn.hasAttribute("data-cm-cart-remove")) {
-      const key = btn.dataset.key;
-      if (!key) return;
-      await updateLine(key, 0);
-      window.location.reload();
-    } else if (btn.hasAttribute("data-cm-addon-add") || btn.hasAttribute("data-cm-rec-add")) {
-      const variantId = btn.dataset.variantId;
-      if (!variantId) return;
-      try {
-        await fetch("/cart/add.js", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
-        });
-        window.location.reload();
-      } catch (err) {
-        console.warn("[cm] add failed", err);
+    if (cartActionInFlight || btn.hasAttribute("data-cm-busy")) return;
+    cartActionInFlight = true;
+    btn.setAttribute("data-cm-busy", "");
+
+    try {
+      if (btn.hasAttribute("data-cm-cart-qty")) {
+        const line = btn.closest("[data-cm-line]");
+        const key = line?.dataset.key;
+        const input = line?.querySelector("input[type=number]");
+        const dir = btn.dataset.dir === "-1" ? -1 : 1;
+        const currentQty = Number(input?.value || 1);
+        const nextQty = Math.max(0, currentQty + dir);
+        if (!key) return;
+        // Update the input immediately so a second click reads the new value,
+        // not the stale one. Prevents "same qty spammed 3 times" pattern.
+        if (input) input.value = nextQty;
+        const ok = await updateLine(key, nextQty);
+        if (ok) window.location.reload();
+      } else if (btn.hasAttribute("data-cm-cart-remove")) {
+        const key = btn.dataset.key;
+        if (!key) return;
+        const ok = await updateLine(key, 0);
+        if (ok) window.location.reload();
+      } else if (btn.hasAttribute("data-cm-addon-add") || btn.hasAttribute("data-cm-rec-add")) {
+        const variantId = btn.dataset.variantId;
+        if (!variantId) return;
+        try {
+          const res = await fetch("/cart/add.js", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
+          });
+          if (res.ok) window.location.reload();
+        } catch (err) {
+          console.warn("[cm] add failed", err);
+        }
       }
+    } finally {
+      cartActionInFlight = false;
+      btn.removeAttribute("data-cm-busy");
     }
   });
 
   async function updateLine(key, qty) {
     try {
-      await fetch("/cart/change.js", {
+      const res = await fetch("/cart/change.js", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({ id: key, quantity: qty })
       });
-    } catch (err) { console.warn("[cm] cart update failed", err); }
+      return res.ok;
+    } catch (err) { console.warn("[cm] cart update failed", err); return false; }
   }
 
   // -----------------------------------------------------------
