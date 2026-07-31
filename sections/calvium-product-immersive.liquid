@@ -21,8 +21,16 @@
 
 <style>
   .cm-pdp-im { color: var(--cm-ink); font-family: var(--cm-font-body); background: #fff; }
-  .cm-pdp-im__banner { position: relative; width: 100%; overflow: hidden; line-height: 0; background: #f5efe6; height: clamp(90px, 12vw, 160px); }
-  .cm-pdp-im__banner img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .cm-pdp-im__banner {
+    position: relative; width: 100%; overflow: hidden; line-height: 0;
+    background: #f5efe6;
+    aspect-ratio: 6 / 1;
+    max-height: 240px;
+  }
+  .cm-pdp-im__banner img {
+    display: block; width: 100%; height: 100%;
+    object-fit: cover; object-position: center right;
+  }
   .cm-pdp-im__banner-text {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
