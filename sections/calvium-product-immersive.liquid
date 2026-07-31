@@ -21,8 +21,8 @@
 
 <style>
   .cm-pdp-im { color: var(--cm-ink); font-family: var(--cm-font-body); background: #fff; }
-  .cm-pdp-im__banner { position: relative; width: 100%; overflow: hidden; line-height: 0; }
-  .cm-pdp-im__banner img { display: block; width: 100%; height: auto; max-height: 340px; object-fit: cover; }
+  .cm-pdp-im__banner { position: relative; width: 100%; overflow: hidden; line-height: 0; background: #fff; }
+  .cm-pdp-im__banner img { display: block; width: 100%; height: auto; object-fit: contain; }
   .cm-pdp-im__banner-text {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -33,6 +33,14 @@
   }
   .cm-pdp-im__banner:not(:has(img)) .cm-pdp-im__banner-text {
     position: static; color: inherit; text-shadow: none; padding: 20px 24px;
+  }
+  .cm-pdp-im__banner-title {
+    position: absolute; top: 50%; left: clamp(16px, 4vw, 48px);
+    transform: translateY(-50%);
+    color: #000; font-family: var(--cm-font-display, var(--cm-font-body));
+    font-size: clamp(22px, 4vw, 48px); font-weight: 600;
+    letter-spacing: 0.02em; line-height: 1.1;
+    max-width: 55%; margin: 0; pointer-events: none;
   }
   .cm-pdp-im__crumb {
     padding: 20px clamp(16px, 3vw, 32px) 12px;
@@ -165,6 +173,7 @@
       {%- if section.settings.banner_text != blank -%}
         <div class="cm-pdp-im__banner-text">{{ section.settings.banner_text }}</div>
       {%- endif -%}
+      <h1 class="cm-pdp-im__banner-title">{{ product.title }}</h1>
     </div>
   {%- endif -%}
 
