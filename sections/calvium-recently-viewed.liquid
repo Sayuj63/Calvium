@@ -80,12 +80,13 @@
 
 {% schema %}
 {
-  "name": "Calvium — Recommended (recently viewed)",
+  "name": "Calvium — Recommended",
   "class": "shopify-section--cm-recently-viewed",
   "tag": "section",
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "RECOMMENDED FOR YOU" },
-    { "type": "collection", "id": "collection", "label": "Fallback collection (used to fill remaining slots when the visitor has fewer recently-viewed products than the max shown)" },
+    { "type": "collection", "id": "collection", "label": "Fallback collection" },
+    { "type": "paragraph", "content": "Used to fill slots when the visitor has fewer recently-viewed products than the count below." },
     { "type": "range", "id": "max_products", "label": "Products shown (constant)", "min": 4, "max": 20, "step": 1, "default": 8 },
     { "type": "text", "id": "cta_label", "label": "View-all label", "default": "View all" },
     { "type": "url", "id": "cta_url", "label": "View-all link" },
@@ -103,6 +104,6 @@
     { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 40 },
     { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 40 }
   ],
-  "presets": [ { "name": "Calvium — Recommended (recently viewed)" } ]
+  "presets": [ { "name": "Calvium — Recommended" } ]
 }
 {% endschema %}
