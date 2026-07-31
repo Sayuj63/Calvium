@@ -468,7 +468,6 @@
   }
   .cm-header__left { gap: 6px; }
   .cm-header__right { gap: 0; }
-  .cm-header__right a.cm-icon-btn[aria-label="Account"] { display: none; }
   .cm-header__logo img { max-height: 34px; }
   .cm-header__brandtext { font-size: 13px; letter-spacing: 0.14em; }
   .cm-icon-btn { width: 36px; height: 36px; }
