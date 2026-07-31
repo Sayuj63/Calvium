@@ -365,10 +365,6 @@
 // <calvium-recently-viewed> — reorder the SSR-rendered cm-slider track so
 // recently-viewed products appear first, then Fisher-Yates shuffle the rest.
 // Reads _halo_recently_viewed (written by product-info.js:setRecentlyViewed).
-// Guard against double-load: on some templates (e.g. /cart) this script
-// is included by multiple sections; the top-level `class` declaration would
-// throw SyntaxError on the second parse and halt every downstream feature.
-if (!customElements.get("calvium-recently-viewed")) {
 class CalviumRecentlyViewed extends HTMLElement {
   connectedCallback() {
     const track = this;
@@ -408,15 +404,15 @@ class CalviumRecentlyViewed extends HTMLElement {
     track.appendChild(frag);
   }
 }
-customElements.define("calvium-recently-viewed", CalviumRecentlyViewed);
-} // end guard for calvium-recently-viewed
+if (!customElements.get("calvium-recently-viewed")) {
+  customElements.define("calvium-recently-viewed", CalviumRecentlyViewed);
+}
 
 // -----------------------------------------------------------
 // <calvium-search> — search overlay with typeahead, recent searches, and
 // keyboard navigation. Uses Shopify's predictive search JSON endpoint
 // (/search/suggest.json). Opened by any [data-search-open] button,
 // ⌘K / Ctrl+K, or focus events on other data-search-open triggers.
-if (!customElements.get("calvium-search")) {
 class CalviumSearch extends HTMLElement {
   constructor() {
     super();
@@ -705,8 +701,9 @@ class CalviumSearch extends HTMLElement {
   }
   escapeAttr(str) { return this.escapeHtml(str); }
 }
-customElements.define("calvium-search", CalviumSearch);
-} // end guard for calvium-search
+if (!customElements.get("calvium-search")) {
+  customElements.define("calvium-search", CalviumSearch);
+}
 
 // Auto-submit sort dropdown on the search results page
 document.addEventListener("change", (e) => {
