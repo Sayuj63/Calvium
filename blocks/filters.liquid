@@ -75,6 +75,24 @@
 {{ 'component-facets.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
 
+<style>
+  /* Sticky filter block on collection pages */
+  .facets-block-wrapper {
+    position: sticky;
+    top: var(--header-height, 80px);
+    z-index: 20;
+    background: var(--color-background, #fff);
+    align-self: start;
+  }
+  .facets-block-wrapper--vertical {
+    max-height: calc(100vh - var(--header-height, 80px));
+    overflow-y: auto;
+  }
+  @media (max-width: 749px) {
+    .facets-block-wrapper { position: sticky; top: 0; }
+  }
+</style>
+
 <div
   class="
     facets-block-wrapper
