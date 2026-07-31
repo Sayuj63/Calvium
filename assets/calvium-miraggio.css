@@ -2478,92 +2478,6 @@
   }
 }
 
-/* --- Horizontal filter bar (desktop) --- */
-@media (min-width: 1024px) {
-  .cm-facetsbar {
-    display: block;
-    position: sticky;
-    top: 72px;
-    z-index: 20;
-    background: #fff;
-    padding-block: 12px;
-    margin-block-end: 4px;
-    border-block: 1px solid var(--cm-ink-15);
-  }
-  .cm-facetsbar__head {
-    display: flex;
-    padding-block: 0 8px;
-    margin-block-end: 8px;
-    border-bottom: 0;
-  }
-  .cm-facetsbar__title { font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; }
-  .cm-facetsbar__form {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
-  .cm-facetsbar__form > .cm-facetgroup {
-    position: relative;
-    margin: 0;
-  }
-  .cm-facetsbar__form > .cm-facetgroup > summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 8px 14px;
-    border: 1px solid var(--cm-ink-15);
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #fff;
-    color: var(--cm-ink);
-    user-select: none;
-    white-space: nowrap;
-  }
-  .cm-facetsbar__form > .cm-facetgroup > summary::-webkit-details-marker { display: none; }
-  .cm-facetsbar__form > .cm-facetgroup > summary::after {
-    content: "";
-    width: 6px; height: 6px;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: rotate(45deg) translate(-1px, -1px);
-    margin-left: 2px;
-    transition: transform 0.2s;
-  }
-  .cm-facetsbar__form > .cm-facetgroup[open] > summary {
-    background: var(--cm-ink);
-    color: #fff;
-    border-color: var(--cm-ink);
-  }
-  .cm-facetsbar__form > .cm-facetgroup[open] > summary::after {
-    transform: rotate(-135deg) translate(-2px, -2px);
-  }
-  .cm-facetsbar__form > .cm-facetgroup > .cm-facetgroup__body {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    min-width: 260px;
-    max-height: 60vh;
-    overflow-y: auto;
-    background: #fff;
-    border: 1px solid var(--cm-ink-15);
-    border-radius: 8px;
-    padding: 14px 16px;
-    z-index: 30;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.10);
-  }
-  .cm-facetsbar__form > .cm-facetgroup > .cm-facetgroup__body::before {
-    display: none;
-  }
-  .cm-facetsbar__empty { padding: 6px 0; margin: 0; }
-  .cm-facetsbar__foot { display: none; }
-  /* Sortbar sits under the sticky filter bar; hide mobile filter button */
-  .cm-collcat__sortbar { padding-block-start: 4px; }
-}
-
 /* -- Sidebar (facets) -- */
 .cm-facetsbar {
   display: none;
@@ -2756,6 +2670,100 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+/* --- Horizontal filter bar (desktop) ---
+   Overrides the sidebar/mobile-drawer defaults above. Placed AFTER the sidebar
+   block so cascade order lets these rules win on desktop without needing
+   !important or extra specificity. */
+@media (min-width: 1024px) {
+  .cm-facetsbar {
+    display: block;
+    position: sticky;
+    top: 72px;
+    z-index: 20;
+    background: #fff;
+    padding-block: 12px;
+    margin-block-end: 4px;
+    border-block: 1px solid var(--cm-ink-15);
+  }
+  .cm-facetsbar__head {
+    display: flex;
+    padding-block: 0 8px;
+    margin-block-end: 8px;
+    border-bottom: 0;
+  }
+  .cm-facetsbar__title { font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+  .cm-facetsbar__form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .cm-facetsbar__form > .cm-facetgroup {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .cm-facetsbar__form > .cm-facetgroup > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 8px 14px;
+    border: 1px solid var(--cm-ink-15);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    color: var(--cm-ink);
+    user-select: none;
+    white-space: nowrap;
+    font-family: var(--cm-font-body);
+  }
+  .cm-facetsbar__form > .cm-facetgroup > summary::-webkit-details-marker { display: none; }
+  .cm-facetsbar__form > .cm-facetgroup > summary::after {
+    content: "";
+    width: 6px; height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translate(-1px, -1px);
+    margin-left: 2px;
+    margin-right: 0;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .cm-facetsbar__form > .cm-facetgroup[open] > summary {
+    background: var(--cm-ink);
+    color: #fff;
+    border-color: var(--cm-ink);
+  }
+  .cm-facetsbar__form > .cm-facetgroup[open] > summary::after {
+    transform: rotate(-135deg) translate(-2px, -2px);
+  }
+  .cm-facetsbar__form > .cm-facetgroup > .cm-facetgroup__body {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 260px;
+    max-height: 60vh;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid var(--cm-ink-15);
+    border-radius: 8px;
+    padding: 14px 16px;
+    z-index: 30;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.10);
+  }
+  .cm-facetsbar__form > .cm-facetgroup > .cm-facetgroup__body::before {
+    display: none;
+  }
+  .cm-facetsbar__empty { padding: 6px 0; margin: 0; }
+  .cm-facetsbar__foot { display: none; }
+  /* Sortbar sits under the sticky filter bar */
+  .cm-collcat__sortbar { padding-block-start: 4px; }
 }
 
 /* -- Main column: sort bar + grid -- */

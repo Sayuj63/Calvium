@@ -1531,3 +1531,56 @@ git push origin main
 - Products shown (constant N — default 8, min 4, max 20)
 - Card options: % OFF badge, swatches, max swatches, hover ATC
 - Padding top/bottom
+
+---
+
+## 23. Session 2026-07-31 part 3 — Collection page filters back to sticky horizontal pill bar (CSS cascade fix)
+
+### 23.1 Symptom
+On `/collections/all` (and every collection page) at desktop widths, the filter area rendered as a full-width block instead of the intended compact sticky horizontal pill bar:
+- Big "FILTERS" heading (20 px, bold)
+- Each filter (`Availability`, `Price`) stacked vertically on its own row with a full-width `border-bottom`
+- Product grid pushed way down before it even appeared
+
+Commit `0396877` (Session 21 timeframe) had already added the horizontal-bar CSS block, but it wasn't actually taking effect on the live site.
+
+### 23.2 Root cause — CSS cascade order
+
+`assets/calvium-miraggio.css` had **two competing style blocks** for the same selectors:
+
+1. The horizontal-bar block starting at line 2481 (`@media (min-width: 1024px)`): sticky pills, compact heading, flex row, absolute-positioned dropdowns.
+2. The base sidebar/drawer block starting at line 2568 (unscoped, applies at all widths): big heading, `display: block` form, bordered facet groups — needed for the mobile filter drawer.
+
+Cascade rule: when two rules have equal specificity, the one declared LATER in the stylesheet wins. Because the sidebar block sat AFTER the horizontal block, its base-level rules like `.cm-facetsbar__form { display: block }` (line 2609) and `.cm-facetsbar__title { font-size: 20px; font-weight: 700 }` (line 2587) beat the horizontal-bar rules at desktop too, even though the horizontal rules were inside a `min-width: 1024px` media query.
+
+Some rules survived (the pill styling itself, from `.cm-facetsbar__form > .cm-facetgroup > summary` — that compound selector has higher specificity, so it won regardless of order). That's why the individual pill buttons still looked pill-shaped, but the layout around them stayed in sidebar mode.
+
+### 23.3 Fix
+Moved the entire "Horizontal filter bar (desktop)" `@media` block from line 2481 to **after** the sidebar/drawer block (now sits just before the `-- Main column: sort bar + grid --` comment). Now cascade order at ≥ 1024 px puts the horizontal rules last, so they win against the base sidebar rules at equal specificity.
+
+Also tightened the horizontal-bar rules while I was there:
+- `.cm-facetsbar__form > .cm-facetgroup { padding: 0; border: 0; }` — nukes the `border-bottom: 1px solid` and `padding-block: 16px` the base sidebar rules add, which is what was making each pill look like its own row with a horizontal divider.
+- `.cm-facetsbar__title { font-weight: 500 }` — the base rule was `font-weight: 700`; the horizontal version is now the intended lighter weight consistent with other section headings on the page.
+- `.cm-facetsbar__form > .cm-facetgroup > summary { font-family: var(--cm-font-body) }` — overrides the base `.cm-facetgroup summary { font-family: var(--cm-font-heading) }` which was applying a serif to the pill button labels.
+- `.cm-facetsbar__form > .cm-facetgroup > summary::after { margin-left: 2px; margin-right: 0; flex-shrink: 0 }` — the base caret rule has `margin-left: auto` (which pushed the caret to the far right of a full-width sidebar summary) and that was leaking into pill mode; explicit override keeps the caret snug next to the label.
+
+Mobile is untouched — the sidebar/drawer block remains unscoped and applies at < 1024 px as before.
+
+### 23.4 Files touched
+```
+assets/calvium-miraggio.css  — moved the horizontal-filter-bar @media block from before the sidebar block to after it; added padding/border overrides + font-family + caret margin overrides
+```
+
+### 23.5 Push
+```bash
+git add assets/calvium-miraggio.css CALVIUM_CHANGES.md
+git commit -m "Collection: fix filter cascade — horizontal pill bar now wins over sidebar CSS at desktop"
+git push origin main
+```
+
+### 23.6 Verification
+1. Theme editor preview at [admin.shopify.com/store/calvium-2/themes/191621005684/editor](https://admin.shopify.com/store/calvium-2/themes/191621005684/editor) → open `/collections/all` or any collection with configured filters.
+2. Expect a single sticky horizontal row: small `FILTERS` label + `Availability` and `Price` pills next to it, all inline. Clicking a pill should reveal an absolute-positioned dropdown panel below it with checkboxes / price inputs.
+3. Scrolling should keep the pill row sticky at `top: 72px`.
+4. On mobile (< 1024 px width), the horizontal bar is hidden; the `Filter` button in the sortbar still opens the slide-in drawer as before.
+5. Verify the `RECOMMENDED FOR YOU` carousel from Section 22 is showing below `YOU MAY ALSO LIKE` on any PDP — merchant does NOT need to add it manually, `templates/product.json` already registers it in `order` between `recommendations` and `pdp_testimonials`.
