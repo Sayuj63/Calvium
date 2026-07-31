@@ -44,7 +44,7 @@
       "name": "Calvium — Announcement",
       "settings": {
         "default_text": "Free shipping across India above ₹999",
-        "auto_rotate": false,
+        "auto_rotate": true,
         "interval": 4,
         "bg_color": "#0a0a0a",
         "text_color": "#ffffff"
