@@ -1584,3 +1584,83 @@ git push origin main
 3. Scrolling should keep the pill row sticky at `top: 72px`.
 4. On mobile (< 1024 px width), the horizontal bar is hidden; the `Filter` button in the sortbar still opens the slide-in drawer as before.
 5. Verify the `RECOMMENDED FOR YOU` carousel from Section 22 is showing below `YOU MAY ALSO LIKE` on any PDP — merchant does NOT need to add it manually, `templates/product.json` already registers it in `order` between `recommendations` and `pdp_testimonials`.
+
+---
+
+## 24. Session 2026-07-31 part 4 — Sticky filter off, Recently-viewed rescue push, Shopify schema constraints learned
+
+### 24.1 What went wrong
+Merchant checked the live theme editor (191621005684) and reported: (a) the collection filter row was still sticky and they wanted it non-sticky, (b) the `RECOMMENDED FOR YOU` carousel was NOT visible on any PDP, and (c) the "Recommended (recently viewed)" section didn't show up as an option in the theme-editor section picker.
+
+`git ls-remote origin main` confirmed commits `a0d8359` (add carousel) and `c3ba8d4` (filter cascade) were on GitHub. But `shopify theme pull --only templates/product.json` from the live theme returned the pre-carousel version. So the **Shopify → GitHub sync had NOT propagated my commits from git → live theme**. Section file `sections/calvium-recently-viewed.liquid` didn't even exist on the live theme.
+
+### 24.2 Root cause of the sync miss — Shopify schema validation
+Direct CLI push (`shopify theme push --theme 191621005684 --only sections/calvium-recently-viewed.liquid`) surfaced the actual error hidden behind the silent GitHub-sync failure:
+
+```
+Invalid schema: name is too long (max 25 characters)
+```
+
+The section schema had `"name": "Calvium — Recommended (recently viewed)"` (~40 chars). Shopify rejects section files whose schema violates constraints; the GitHub sync doesn't surface this error in a visible place, so the sync silently drops the file — and any template that references it also fails to push, cascading the outage.
+
+A second retry surfaced another constraint:
+
+```
+Invalid schema: setting with id="collection" label is too long (max 70 characters)
+```
+
+The `fallback_collection` setting had a verbose label explaining what it did (~170 chars). Same class of failure.
+
+**Shopify section schema constraints (relevant to this repo)**:
+- `schema.name` — max **25 characters**
+- Setting `label` — max **70 characters**
+- (Merchant-visible strings: err short. Move long explanations into a `paragraph`-type setting inline in the schema.)
+
+### 24.3 Fixes applied
+1. **`sections/calvium-recently-viewed.liquid` schema**:
+   - `name` → `"Calvium — Recommended"` (21 chars)
+   - Preset `name` → same
+   - `collection` setting `label` → `"Fallback collection"` (19 chars); the long explanation moved to a new `{"type": "paragraph", "content": "Used to fill slots when the visitor has fewer recently-viewed products than the count below."}` block right after the collection picker, which is under 70 chars and Shopify accepts it as merchant-visible help text.
+
+2. **`assets/calvium-miraggio.css` — remove sticky on the filter row** (per merchant request):
+   - `.cm-facetsbar` (inside the desktop horizontal-bar `@media` block, moved to after the sidebar block in Section 23) — swapped `position: sticky; top: 72px; z-index: 20;` for `position: static;`. Filter row now scrolls with the page.
+
+3. **Force-push everything to live theme via CLI** to bypass whatever was breaking the GitHub sync. Order matters — section file first, then the JSON template that references it:
+```bash
+shopify theme push --store calvium-2.myshopify.com --theme 191621005684 --nodelete --allow-live \
+  --only "sections/calvium-recently-viewed.liquid"
+shopify theme push --store calvium-2.myshopify.com --theme 191621005684 --nodelete --allow-live \
+  --only "templates/product.json" \
+  --only "assets/calvium-miraggio.js" \
+  --only "assets/calvium-miraggio.css" \
+  --only "assets/calvium-overrides.css" \
+  --only "snippets/cm-cross-product-swatches.liquid"
+```
+
+Pushing template + section together in one call fails with `Section type 'calvium-recently-viewed' does not refer to an existing section file` because Shopify validates the template BEFORE the section file has been committed to the theme's asset store. Always push new sections first, then push templates that reference them.
+
+### 24.4 Verification (after the CLI push)
+`shopify theme pull --only templates/product.json --only sections/calvium-recently-viewed.liquid` confirmed both files are now on theme `191621005684`, and `templates/product.json` has `recently_viewed` in both `sections` and the `order` array.
+
+### 24.5 Deploy convention going forward (updated)
+Because the Shopify GitHub sync silently drops files that fail schema validation:
+1. **Always run `shopify theme push --dry-run` first** (or just push directly with `--allow-live`) — the CLI surfaces schema errors that the GitHub sync hides.
+2. If schema validation fails, fix the schema, then push again.
+3. Only rely on `git push origin main` alone once the CLI push has confirmed the schema is valid. In practice: CLI-push for the first commit that introduces a new section, then rely on GitHub sync for follow-up edits to that section.
+
+### 24.6 Files touched
+```
+sections/calvium-recently-viewed.liquid  — schema.name and label shortened, added paragraph help text
+assets/calvium-miraggio.css              — .cm-facetsbar position: sticky → static (in desktop @media block)
+```
+
+### 24.7 Push (this commit)
+```bash
+git add sections/calvium-recently-viewed.liquid \
+        assets/calvium-miraggio.css \
+        CALVIUM_CHANGES.md
+git commit -m "Section: shorten schema strings to Shopify's 25/70 char limits; Collection: remove sticky filter"
+git push origin main
+```
+
+Direct-to-theme push already done via CLI. Git commit is for record-keeping so the GitHub state matches what's on the live theme.
