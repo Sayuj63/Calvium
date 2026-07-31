@@ -1,0 +1,110 @@
+{%- comment -%}
+  Calvium — Search overlay.
+  Full-screen typeahead + recommendations. Rendered inside the header section.
+  Reads _calvium_recent_searches from localStorage via the <calvium-search>
+  custom element (calvium-miraggio.js). Triggered by any [data-search-open]
+  button, ⌘K / Ctrl+K, or the search icon; closed by Esc, backdrop, or the
+  close button.
+{%- endcomment -%}
+
+{%- assign featured_coll = collections['best-sellers'] -%}
+{%- if featured_coll == blank or featured_coll.products.size == 0 -%}
+  {%- assign featured_coll = collections['new-arrivals'] -%}
+{%- endif -%}
+{%- if featured_coll == blank or featured_coll.products.size == 0 -%}
+  {%- assign featured_coll = collections.all -%}
+{%- endif -%}
+
+<calvium-search class="cm-search" data-cm-search hidden>
+  <div class="cm-search__backdrop" data-cm-search-close aria-hidden="true"></div>
+  <div class="cm-search__panel" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="cm-search__head">
+      <form class="cm-search__form" action="{{ routes.search_url }}" method="get" role="search">
+        <input type="hidden" name="type" value="product">
+        <svg class="cm-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m20 20-3.5-3.5"/>
+        </svg>
+        <input
+          type="search"
+          name="q"
+          class="cm-search__input"
+          placeholder="Search bags, colours, collections…"
+          autocomplete="off"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          data-cm-search-input
+          aria-label="Search products"
+        >
+        <button type="button" class="cm-search__clear" data-cm-search-clear hidden aria-label="Clear search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+        <button type="button" class="cm-search__close" data-cm-search-close aria-label="Close search">
+          <span class="cm-search__close-label">Close</span>
+          <svg class="cm-search__close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="cm-search__body" data-cm-search-body>
+
+      <div class="cm-search__empty" data-cm-search-empty>
+        <section class="cm-search__section" data-cm-search-recent-section hidden>
+          <div class="cm-search__section-head">
+            <h3 class="cm-search__section-title">Recent</h3>
+            <button type="button" class="cm-search__clear-recent" data-cm-search-clear-recent>Clear</button>
+          </div>
+          <div class="cm-search__pills" data-cm-search-recent-list></div>
+        </section>
+
+        <section class="cm-search__section">
+          <h3 class="cm-search__section-title">Popular</h3>
+          <div class="cm-search__pills">
+            <a href="{{ routes.search_url }}?q=tote+bag&amp;type=product" class="cm-search__pill">Tote bags</a>
+            <a href="{{ routes.search_url }}?q=crossbody&amp;type=product" class="cm-search__pill">Crossbody</a>
+            <a href="{{ routes.search_url }}?q=shoulder&amp;type=product" class="cm-search__pill">Shoulder</a>
+            <a href="{{ routes.search_url }}?q=backpack&amp;type=product" class="cm-search__pill">Backpacks</a>
+            <a href="{{ routes.search_url }}?q=clutch&amp;type=product" class="cm-search__pill">Clutches</a>
+            <a href="{{ routes.search_url }}?q=wallet&amp;type=product" class="cm-search__pill">Wallets</a>
+          </div>
+        </section>
+
+        {%- if featured_coll and featured_coll.products.size > 0 -%}
+          <section class="cm-search__section">
+            <h3 class="cm-search__section-title">Featured</h3>
+            <div class="cm-search__featured-grid">
+              {%- assign shown = 0 -%}
+              {%- for p in featured_coll.products -%}
+                {%- if shown >= 4 -%}{%- break -%}{%- endif -%}
+                {%- render 'cm-product-card', product: p, show_percent: false, show_swatches: false, show_atc: false -%}
+                {%- assign shown = shown | plus: 1 -%}
+              {%- endfor -%}
+            </div>
+          </section>
+        {%- endif -%}
+      </div>
+
+      <div class="cm-search__results" data-cm-search-results hidden></div>
+
+      <div class="cm-search__no-results" data-cm-search-no-results hidden>
+        <p class="cm-search__no-results-text">No results for "<span data-cm-search-query></span>"</p>
+        <p class="cm-search__no-results-hint">Try different keywords or browse:</p>
+        <div class="cm-search__pills">
+          <a href="/collections/best-sellers" class="cm-search__pill">Best sellers</a>
+          <a href="/collections/new-arrivals" class="cm-search__pill">New arrivals</a>
+          <a href="/collections/all" class="cm-search__pill">All products</a>
+        </div>
+      </div>
+
+      <div class="cm-search__loading" data-cm-search-loading hidden aria-live="polite">
+        <span class="cm-search__spinner" aria-hidden="true"></span>
+        <span class="visually-hidden">Searching…</span>
+      </div>
+    </div>
+  </div>
+</calvium-search>

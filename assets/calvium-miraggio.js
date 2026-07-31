@@ -390,3 +390,306 @@ class CalviumRecentlyViewed extends HTMLElement {
 if (!customElements.get("calvium-recently-viewed")) {
   customElements.define("calvium-recently-viewed", CalviumRecentlyViewed);
 }
+
+// -----------------------------------------------------------
+// <calvium-search> — search overlay with typeahead, recent searches, and
+// keyboard navigation. Uses Shopify's predictive search JSON endpoint
+// (/search/suggest.json). Opened by any [data-search-open] button,
+// ⌘K / Ctrl+K, or focus events on other data-search-open triggers.
+class CalviumSearch extends HTMLElement {
+  constructor() {
+    super();
+    this.debounceTimer = null;
+    this.currentQuery = "";
+    this.isOpen = false;
+    this.RECENT_KEY = "_calvium_recent_searches";
+    this.RECENT_LIMIT = 25;
+    this.RECENT_SHOW = 5;
+  }
+
+  connectedCallback() {
+    this.input = this.querySelector("[data-cm-search-input]");
+    this.form = this.querySelector(".cm-search__form");
+    this.body = this.querySelector("[data-cm-search-body]");
+    this.emptyEl = this.querySelector("[data-cm-search-empty]");
+    this.resultsEl = this.querySelector("[data-cm-search-results]");
+    this.noResultsEl = this.querySelector("[data-cm-search-no-results]");
+    this.loadingEl = this.querySelector("[data-cm-search-loading]");
+    this.clearBtn = this.querySelector("[data-cm-search-clear]");
+    this.recentSection = this.querySelector("[data-cm-search-recent-section]");
+    this.recentList = this.querySelector("[data-cm-search-recent-list]");
+    this.queryDisplay = this.querySelector("[data-cm-search-query]");
+    if (!this.input || !this.form) return;
+
+    document.querySelectorAll("[data-search-open]").forEach((btn) => {
+      btn.addEventListener("click", (e) => { e.preventDefault(); this.open(); });
+    });
+
+    this.querySelectorAll("[data-cm-search-close]").forEach((btn) => {
+      btn.addEventListener("click", () => this.close());
+    });
+
+    this.input.addEventListener("input", () => {
+      const q = this.input.value.trim();
+      this.clearBtn.hidden = q.length === 0;
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = setTimeout(() => this.search(q), 250);
+    });
+
+    this.clearBtn.addEventListener("click", () => {
+      this.input.value = "";
+      this.clearBtn.hidden = true;
+      this.currentQuery = "";
+      this.showEmpty();
+      this.input.focus();
+    });
+
+    const clearRecentBtn = this.querySelector("[data-cm-search-clear-recent]");
+    if (clearRecentBtn) clearRecentBtn.addEventListener("click", () => this.clearRecent());
+
+    this.form.addEventListener("submit", () => {
+      const q = this.input.value.trim();
+      if (q) this.saveRecent(q);
+    });
+
+    this.recentList.addEventListener("click", (e) => {
+      const removeBtn = e.target.closest("[data-remove-recent]");
+      if (removeBtn) {
+        e.preventDefault();
+        this.removeRecent(removeBtn.dataset.removeRecent);
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && this.isOpen) { this.close(); return; }
+      const isMod = e.metaKey || e.ctrlKey;
+      if (isMod && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        this.isOpen ? this.close() : this.open();
+      }
+    });
+
+    this.resultsEl.addEventListener("keydown", (e) => this.handleResultsKeydown(e));
+    this.input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        const first = this.resultsEl.querySelector("a[href], button");
+        if (first) { e.preventDefault(); first.focus(); }
+      }
+    });
+  }
+
+  open() {
+    this.hidden = false;
+    void this.offsetWidth;
+    this.classList.add("is-open");
+    document.documentElement.classList.add("cm-search-open");
+    setTimeout(() => this.input.focus(), 60);
+    this.renderRecent();
+    this.isOpen = true;
+  }
+
+  close() {
+    this.classList.remove("is-open");
+    document.documentElement.classList.remove("cm-search-open");
+    this.isOpen = false;
+    setTimeout(() => {
+      this.hidden = true;
+      this.input.value = "";
+      this.clearBtn.hidden = true;
+      this.currentQuery = "";
+      this.showEmpty();
+    }, 220);
+  }
+
+  showEmpty() {
+    this.emptyEl.hidden = false;
+    this.resultsEl.hidden = true;
+    this.noResultsEl.hidden = true;
+    this.loadingEl.hidden = true;
+  }
+  showLoading() { this.loadingEl.hidden = false; }
+  showResults() {
+    this.emptyEl.hidden = true;
+    this.resultsEl.hidden = false;
+    this.noResultsEl.hidden = true;
+    this.loadingEl.hidden = true;
+  }
+  showNoResults(query) {
+    this.emptyEl.hidden = true;
+    this.resultsEl.hidden = true;
+    this.noResultsEl.hidden = false;
+    this.loadingEl.hidden = true;
+    if (this.queryDisplay) this.queryDisplay.textContent = query;
+  }
+
+  async search(query) {
+    if (!query || query.length < 2) { this.showEmpty(); return; }
+    this.currentQuery = query;
+    this.showLoading();
+
+    const params = new URLSearchParams();
+    params.set("q", query);
+    params.set("resources[type]", "product,collection,query");
+    params.set("resources[limit]", "6");
+    params.set("resources[limit_scope]", "each");
+    params.set("resources[options][unavailable_products]", "last");
+
+    try {
+      const res = await fetch(`/search/suggest.json?${params.toString()}`, {
+        headers: { "Accept": "application/json" }
+      });
+      if (!res.ok) throw new Error(`Search ${res.status}`);
+      const data = await res.json();
+
+      if (query !== this.currentQuery) return;
+
+      const results = (data && data.resources && data.resources.results) || {};
+      const products = results.products || [];
+      const collections = results.collections || [];
+      const queries = results.queries || [];
+      const total = products.length + collections.length + queries.length;
+
+      if (total === 0) {
+        this.showNoResults(query);
+      } else {
+        this.renderResults(products, collections, queries, query);
+        this.showResults();
+      }
+    } catch (e) {
+      console.warn("[cm-search] fetch failed", e);
+      this.loadingEl.hidden = true;
+    }
+  }
+
+  renderResults(products, collections, queries, query) {
+    const parts = [];
+
+    if (queries.length > 0) {
+      parts.push(`<section class="cm-search__section">
+        <h3 class="cm-search__section-title">Suggestions</h3>
+        <div class="cm-search__pills">${
+          queries.map((q) => {
+            const text = q.text || q.styled_text || String(q);
+            return `<a href="${this.escapeAttr("/search?q=" + encodeURIComponent(text) + "&type=product")}" class="cm-search__pill">${this.escapeHtml(text)}</a>`;
+          }).join("")
+        }</div>
+      </section>`);
+    }
+
+    if (collections.length > 0) {
+      parts.push(`<section class="cm-search__section">
+        <h3 class="cm-search__section-title">Collections</h3>
+        <ul class="cm-search__result-list" role="list">${
+          collections.map((c) => `
+            <li>
+              <a class="cm-search__result-link" href="${this.escapeAttr(c.url)}">
+                <span>${this.escapeHtml(c.title)}</span>
+                <span class="cm-search__result-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          `).join("")
+        }</ul>
+      </section>`);
+    }
+
+    if (products.length > 0) {
+      parts.push(`<section class="cm-search__section">
+        <div class="cm-search__section-head">
+          <h3 class="cm-search__section-title">Products</h3>
+          <a class="cm-search__view-all" href="${this.escapeAttr("/search?q=" + encodeURIComponent(query) + "&type=product")}">See all →</a>
+        </div>
+        <ul class="cm-search__product-list" role="list">${
+          products.map((p) => {
+            const img = p.featured_image && p.featured_image.url ? p.featured_image.url : "";
+            const imgSrc = img ? (img.indexOf("?") >= 0 ? `${img}&width=200` : `${img}?width=200`) : "";
+            return `<li>
+              <a class="cm-search__product" href="${this.escapeAttr(p.url)}">
+                <span class="cm-search__product-thumb">${
+                  imgSrc ? `<img src="${this.escapeAttr(imgSrc)}" alt="" loading="lazy" width="80" height="106">` : ""
+                }</span>
+                <span class="cm-search__product-info">
+                  ${p.vendor ? `<span class="cm-search__product-vendor">${this.escapeHtml(p.vendor)}</span>` : ""}
+                  <span class="cm-search__product-title">${this.escapeHtml(p.title)}</span>
+                  <span class="cm-search__product-price">${this.escapeHtml(p.price || "")}</span>
+                </span>
+              </a>
+            </li>`;
+          }).join("")
+        }</ul>
+      </section>`);
+    }
+
+    this.resultsEl.innerHTML = parts.join("");
+  }
+
+  handleResultsKeydown(e) {
+    const focusables = Array.from(this.resultsEl.querySelectorAll("a[href], button"));
+    if (focusables.length === 0) return;
+    const currentIndex = focusables.indexOf(document.activeElement);
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = currentIndex < focusables.length - 1 ? currentIndex + 1 : 0;
+      focusables[next].focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (currentIndex <= 0) { this.input.focus(); return; }
+      focusables[currentIndex - 1].focus();
+    }
+  }
+
+  saveRecent(query) {
+    if (!query || query.length < 2) return;
+    let recent = this.getRecent();
+    recent = recent.filter((r) => r.toLowerCase() !== query.toLowerCase());
+    recent.unshift(query);
+    try { localStorage.setItem(this.RECENT_KEY, JSON.stringify(recent.slice(0, this.RECENT_LIMIT))); } catch (e) {}
+  }
+
+  getRecent() {
+    try { return JSON.parse(localStorage.getItem(this.RECENT_KEY) || "[]"); } catch (e) { return []; }
+  }
+
+  renderRecent() {
+    const recent = this.getRecent();
+    if (recent.length === 0) { this.recentSection.hidden = true; return; }
+    this.recentSection.hidden = false;
+    this.recentList.innerHTML = recent.slice(0, this.RECENT_SHOW).map((q) => {
+      const safe = this.escapeHtml(q);
+      const safeAttr = this.escapeAttr(q);
+      const url = "/search?q=" + encodeURIComponent(q) + "&type=product";
+      return `<span class="cm-search__recent-pill">
+        <a href="${this.escapeAttr(url)}" class="cm-search__pill">${safe}</a>
+        <button type="button" class="cm-search__recent-remove" data-remove-recent="${safeAttr}" aria-label="Remove ${safe} from recent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </span>`;
+    }).join("");
+  }
+
+  removeRecent(query) {
+    const recent = this.getRecent().filter((r) => r !== query);
+    try { localStorage.setItem(this.RECENT_KEY, JSON.stringify(recent)); } catch (e) {}
+    this.renderRecent();
+  }
+
+  clearRecent() {
+    try { localStorage.removeItem(this.RECENT_KEY); } catch (e) {}
+    this.renderRecent();
+  }
+
+  escapeHtml(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, (c) => (
+      { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c]
+    ));
+  }
+  escapeAttr(str) { return this.escapeHtml(str); }
+}
+if (!customElements.get("calvium-search")) {
+  customElements.define("calvium-search", CalviumSearch);
+}
+
+// Auto-submit sort dropdown on the search results page
+document.addEventListener("change", (e) => {
+  const sel = e.target.closest("[data-cm-search-sort]");
+  if (sel) sel.form && sel.form.submit();
+});
