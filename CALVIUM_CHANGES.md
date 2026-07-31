@@ -1463,3 +1463,71 @@ Then in-browser: hover "Shop By Category" and drag the cursor slowly down toward
 
 ### 21.6 Deferred (next in queue)
 - "Recently Viewed" section below the PDP — SSR from a fallback collection (best-sellers → new-arrivals → all cascade, same as `calvium-most-loved.liquid`) rendering N products via `cm-product-card` for visual parity with "YOU MAY ALSO LIKE"; client-side JS reorders so recently viewed sit at the front (from `localStorage._halo_recently_viewed`, current product filtered out), remaining slots randomised via Fisher–Yates. Guarantees constant N. Not yet implemented — waiting on placement decision (bottom of PDP after `pdp_testimonials`, vs. between recommendations and testimonials).
+
+---
+
+## 22. Session 2026-07-31 part 2 — "Recommended for you" carousel below "You may also like"
+
+### 22.1 The ask
+Add a second carousel on the PDP, directly under "YOU MAY ALSO LIKE", visually identical to it (same `cm-slider` / `cm-product-card` styling), driven by this algorithm:
+- Constant product count N (default 8)
+- Recently-viewed products come first, in most-recent-first order
+- Remaining slots filled with random products so visitors with no history still see a full carousel
+- Current PDP product filtered out
+
+### 22.2 Implementation — three files, one new section
+
+**New: `sections/calvium-recently-viewed.liquid`** — near-clone of `calvium-most-loved.liquid`:
+- Same fallback collection cascade (chosen setting → `best-sellers` → `new-arrivals` → `all`) so the pool is guaranteed non-empty even before a merchant configures it.
+- Same DOM: `.cm-section` → `.cm-container/.cm-section__head` → `.cm-slider` → `.cm-slider__viewport` → `.cm-slider__track` (grid-auto-flow: column, scroll-snap-type: x mandatory).
+- Difference: the `.cm-slider__track` element is a `<calvium-recently-viewed>` custom element instead of a plain `<div>`. Class `cm-slider__track` still applies, so the existing CSS (`display: grid`) overrides the custom-element default `display: inline`.
+- SSR filters the current product server-side: `{%- if product and p.id == product.id -%}{%- continue -%}{%- endif -%}`.
+- Cards rendered via the existing `cm-product-card` snippet — same swatch/hover/atc treatment as `calvium-most-loved`. Each card carries `data-product-id` (already emitted by `cm-product-card.liquid:46`), which is what the reorder logic keys on.
+
+**New JS: `CalviumRecentlyViewed` custom element in `assets/calvium-miraggio.js`** (appended at end of file, outside the existing IIFE so it can register once on script load):
+1. `connectedCallback()` treats `this` as the track (already `display: grid`).
+2. Collects direct children with a `data-product-id` attribute.
+3. Reads `_halo_recently_viewed` from localStorage (the same key `product-info.js:setRecentlyViewed` writes to when a PDP loads; entries are numeric product IDs, most recent first, capped at 25).
+4. Filters out the current product ID (from `data-current-product-id` attribute the section sets from `{{ product.id }}`).
+5. Two-pass reorder:
+   - For each recently-viewed ID (in localStorage order), if there's a matching card in the track, pull it into a `recentMatches` array.
+   - Everything else goes into `rest` and gets Fisher–Yates shuffled in-place.
+6. Rebuild the track by appending `recentMatches` then `rest` into a `DocumentFragment` and appending back to the track — single DOM write, no flicker.
+
+No AJAX fallback for products missing from the SSR pool. Coverage is expected to be high (fallback `all` iterates the first 50 products by Liquid's default), and adding a fetch pass would double the request count without materially changing behaviour for stores under ~50 SKUs.
+
+**Template registration: `templates/product.json`** — added a `recently_viewed` section between `recommendations` and `pdp_testimonials`, and inserted `"recently_viewed"` into the `order` array in the same position. Settings mirror the "YOU MAY ALSO LIKE" section (best-sellers fallback, 8 products, swatches + %-off + ATC hover on) with heading `RECOMMENDED FOR YOU` so the two carousels don't share a title.
+
+### 22.3 Why not extend the existing `sections/recently-viewed-products.liquid`
+That section fetches recently-viewed cards via `/search?section_id=…&q=id:X OR id:Y` and renders them with the block-based `card-product-flex` layout — completely different card style from `cm-product-card` used above by "YOU MAY ALSO LIKE". Reusing it would either force a visual break between the two carousels or require rewriting the section to swap card renderers based on context. Cleaner to fork a Calvium-styled version.
+
+### 22.4 Files touched
+```
+sections/calvium-recently-viewed.liquid  — new section, cm-slider-styled, wraps <calvium-recently-viewed> on the track
+assets/calvium-miraggio.js               — appended CalviumRecentlyViewed custom element at EOF
+templates/product.json                   — new "recently_viewed" section entry + inserted into order between recommendations and pdp_testimonials
+```
+
+### 22.5 Push (git → live theme)
+```bash
+git add sections/calvium-recently-viewed.liquid \
+        assets/calvium-miraggio.js \
+        templates/product.json \
+        CALVIUM_CHANGES.md
+git commit -m "PDP: add RECOMMENDED FOR YOU carousel with recently-viewed reorder"
+git push origin main
+```
+
+### 22.6 Verification
+1. Open a PDP in the theme editor: [admin.shopify.com/store/calvium-2/themes/191621005684/editor](https://admin.shopify.com/store/calvium-2/themes/191621005684/editor) → Products → any product.
+2. Expect two carousels: "YOU MAY ALSO LIKE" (calvium-most-loved) followed by "RECOMMENDED FOR YOU" (calvium-recently-viewed), same visual style, same card sizes.
+3. In DevTools console: `localStorage.getItem('_halo_recently_viewed')` — should be a JSON array populated with every PDP visited this session.
+4. Visit product A → visit product B → on product B's PDP, product A should be the first card in "RECOMMENDED FOR YOU".
+5. Hard-refresh with cleared localStorage → carousel should still show N products (shuffled fallback), no empty state.
+
+### 22.7 Tunables (merchant editor)
+- Heading text (default: `RECOMMENDED FOR YOU`)
+- Fallback collection (default: `best-sellers`; leave blank to fall through the cascade)
+- Products shown (constant N — default 8, min 4, max 20)
+- Card options: % OFF badge, swatches, max swatches, hover ATC
+- Padding top/bottom

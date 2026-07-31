@@ -36,6 +36,23 @@
         "padding_bottom": 40
       }
     },
+    "recently_viewed": {
+      "type": "calvium-recently-viewed",
+      "settings": {
+        "heading": "RECOMMENDED FOR YOU",
+        "collection": "best-sellers",
+        "max_products": 8,
+        "cta_label": "",
+        "cta_url": "",
+        "tone": "light",
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
     "pdp_testimonials": {
       "type": "calvium-testimonials",
       "blocks": {
@@ -97,6 +114,7 @@
   "order": [
     "main",
     "recommendations",
+    "recently_viewed",
     "pdp_testimonials"
   ]
 }

@@ -343,3 +343,50 @@
     });
   });
 })();
+
+// -----------------------------------------------------------
+// <calvium-recently-viewed> — reorder the SSR-rendered cm-slider track so
+// recently-viewed products appear first, then Fisher-Yates shuffle the rest.
+// Reads _halo_recently_viewed (written by product-info.js:setRecentlyViewed).
+class CalviumRecentlyViewed extends HTMLElement {
+  connectedCallback() {
+    const track = this;
+
+    const cards = Array.from(track.children).filter((el) => el.dataset && el.dataset.productId);
+    if (cards.length === 0) return;
+
+    let recentIds = [];
+    try { recentIds = JSON.parse(localStorage.getItem("_halo_recently_viewed") || "[]"); } catch (e) {}
+    const currentId = parseInt(this.dataset.currentProductId || "0", 10);
+    if (currentId) recentIds = recentIds.filter((id) => id !== currentId);
+
+    const byId = new Map();
+    for (const card of cards) {
+      byId.set(parseInt(card.dataset.productId, 10), card);
+    }
+
+    const recentMatches = [];
+    const usedIds = new Set();
+    for (const id of recentIds) {
+      const card = byId.get(id);
+      if (card && !usedIds.has(id)) {
+        recentMatches.push(card);
+        usedIds.add(id);
+      }
+    }
+
+    const rest = cards.filter((c) => !usedIds.has(parseInt(c.dataset.productId, 10)));
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+
+    const frag = document.createDocumentFragment();
+    for (const el of recentMatches) frag.appendChild(el);
+    for (const el of rest) frag.appendChild(el);
+    track.appendChild(frag);
+  }
+}
+if (!customElements.get("calvium-recently-viewed")) {
+  customElements.define("calvium-recently-viewed", CalviumRecentlyViewed);
+}
