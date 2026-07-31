@@ -296,6 +296,7 @@
         "t5": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/post_4.png",
             "link": "",
             "alt": "Calvium look 5",
             "caption": "",
@@ -305,6 +306,7 @@
         "t6": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/insta_post.png",
             "link": "",
             "alt": "Calvium look 6",
             "caption": "",
@@ -314,6 +316,7 @@
         "t7": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/IG_-07.jpg",
             "link": "",
             "alt": "Calvium look 7",
             "caption": "",
@@ -323,6 +326,7 @@
         "t8": {
           "type": "tile",
           "settings": {
+            "image": "shopify://shop_images/IG_-09.jpg",
             "link": "",
             "alt": "Calvium look 8",
             "caption": "",
