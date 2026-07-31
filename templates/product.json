@@ -12,7 +12,11 @@
     "main": {
       "type": "calvium-product-immersive",
       "settings": {
-        "show_stub_rating": true
+        "banner_image": "shopify://shop_images/calvium_Banner__-02-01.jpg",
+        "banner_text": "",
+        "banner_bg": "",
+        "show_stub_rating": true,
+        "short_description": ""
       }
     },
     "recommendations": {
@@ -20,11 +24,14 @@
       "settings": {
         "heading": "YOU MAY ALSO LIKE",
         "collection": "best-sellers",
-        "cta_label": "",
         "max_products": 8,
-        "show_swatches": true,
-        "show_atc": true,
+        "cta_label": "",
+        "cta_url": "",
         "tone": "light",
+        "show_percent": true,
+        "show_swatches": true,
+        "max_swatches": 4,
+        "show_atc": true,
         "padding_top": 40,
         "padding_bottom": 40
       }
@@ -40,7 +47,9 @@
             "quote": "The cut is beautiful, layered easily, and the delivery was faster than promised.",
             "name": "Aanya M.",
             "location": "Mumbai",
-            "verified": true
+            "verified": true,
+            "product_label": "",
+            "product_link": ""
           }
         },
         "r2": {
@@ -51,7 +60,9 @@
             "quote": "Ordered my usual size — fit was spot on. Will reorder in other colours.",
             "name": "Rohan I.",
             "location": "Bengaluru",
-            "verified": true
+            "verified": true,
+            "product_label": "",
+            "product_link": ""
           }
         },
         "r3": {
@@ -62,7 +73,9 @@
             "quote": "Exactly what I was looking for. Very well made and worth the price.",
             "name": "Priya S.",
             "location": "New Delhi",
-            "verified": true
+            "verified": true,
+            "product_label": "",
+            "product_link": ""
           }
         }
       },
