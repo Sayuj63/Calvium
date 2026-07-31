@@ -638,11 +638,35 @@
   cursor: pointer;
   z-index: 2;
   opacity: 0; transform: translateY(4px);
-  transition: opacity 200ms var(--cm-ease-out), transform 200ms var(--cm-ease-out), background 160ms var(--cm-ease-out);
+  transition: opacity 200ms var(--cm-ease-out), transform 200ms var(--cm-ease-out), background 160ms var(--cm-ease-out), color 160ms var(--cm-ease-out);
 }
-.cm-card:hover .cm-card__wishlist { opacity: 1; transform: none; }
+.cm-card:hover .cm-card__wishlist,
+.cm-card:focus-within .cm-card__wishlist { opacity: 1; transform: none; }
 .cm-card__wishlist:hover { background: #fff; }
-.cm-card__wishlist svg { width: 15px; height: 15px; }
+.cm-card__wishlist svg { width: 15px; height: 15px; transition: fill 160ms var(--cm-ease-out); }
+
+/* Saved state — persistent visibility + filled heart so users can see at a
+   glance which items are in their wishlist without hovering each card. */
+.cm-card__wishlist.wishlist-added {
+  opacity: 1;
+  transform: none;
+  background: var(--cm-ink);
+  color: #fff;
+}
+.cm-card__wishlist.wishlist-added svg { fill: currentColor; }
+.cm-card__wishlist.wishlist-added:hover { background: var(--cm-ink); color: #fff; }
+
+/* PDP heart button — saved state matches the card variant. */
+.cm-pdp-im__wish.wishlist-added,
+.cm-pdp-lux__wish.wishlist-added,
+.cm-pdp-ed__wish.wishlist-added {
+  background: var(--cm-ink);
+  color: #fff;
+  border-color: var(--cm-ink);
+}
+.cm-pdp-im__wish.wishlist-added svg,
+.cm-pdp-lux__wish.wishlist-added svg,
+.cm-pdp-ed__wish.wishlist-added svg { fill: currentColor; }
 
 .cm-card__atc {
   position: absolute;
@@ -1553,6 +1577,8 @@
 }
 .cm-cart__taxnote { font-size: 11px; color: var(--cm-ink-50); text-align: center; }
 .cm-cart__checkout {
+  width: 100%;
+  display: block;
   padding: 16px 20px;
   background: var(--cm-ink);
   color: #fff;
@@ -1565,8 +1591,10 @@
   cursor: pointer;
   border-radius: 2px;
   transition: background 160ms var(--cm-ease-out);
+  text-align: center;
 }
 .cm-cart__checkout:hover { background: #000; }
+.cm-cart__foot form { margin: 0; }
 .cm-cart__viewcart {
   text-align: center;
   font-size: 12px;
@@ -1584,6 +1612,7 @@
   font-size: 14px;
   display: flex; flex-direction: column; gap: 14px; align-items: center;
 }
+.cm-cart__empty .cm-button { align-self: center; }
 
 /* Reveal helpers */
 [data-cm-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 800ms var(--cm-ease-out), transform 800ms var(--cm-ease-out); }
