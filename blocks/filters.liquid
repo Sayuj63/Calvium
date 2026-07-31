@@ -75,34 +75,6 @@
 {{ 'component-facets.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
 
-<style>
-  /* Sticky filter block on collection pages — flows with scroll */
-  .facets-block-wrapper,
-  .facets-block-wrapper--horizontal,
-  .facets-block-wrapper--vertical {
-    position: -webkit-sticky !important;
-    position: sticky !important;
-    top: var(--header-height, 80px) !important;
-    z-index: 30 !important;
-    background: var(--color-background, #fff) !important;
-    align-self: start !important;
-  }
-  .facets-block-wrapper--vertical {
-    max-height: calc(100vh - var(--header-height, 80px) - 20px);
-    overflow-y: auto;
-  }
-  /* Ensure ancestors don't clip the sticky context */
-  .template-collection,
-  .collection-wrapper,
-  .main-collection-grid,
-  .product-grid-container { overflow: visible !important; }
-  @media (max-width: 749px) {
-    .facets-block-wrapper,
-    .facets-block-wrapper--horizontal,
-    .facets-block-wrapper--vertical { top: 0 !important; }
-  }
-</style>
-
 <div
   class="
     facets-block-wrapper
