@@ -2675,13 +2675,12 @@
 /* --- Horizontal filter bar (desktop) ---
    Overrides the sidebar/mobile-drawer defaults above. Placed AFTER the sidebar
    block so cascade order lets these rules win on desktop without needing
-   !important or extra specificity. */
+   !important or extra specificity.
+   Filter row scrolls with the page (no position: sticky) — merchant preference. */
 @media (min-width: 1024px) {
   .cm-facetsbar {
     display: block;
-    position: sticky;
-    top: 72px;
-    z-index: 20;
+    position: static;
     background: #fff;
     padding-block: 12px;
     margin-block-end: 4px;
