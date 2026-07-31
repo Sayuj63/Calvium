@@ -12,7 +12,7 @@
     "main": {
       "type": "calvium-product-immersive",
       "settings": {
-        "banner_image": "shopify://shop_images/calvium_Banner__-02-01.jpg",
+        "banner_image": "shopify://shop_images/calvium_Banner__01-01.jpg",
         "banner_text": "",
         "banner_bg": "",
         "show_stub_rating": true,
