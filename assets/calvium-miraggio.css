@@ -2833,7 +2833,7 @@
 
 .cm-collcat__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 28px 16px;
 }
 @media (max-width: 1023px) { .cm-collcat__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
