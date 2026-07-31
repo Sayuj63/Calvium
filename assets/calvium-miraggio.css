@@ -933,10 +933,13 @@
 .cm-button--solid {
   background: var(--cm-ink);
   color: #fff;
+  border-color: var(--cm-ink);
 }
 .cm-button--solid:hover {
-  background: #fff;
-  color: var(--cm-ink);
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  transform: translateY(-1px);
 }
 
 /* ------------------------------------------------------------
