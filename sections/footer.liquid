@@ -31,6 +31,19 @@
   footer .cm-contact-line + .cm-contact-line { margin-top: 6px; }
   footer .cm-contact-line svg { width: 16px; height: 16px; flex-shrink: 0; }
   footer .cm-contact-line span { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Center the social icons row under the (now larger) logo. Ella wraps
+     each social link in an <li> inside a flex list; centring the list
+     itself pushes the icons under the logo instead of left-aligned. */
+  footer .social-icons-block,
+  footer .social-icons-block .social-icons-block__list,
+  footer .list-social,
+  footer ul.list-social {
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    margin-left: 0;
+  }
 </style>
 <{% if section.settings.animation_type == 'parallax' %}footer-parallax class="block"{% else %}div{% endif %}>
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>
