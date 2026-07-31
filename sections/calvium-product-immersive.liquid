@@ -296,9 +296,19 @@
           <button type="submit" class="cm-pdp-lux__atc" data-cm-atc {% unless current_variant.available %}disabled{% endunless %}>
             {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
           </button>
-          <button type="button" class="cm-pdp-im__wish" aria-label="Add to wishlist">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </button>
+          <wish-list>
+            <button
+              type="button"
+              class="cm-pdp-im__wish wishlist-button"
+              data-wishlist
+              data-wishlist-handle="{{ product.handle }}"
+              data-product-id="{{ product.id }}"
+              aria-label="Add to wishlist"
+              title="Add to wishlist"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+          </wish-list>
         </div>
       </form>
 

@@ -3025,6 +3025,7 @@
   border-block: 1px solid var(--cm-ink-15);
   margin-block: 20px;
 }
+.cm-wishpage__addall,
 .cm-wishpage__share,
 .cm-wishpage__clear {
   display: inline-flex;
@@ -3045,11 +3046,43 @@
   text-decoration: none;
   transition: background 200ms var(--cm-ease-out), color 200ms var(--cm-ease-out), border-color 200ms var(--cm-ease-out);
 }
+.cm-wishpage__addall svg,
 .cm-wishpage__share svg,
 .cm-wishpage__clear svg { width: 16px; height: 16px; }
+.cm-wishpage__addall {
+  background: var(--cm-ink);
+  color: #fff;
+  border-color: var(--cm-ink);
+  margin-inline-end: auto;
+}
+.cm-wishpage__addall:hover { background: #000; border-color: #000; }
+.cm-wishpage__addall[disabled] { opacity: 0.6; cursor: default; }
 .cm-wishpage__share:hover { background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black); }
 .cm-wishpage__clear { color: #b23a1f; border-color: rgba(178,58,31,0.28); }
 .cm-wishpage__clear:hover { background: #b23a1f; color: var(--cm-white); border-color: #b23a1f; }
+
+/* Empty-state cross-sell — appears below the "Continue Shopping" CTA */
+.cm-wishpage__empty-picks {
+  margin-block-start: 40px;
+  padding-block-start: 32px;
+  border-top: 1px solid var(--cm-ink-08);
+  width: 100%;
+}
+.cm-wishpage__empty-picks-title {
+  font-family: var(--cm-font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 20px;
+  letter-spacing: -0.01em;
+}
+.cm-wishpage__empty-picks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px 14px;
+}
+@media (max-width: 1023px) { .cm-wishpage__empty-picks-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 749px)  { .cm-wishpage__empty-picks-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .cm-wishpage__grid {
   display: grid;
@@ -3062,10 +3095,13 @@
 .cm-wishpage__grid .cm-card { min-width: 0; }
 
 .cm-wishpage__empty {
-  padding: 60px 24px;
+  margin-block-start: 40px;
   text-align: center;
+}
+.cm-wishpage__empty-message {
+  padding: 60px 24px;
   max-width: 480px;
-  margin: 40px auto 0;
+  margin: 0 auto;
   border: 1px solid var(--cm-ink-15);
   border-radius: var(--cm-radius-lg);
   background: var(--cm-cream);
