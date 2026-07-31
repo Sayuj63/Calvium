@@ -38,9 +38,12 @@
     position: absolute; top: 50%; left: clamp(16px, 4vw, 48px);
     transform: translateY(-50%);
     color: #000; font-family: var(--cm-font-display, var(--cm-font-body));
-    font-size: clamp(22px, 4vw, 48px); font-weight: 600;
-    letter-spacing: 0.02em; line-height: 1.1;
-    max-width: 55%; margin: 0; pointer-events: none;
+    font-size: clamp(16px, 2.2vw, 28px); font-weight: 600;
+    letter-spacing: 0.08em; line-height: 1.1; text-transform: uppercase;
+    max-width: 40%; margin: 0; pointer-events: none;
+  }
+  @media (max-width: 640px) {
+    .cm-pdp-im__banner-title { font-size: 14px; letter-spacing: 0.06em; max-width: 55%; }
   }
   .cm-pdp-im__crumb {
     padding: 20px clamp(16px, 3vw, 32px) 12px;
