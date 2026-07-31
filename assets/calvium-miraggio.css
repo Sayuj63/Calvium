@@ -302,11 +302,25 @@
   transition: opacity 220ms var(--cm-ease-out), transform 240ms var(--cm-ease-out);
   z-index: 30;
 }
+.cm-mega::before {
+  content: "";
+  position: absolute;
+  top: -24px;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: transparent;
+  pointer-events: none;
+}
 .cm-nav__item:hover .cm-mega,
 .cm-nav__item:focus-within .cm-mega {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(-50%) translateY(0);
+}
+.cm-nav__item:hover .cm-mega::before,
+.cm-nav__item:focus-within .cm-mega::before {
+  pointer-events: auto;
 }
 
 .cm-mega__cols {

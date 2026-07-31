@@ -1635,14 +1635,16 @@ free-shipping-component .message {
    to sibling color products. Each swatch has a thumb + a color name label below.
    Row wraps on mobile, caps at 6 across desktop. */
 .cm-cross-swatches {
-  margin: 0 auto 20px;
-  max-width: 520px;
+  margin: 0 0 20px;
+  max-width: none;
+  width: 100%;
 }
 .cm-cross-swatches__row {
   display: flex;
   flex-wrap: wrap;
   gap: 14px 12px;
   align-items: flex-start;
+  justify-content: flex-start;
 }
 .cm-cross-swatch {
   display: inline-flex;

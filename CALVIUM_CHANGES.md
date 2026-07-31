@@ -11,12 +11,17 @@
 | **Store** | `calvium-2.myshopify.com` |
 | **Custom domain** | `calvium.in` |
 | **Admin** | https://admin.shopify.com/store/calvium-2 |
-| **Live theme** | `Swytch Default Day1` — id **`184946491764`** |
-| **Live theme editor** | https://calvium-2.myshopify.com/admin/themes/184946491764/editor |
+| **Live theme** | `Calvium/main` — id **`191621005684`** (GitHub-connected) |
+| **Live theme editor** | https://admin.shopify.com/store/calvium-2/themes/191621005684/editor |
+| **GitHub repo** | https://github.com/Sayuj63/Calvium.git (branch: `main`) |
+| **Deploy flow** | `git commit` → `git push origin main` — Shopify GitHub sync updates the live theme automatically (no `shopify theme push` needed) |
 | **Theme family** | Swytch (block-heavy, group-nested) — 75 sections, 231 block types, ~250 assets |
-| **Working dir** | `~/Desktop/calvium` |
+| **Working dir** | `~/Desktop/Desktop - Sayuj's MacBook Air/calvium` |
 | **Locale** | India only — `calvium.in` serves IN traffic |
 | **Customer accounts** | Enabled — `/account` returns 302 (login redirect) |
+
+### Previous live theme (now unpublished)
+`Swytch Default Day1` (#184946491764) was the live theme through session 20. It's now unpublished but still receives Shopify CLI pushes if you forget to switch — **always deploy via git to `Calvium/main` (#191621005684) instead**.
 
 ### Backup theme
 `Calvium fixes 2026-06-01` (#189635920244) is unpublished but kept as a rollback copy of an intermediate state. Safe to delete with `shopify theme delete 189635920244` if no longer needed.
@@ -1368,3 +1373,93 @@ shopify theme push --store calvium-2.myshopify.com --theme 184946491764 \
 ### 20.5 Notes
 - Storefront `calvium.in` caches HTML for 30–60 min; the versioned CSS URL embedded in the cached HTML pins the browser to an older CSS build until the HTML cache refreshes. If a merchant's browser is loading an old `?v=` hash of `calvium-miraggio.css`, the CSS changes won't be visible until the HTML cache refreshes. Admin theme editor bypasses this.
 - Multiple past sessions used `!important` on cart rules to force-fix layout; the root-cause pass consolidates all of them into 3 clean rules relying on flex `align-items: stretch`.
+
+---
+
+## 21. Session 2026-07-31 — PDP swatch alignment + mega-menu hover gap
+
+### 21.1 PDP cross-product colour swatches — right-drifted, out of alignment with the ATC button
+
+**Symptom**: on `/products/solis-black` (and every PDP that renders the cross-product colour swatches), the `COLOR: <name>` label sat visually centred, and the row of colour thumbnails (BeigeOffWhite / Black / BlackGreen / Khaki / Red / Tan / Yellow) started well to the right of the price line and the ADD TO CART button. Everything else in the info column (title, rating, price, MRP line, ATC) started at the same left edge — only the swatch block was off.
+
+**Root cause — two culprits stacked**:
+1. `snippets/cm-cross-product-swatches.liquid` had inline `style="text-align:center;"` on both `.cm-picker__label` `<p>` tags (both the `siblings_csv` branch and the `collections.all` fallback branch) → the "COLOR: BLACK" label rendered centred.
+2. `assets/calvium-overrides.css:1637` — `.cm-cross-swatches` was declared `margin: 0 auto 20px; max-width: 520px;` → the whole swatch block was constrained to 520 px and horizontally auto-centred inside the info column. Info column on desktop is wider than 520 px, so the block visually drifted right of the ATC button's left edge.
+
+**Fix**:
+- Removed the two inline `style="text-align:center;"` attributes from the label `<p>` tags in the snippet — label now defaults to left-aligned (inherits from the info column).
+- Changed the CSS block to full-width, left-aligned:
+  ```css
+  .cm-cross-swatches {
+    margin: 0 0 20px;
+    max-width: none;
+    width: 100%;
+  }
+  .cm-cross-swatches__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 12px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  ```
+- `.cm-cross-swatch__name` still has `text-align: center` (centres the colour name UNDER each thumbnail) — that's intentional and left alone.
+
+### 21.2 Mega-menu dropdown closes when cursor crosses the trigger→panel gap
+
+**Symptom**: hovering "Shop By Category" opened the mega-menu, but moving the cursor down towards the dropdown items (BY STYLE / BY SILHOUETTE / SPECIALTY / SHOP ALL) closed the panel before reaching them.
+
+**Root cause**: `.cm-mega` in `assets/calvium-miraggio.css:289` is `position: fixed; top: calc(var(--cm-header-offset, 122px) + 6px)`. That 6 px vertical dead-zone between the trigger row and the mega panel is covered by neither `.cm-nav__item` nor `.cm-mega`. Cursor crossing it evaluates `.cm-nav__item:hover` as false for a frame, and the panel hides.
+
+**Fix — invisible hover bridge**: added a 24 px transparent `::before` pseudo-element on `.cm-mega` positioned at `top: -24px` that extends the panel's hit area upward across the gap. Guarded with `pointer-events: none` by default so it doesn't spuriously open dropdowns when the cursor is just below the header; only becomes `pointer-events: auto` while `.cm-nav__item:hover` / `:focus-within` is already active, keeping the panel latched once the trigger is engaged.
+
+```css
+.cm-mega::before {
+  content: "";
+  position: absolute;
+  top: -24px;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: transparent;
+  pointer-events: none;
+}
+.cm-nav__item:hover .cm-mega::before,
+.cm-nav__item:focus-within .cm-mega::before {
+  pointer-events: auto;
+}
+```
+
+Because the bridge is a descendant of `.cm-mega`, which is a descendant of `.cm-nav__item`, hovering it counts as hovering the trigger — CSS `:hover` state stays live through the gap.
+
+### 21.3 Files touched
+```
+snippets/cm-cross-product-swatches.liquid  — removed inline text-align:center on both .cm-picker__label
+assets/calvium-overrides.css               — .cm-cross-swatches now full-width, left-aligned; explicit justify-content: flex-start on the row
+assets/calvium-miraggio.css                — added .cm-mega::before hover bridge (guarded pointer-events)
+```
+
+### 21.4 Push (via git — live theme is GitHub-connected)
+Live theme changed from `Swytch Default Day1` (#184946491764) → `Calvium/main` (#191621005684) between sessions 20 and 21. `Calvium/main` is wired to https://github.com/Sayuj63/Calvium.git (branch `main`) via Shopify's GitHub integration, so the correct deploy is a git push, not a `shopify theme push`:
+```bash
+git add snippets/cm-cross-product-swatches.liquid \
+        assets/calvium-overrides.css \
+        assets/calvium-miraggio.css \
+        CALVIUM_CHANGES.md
+git commit -m "PDP: fix swatch alignment; Header: bridge mega-menu hover gap"
+git push origin main
+```
+Shopify's GitHub sync polls the repo and updates the live theme within seconds. Verify in the theme editor at [admin.shopify.com/store/calvium-2/themes/191621005684/editor](https://admin.shopify.com/store/calvium-2/themes/191621005684/editor).
+
+An earlier `shopify theme push` in this session accidentally landed on the previous (now-unpublished) `Swytch Default Day1` theme — inert but stale. Ignore.
+
+### 21.5 Verification
+```bash
+curl -s "https://calvium.in/products/solis-black?_fd=0" | grep -A1 'cm-picker__label' | head -20
+# expect: no style="text-align:center" inline attribute on the label
+# expect: .cm-cross-swatches with new margin/width rules loaded from calvium-overrides.css?v=<new-hash>
+```
+Then in-browser: hover "Shop By Category" and drag the cursor slowly down towards the panel — the dropdown must stay open the entire trip. Try each mega parent to be sure.
+
+### 21.6 Deferred (next in queue)
+- "Recently Viewed" section below the PDP — SSR from a fallback collection (best-sellers → new-arrivals → all cascade, same as `calvium-most-loved.liquid`) rendering N products via `cm-product-card` for visual parity with "YOU MAY ALSO LIKE"; client-side JS reorders so recently viewed sit at the front (from `localStorage._halo_recently_viewed`, current product filtered out), remaining slots randomised via Fisher–Yates. Guarantees constant N. Not yet implemented — waiting on placement decision (bottom of PDP after `pdp_testimonials`, vs. between recommendations and testimonials).

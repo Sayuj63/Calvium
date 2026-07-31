@@ -33,7 +33,7 @@
 
   {%- if sibling_handles.size > 1 -%}
     <div class="cm-picker cm-cross-swatches">
-      <p class="cm-picker__label" style="text-align:center;">
+      <p class="cm-picker__label">
         <span>Color:</span>
         <strong>{{ this_color_label | default: 'Select' }}</strong>
       </p>
@@ -94,7 +94,7 @@
     {%- endfor -%}
     {%- if sibling_count > 1 -%}
       <div class="cm-picker cm-cross-swatches">
-        <p class="cm-picker__label" style="text-align:center;">
+        <p class="cm-picker__label">
           <span>Color:</span>
           <strong>{{ this_color_label | default: 'Select' }}</strong>
         </p>
