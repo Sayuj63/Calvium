@@ -1700,4 +1700,102 @@ free-shipping-component .message {
   font-weight: 600;
 }
 
+/* ----- 23. Testimonial "Bought · Calvium X" pill: force white text on hover
+   so the label remains readable when the pill fills black. Some cascade
+   ordering was defeating the earlier hover color. */
+.cm-testimonial__product,
+a.cm-testimonial__product {
+  background: #fff !important;
+  color: var(--cm-ink, #000) !important;
+  border: 1px solid var(--cm-ink-15, rgba(0,0,0,0.15)) !important;
+}
+.cm-testimonial__product:hover,
+a.cm-testimonial__product:hover,
+.cm-testimonial__product:focus-visible,
+a.cm-testimonial__product:focus-visible {
+  background: var(--cm-black, #000) !important;
+  color: #fff !important;
+  border-color: var(--cm-black, #000) !important;
+}
+
+/* ----- 24. READ THE FULL STORY (and every .cm-button in a spotlight/cream
+   context) — force the outline → black fill hover, defeating any Ella cascade
+   that might blank the transition. */
+.cm-section .cm-button,
+.cm-spot .cm-button,
+.cm-section--cream .cm-button {
+  background: transparent;
+  color: var(--cm-ink, #000);
+  border: 1px solid var(--cm-ink, #000);
+  transition: background 200ms ease, color 200ms ease, transform 200ms ease;
+}
+.cm-section .cm-button:hover,
+.cm-spot .cm-button:hover,
+.cm-section--cream .cm-button:hover,
+.cm-section .cm-button:focus-visible,
+.cm-spot .cm-button:focus-visible {
+  background: var(--cm-ink, #000) !important;
+  color: #fff !important;
+  border-color: var(--cm-ink, #000) !important;
+  transform: translateY(-1px);
+}
+
+/* ----- 25. Cart page (Ella /cart template) polish */
+/* Home > Cart breadcrumb — nudge down; MY CART title — nudge down; X remove
+   icon — nudge up so it aligns with the row centre visually. */
+.section--main-cart .breadcrumb,
+.section--main-cart .cart-page__title { margin-block-start: 20px; }
+.section--main-cart .cart-page__title { margin-block-end: 8px; }
+
+/* Quantity selector — center the number vertically between +/- buttons */
+.section--main-cart .quantity-popover-component .quantity__input,
+.section--main-cart .quantity-selector input[type="number"],
+.section--main-cart .cart-items__row-quantity .quantity {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  text-align: center;
+}
+.section--main-cart .quantity button,
+.section--main-cart .quantity .quantity__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+/* Line-remove X — pull up so it centers with the row */
+.section--main-cart .cart-items__row-remove,
+.section--main-cart .cart-items__row .icon-close,
+.section--main-cart button[aria-label*="Remove"] {
+  align-self: center;
+  margin-block-start: 0;
+}
+
+/* Coupon APPLY button being clipped — give it a min-width and let it grow */
+.section--main-cart .cart-summary__discount button,
+.section--main-cart form[action*="/discount"] button,
+.section--main-cart .discount-form button,
+.section--main-cart input[name*="discount"] + button {
+  min-width: 90px !important;
+  padding-inline: 16px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0;
+}
+
+/* Additional comments — centre the label + textarea group under the cart */
+.section--main-cart .cart-note,
+.section--main-cart .cart__note,
+.section--main-cart textarea[name="note"],
+.section--main-cart .additional-comments {
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+/* Reduce the empty space between the Secure Shopping Guarantee area and
+   "YOU MIGHT ALSO LOVE" */
+.section--main-cart + .shopify-section,
+.cart-items-component + .shopify-section { margin-block-start: -40px; }
+.section--main-cart .cart-page { padding-block-end: 20px; }
 

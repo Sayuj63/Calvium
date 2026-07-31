@@ -172,7 +172,7 @@
         <p class="cm-cart__taxnote">Taxes &amp; shipping calculated at checkout</p>
         <form action="{{ routes.cart_url }}" method="post">
           <input type="hidden" name="checkout" value="1">
-          <button type="submit" name="checkout" class="cm-cart__checkout">Secure checkout · {{ cart.total_price | money }}</button>
+          <button type="submit" name="checkout" class="cm-cart__checkout">Checkout</button>
         </form>
         <a href="{{ routes.cart_url }}" class="cm-cart__viewcart">View cart</a>
       </footer>
