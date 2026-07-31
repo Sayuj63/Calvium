@@ -1,3 +1,16 @@
+<style>
+  /* Force enlarged footer logo — overrides JSON block setting */
+  footer .logo-block,
+  [data-section-type="footer"] .logo-block,
+  .shopify-section-group-footer-group .logo-block { --logo-width: 260px !important; --logo-width-mobile: 180px !important; }
+  footer .logo-block__image,
+  [data-section-type="footer"] .logo-block__image,
+  .shopify-section-group-footer-group .logo-block__image { width: 100% !important; height: auto !important; max-width: 260px; }
+  @media (max-width: 749px) {
+    footer .logo-block__image,
+    .shopify-section-group-footer-group .logo-block__image { max-width: 180px; }
+  }
+</style>
 <{% if section.settings.animation_type == 'parallax' %}footer-parallax class="block"{% else %}div{% endif %}>
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>
   <div
