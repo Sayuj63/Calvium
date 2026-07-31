@@ -1,0 +1,101 @@
+{%- comment -%}
+  Calvium — Search results page.
+  Renders search.results in the cm-product-card grid style, matching
+  the collection page look. Type is fixed to `product` via the overlay
+  form's hidden input.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'calvium-miraggio.js' | asset_url }}" defer="defer"></script>
+
+{%- paginate search.results by section.settings.per_page -%}
+
+<section class="cm-section cm-collcat" style="padding-block: 24px 60px;">
+  <div class="cm-container">
+
+    <div class="cm-collcat__hero">
+      <p class="cm-collcat__crumb">
+        <a href="{{ routes.root_url }}">Home</a>
+        <span aria-hidden="true">/</span>
+        <span>Search</span>
+      </p>
+      {%- if search.performed -%}
+        <h1 class="cm-collcat__title">
+          {%- if search.results_count > 0 -%}
+            Results for "{{ search.terms | escape }}"
+          {%- else -%}
+            No results for "{{ search.terms | escape }}"
+          {%- endif -%}
+        </h1>
+      {%- else -%}
+        <h1 class="cm-collcat__title">Search</h1>
+        <p class="cm-collcat__desc">Use the search box in the header to look for products.</p>
+      {%- endif -%}
+    </div>
+
+    {%- if search.performed and search.results_count > 0 -%}
+      <div class="cm-collcat__sortbar">
+        <span class="cm-collcat__count">
+          {{ search.results_count }}
+          {%- if search.results_count == 1 %} result{% else %} results{% endif -%}
+        </span>
+        <form method="get" action="{{ routes.search_url }}" class="cm-search-sort-form">
+          <input type="hidden" name="q" value="{{ search.terms | escape }}">
+          <input type="hidden" name="type" value="product">
+          <label class="cm-collcat__sortwrap">
+            <span class="visually-hidden">Sort by</span>
+            <select class="cm-collcat__sort" name="sort_by" data-cm-search-sort>
+              <option value="relevance" {% if search.sort_by == 'relevance' or search.sort_by == blank %}selected{% endif %}>Best match</option>
+              <option value="price-ascending" {% if search.sort_by == 'price-ascending' %}selected{% endif %}>Price: low to high</option>
+              <option value="price-descending" {% if search.sort_by == 'price-descending' %}selected{% endif %}>Price: high to low</option>
+            </select>
+          </label>
+        </form>
+      </div>
+
+      <div class="cm-grid cm-collcat__grid">
+        {%- for item in search.results -%}
+          {%- if item.object_type == 'product' -%}
+            {%- render 'cm-product-card', product: item, show_percent: section.settings.show_percent, show_swatches: section.settings.show_swatches, max_swatches: section.settings.max_swatches, show_atc: section.settings.show_atc -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="cm-collcat__pagination" aria-label="Search pagination">
+          {{ paginate | default_pagination }}
+        </nav>
+      {%- endif -%}
+
+    {%- elsif search.performed and search.results_count == 0 -%}
+
+      <div class="cm-collcat__empty">
+        <p class="cm-collcat__empty-title">Nothing matches "{{ search.terms | escape }}"</p>
+        <p class="cm-collcat__empty-hint">Try different keywords or browse:</p>
+        <div class="cm-search__pills" style="justify-content:center;">
+          <a href="/collections/best-sellers" class="cm-search__pill">Best sellers</a>
+          <a href="/collections/new-arrivals" class="cm-search__pill">New arrivals</a>
+          <a href="/collections/all" class="cm-search__pill">All products</a>
+        </div>
+      </div>
+
+    {%- endif -%}
+  </div>
+</section>
+
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Calvium — Search",
+  "class": "shopify-section--cm-search-results",
+  "tag": "section",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "show_percent", "label": "Show % OFF badge", "default": true },
+    { "type": "checkbox", "id": "show_swatches", "label": "Show colour swatches", "default": true },
+    { "type": "range", "id": "max_swatches", "label": "Max swatches", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_atc", "label": "Show hover Add-to-Cart", "default": true }
+  ],
+  "presets": [ { "name": "Calvium — Search" } ]
+}
+{% endschema %}
