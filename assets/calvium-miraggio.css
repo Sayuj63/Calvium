@@ -645,24 +645,24 @@
 .cm-card__wishlist:hover { background: #fff; }
 .cm-card__wishlist svg { width: 15px; height: 15px; transition: fill 160ms var(--cm-ease-out); }
 
-/* Saved state — persistent visibility + filled heart so users can see at a
-   glance which items are in their wishlist without hovering each card. */
+/* Saved state — persistent visibility + filled RED heart so users can see at
+   a glance which items are in their wishlist without hovering each card. */
 .cm-card__wishlist.wishlist-added {
   opacity: 1;
   transform: none;
-  background: var(--cm-ink);
-  color: #fff;
+  background: #fff;
+  color: #e11d48;
 }
 .cm-card__wishlist.wishlist-added svg { fill: currentColor; }
-.cm-card__wishlist.wishlist-added:hover { background: var(--cm-ink); color: #fff; }
+.cm-card__wishlist.wishlist-added:hover { background: #fff; color: #e11d48; }
 
-/* PDP heart button — saved state matches the card variant. */
+/* PDP heart button — saved state matches the card variant (filled red). */
 .cm-pdp-im__wish.wishlist-added,
 .cm-pdp-lux__wish.wishlist-added,
 .cm-pdp-ed__wish.wishlist-added {
-  background: var(--cm-ink);
-  color: #fff;
-  border-color: var(--cm-ink);
+  color: #e11d48;
+  border-color: rgba(225, 29, 72, 0.35);
+  background: transparent;
 }
 .cm-pdp-im__wish.wishlist-added svg,
 .cm-pdp-lux__wish.wishlist-added svg,
@@ -808,6 +808,7 @@
   min-width: 55%;
   text-align: center;
   border-radius: 1px;
+  white-space: nowrap;
 }
 
 /* NEW IN — auto-scrolling carousel variant.
@@ -822,6 +823,7 @@
     gap: 0;
     overflow: hidden;
     position: relative;
+    padding-inline: clamp(20px, 4vw, 56px);
   }
   .cm-cats--carousel .cm-cats__track {
     display: flex;
@@ -1643,7 +1645,7 @@
 .cm-hero__media img {
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
   display: block;
 }
 .cm-hero__placeholder {
@@ -1754,8 +1756,12 @@
   color: currentColor;
   border-color: currentColor;
 }
-.cm-hero .cm-hero__btn--secondary:hover { background: currentColor; color: var(--cm-black); }
-.cm-hero.cm-hero--dark-text .cm-hero__btn--secondary:hover { color: var(--cm-white); }
+.cm-hero .cm-hero__btn--secondary:hover,
+.cm-hero a.cm-hero__btn--secondary:hover {
+  background: var(--cm-black);
+  color: var(--cm-white);
+  border-color: var(--cm-black);
+}
 .cm-hero.cm-hero--dark-text .cm-hero__btn--primary {
   background: var(--cm-black); color: var(--cm-white); border-color: var(--cm-black);
 }
