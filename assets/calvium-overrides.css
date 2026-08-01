@@ -1831,12 +1831,15 @@ iframe[src*="recaptcha"],
 [id^="Promotion-popup"] { display: none; visibility: hidden; pointer-events: none; }
 
 /* ============================================================
-   Lookbook ("THE STORY") — heading + CTA a bit bigger.
+   Lookbook ("THE STORY") — heading + CTA a bit bigger + white text
+   over the editorial photo (which has a dark subject).
    ============================================================ */
 .cm-lookbook__heading {
-  font-size: clamp(2.6rem, 3.6vw, 4.2rem) !important;
-  max-width: 26ch !important;
+  font-size: clamp(2.6rem, 3.6vw, 4.2rem);
+  max-width: 26ch;
+  color: #ffffff;
 }
+.cm-lookbook__eyebrow { color: #ffffff; }
 .cm-lookbook__cta {
   padding: 16px 30px 16px 32px !important;
   min-height: 56px !important;
@@ -1900,12 +1903,41 @@ iframe[src*="recaptcha"],
 
 /* ============================================================
    Footer social icons — center under the logo.
-   Root cause: template applies class "sm:justify-center" on the
-   <ul>, but the theme's utility CSS only defines ".max-sm\:justify-center"
-   (opposite breakpoint), so nothing centers the icons horizontally.
-   Fix by adding the missing rule scoped to the footer.
+
+   Verified DOM chain (from live curl):
+     .section-footer
+       .group-block-content.layout-panel-flex--column   (align-items: flex-start via --horizontal-alignment inline var)
+         .logo-block                                    (natural width, sits left)
+         div.shopify-block[id*="_social_icons_"]        (flex item, takes fit-content unless forced)
+           div.flex.flex-wrap.justify-center.flex-column
+             ul.list-social                             (natural width)
+               li.list-social__item × 2
+
+   Why prior CSS didn't work: the shopify-block is a flex ITEM of a
+   parent flex-column set to align-items:flex-start. Without help it
+   sizes to its child (the ul), which is only wide enough for 2 icons.
+   Centering the ul inside a fit-content parent has no room to move.
+
+   Fix (three lines, no !important):
+     1. Force the shopify-block to align-self:stretch + width:100% so
+        it fills the column's cross axis.
+     2. Its inner .flex.flex-column becomes align-items:center so the
+        ul is centred within that full-column width.
+     3. .list-social itself gets justify-content:center for the li
+        items to stay centred inside the ul.
    ============================================================ */
-.section-footer .list-social { justify-content: center; }
+.section-footer .group-block-content > [id*="_social_icons_"] {
+  align-self: stretch;
+  width: 100%;
+}
+.section-footer [id*="_social_icons_"] > .flex.flex-column {
+  align-items: center;
+  width: 100%;
+}
+.section-footer [id*="_social_icons_"] .list-social {
+  justify-content: center;
+  width: 100%;
+}
 
 /* ============================================================
    Search overlay input — kill the thick black focus ring.
