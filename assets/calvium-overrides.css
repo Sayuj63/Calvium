@@ -1926,8 +1926,22 @@ iframe[src*="recaptcha"],
      3. .list-social itself gets justify-content:center for the li
         items to stay centred inside the ul.
    ============================================================ */
+/* Root cause verified via Playwright audit (viewport 1920×1080):
+   Column 1 = 389px wide starting at x=75.
+   Logo = 220px at x=75 (left-aligned in column, center at x=185).
+   Social ul = 389px full column, justify-content:center → icons at x=270.
+   Result: icons render 85px to the RIGHT of the logo's centre —
+   what the user sees as "right-aligned."
+
+   Fix: centre BOTH children of that specific column so the logo
+   moves from x=75 to the column centre, and the icons already
+   centred in the column line up under it. Scope with :has() so
+   only the column that actually contains a social-icons block is
+   affected — other footer columns keep their left-alignment. */
+.section-footer .group-block-content.layout-panel-flex--column:has(> [id*="_social_icons_"]) {
+  align-items: center;
+}
 .section-footer .group-block-content > [id*="_social_icons_"] {
-  align-self: stretch;
   width: 100%;
   text-align: center;
   display: block;
