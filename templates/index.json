@@ -37,31 +37,31 @@
           "type": "tab",
           "settings": {
             "label": "Everyday",
-            "collection": "everyday",
+            "collection": "everyday-icons",
             "link": ""
           }
         },
         "tab_2": {
           "type": "tab",
           "settings": {
-            "label": "Work Essential",
-            "collection": "work-essential",
+            "label": "Work Ready",
+            "collection": "work-ready",
             "link": ""
           }
         },
         "tab_3": {
           "type": "tab",
           "settings": {
-            "label": "After Hours",
-            "collection": "after-hours",
+            "label": "Carry Ons",
+            "collection": "carry-ons",
             "link": ""
           }
         },
         "tab_4": {
           "type": "tab",
           "settings": {
-            "label": "New Collection",
-            "collection": "hobo-bags",
+            "label": "on the move",
+            "collection": "on-the-move",
             "link": ""
           }
         }
@@ -76,7 +76,7 @@
         "heading": "SHOP BY STYLE",
         "subheading": "Timeless silhouettes for every occasion — pick a mood to browse.",
         "viewall_label": "View all",
-        "viewall_url": "/collections/all",
+        "viewall_url": "shopify://collections/all-bags",
         "tone": "light",
         "max_products": 8,
         "show_percent": true,
