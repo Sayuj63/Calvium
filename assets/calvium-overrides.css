@@ -1819,21 +1819,16 @@ iframe[src*="recaptcha"],
 [data-cptcha] + .shopify-tos-notice { display: none !important; visibility: hidden !important; }
 
 /* ============================================================
-   Promotion popup — center rock-solid in the viewport.
-   Was translate(-50%,-40%) initial + translate(-50%,-50%) final
-   which caused a top-shifted appearance. Now uses grid centering
-   which ignores any lingering transform.
+   Promotion popup — HIDDEN.
+   User asked for the "New arrivals / Flat 30% OFF" popup to be
+   removed from the site. The section is also unregistered from
+   popup-group.json's order array (belt + suspenders). CSS is the
+   fallback in case Shopify's theme editor re-adds it later.
    ============================================================ */
-.modal--popup.promotionPopup { display: grid !important; place-items: center !important; }
-.modal--popup.promotionPopup .popup__inner {
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
-  transform: none !important;
-  margin: 0 !important;
-  max-height: min(92vh, 100%) !important;
-}
-.modal--popup.promotionPopup[open] .popup__inner { transform: none !important; }
+.modal--popup.promotionPopup,
+.section-promotion-popup,
+.promotionPopup,
+[id^="Promotion-popup"] { display: none; visibility: hidden; pointer-events: none; }
 
 /* ============================================================
    Lookbook ("THE STORY") — heading + CTA a bit bigger.
