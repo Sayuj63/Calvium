@@ -1,16 +1,12 @@
 {%- comment -%}
-  Policy-page handle whitelist — Privacy/Return/Shipping/Terms don't reliably
-  carry a heading block in the Shopify page editor. Auto-render <h1>{{ page.title }}</h1>
-  so every policy page has a centred title. Merchants who add their own text-block
-  heading should remove it (otherwise it'll show twice). Non-policy pages
-  (About, Contact, FAQ) supply their own heading, so no auto-inject there.
+  page.json already ships a text-block heading (`text_q48tHr` with
+  content `<p>{{ closest.page.title }}</p>` and type_preset h1) that
+  renders the page title on every Default-page page. Auto-injecting
+  another <h1> here duplicated it — CSS then centres whichever one
+  page.json provides via .template-page selectors.
 {%- endcomment -%}
-{%- assign policy_handles = 'privacy-policy,return-policy,shipping-policy,refund-policy,terms-of-service,terms-and-conditions,terms-conditions,cookie-policy' | split: ',' -%}
 
 {% capture children %}
-  {%- if policy_handles contains page.handle and page.title != blank -%}
-    <h1 class="policy-title">{{ page.title }}</h1>
-  {%- endif -%}
   {% content_for 'blocks' %}
   {{ page.content }}
 {% endcapture %}
