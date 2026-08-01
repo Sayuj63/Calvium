@@ -750,7 +750,7 @@
                           "type": "text",
                           "name": "Text",
                           "settings": {
-                            "text": "<p><a href=\"https://wa.me/919135030303\" target=\"_blank\" rel=\"noopener\">WhatsApp: +91 91350 30303</a></p>\n<p><a href=\"https://maps.google.com/?q=Senior+compound+Narayan+Nagar+Ghatkopar+West+Mumbai\" target=\"_blank\" rel=\"noopener\">Senior compound, Narayan Nagar, Ghatkopar West<br/>Mumbai - 400 086</a></p>",
+                            "text": "<p><a href=\"https://wa.me/919135030303\" target=\"_blank\" rel=\"noopener\">+91 91350 30303</a></p>\n<p><a href=\"https://maps.google.com/?q=Senior+compound+Narayan+Nagar+Ghatkopar+West+Mumbai\" target=\"_blank\" rel=\"noopener\">Senior compound, Narayan Nagar, Ghatkopar West<br/>Mumbai - 400 086</a></p>",
                             "collection_description_only": false,
                             "collapse_text": false,
                             "typing_text": false,

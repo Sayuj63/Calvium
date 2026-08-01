@@ -1867,20 +1867,141 @@ iframe[src*="recaptcha"],
 .footer-block--text a:focus { text-decoration: none !important; border-bottom: 0 !important; }
 
 /* ============================================================
-   Footer social icons — center under the logo instead of
-   left-aligned. Targets the social-icons block directly.
+   Footer social icons — center under the logo.
+   Root cause: template applies class "sm:justify-center" on the
+   <ul>, but the theme's utility CSS only defines ".max-sm\:justify-center"
+   (opposite breakpoint), so nothing centers the icons horizontally.
+   Fix by adding the missing rule scoped to the footer.
    ============================================================ */
-.footer-block--social-icons-list,
-.footer .social-icons-list,
-.footer .social-list {
-  justify-content: center !important;
-  width: 100% !important;
-  text-align: center !important;
+.section-footer .list-social { justify-content: center; }
+
+/* ============================================================
+   Search overlay input — kill the thick black focus ring.
+   Root cause: base.css:2057 uses `*:focus-visible` (universal) with
+   a 0.3rem foreground-colored box-shadow via --focused-base-box-shadow.
+   The .cm-search__input inherits this. Our own rule has higher
+   specificity so no !important needed.
+   ============================================================ */
+.cm-search__input:focus,
+.cm-search__input:focus-visible {
+  outline: 0;
+  box-shadow: none;
 }
-.footer-block--social-icons-list ul,
-.footer .social-icons-list ul,
-.footer .social-list ul {
-  justify-content: center !important;
-  width: 100% !important;
-  margin-inline: auto !important;
+
+/* ============================================================
+   Collection page — new toolbar (Filters dropdown / count / sort).
+   Kills the old hero underline + facet sidebar dividers, replaces
+   with a single row bordered top+bottom.
+   Structural change happens in sections/calvium-collection-category.liquid;
+   these styles support the new markup.
+   ============================================================ */
+.cm-collcat__hero { border-bottom: 0; margin-block-end: 12px; padding-block: 16px 12px; }
+
+.cm-colltoolbar {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding-block: 14px;
+  border-block: 1px solid var(--cm-ink-15);
+  margin-block-end: 24px;
+}
+.cm-colltoolbar__count {
+  font-size: 13px;
+  color: var(--cm-ink-70);
+  justify-self: start;
+  padding-inline-start: 8px;
+}
+.cm-colltoolbar__filters { position: relative; }
+.cm-colltoolbar__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--cm-ink-15);
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--cm-ink);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.cm-colltoolbar__trigger::-webkit-details-marker { display: none; }
+.cm-colltoolbar__trigger::marker { content: ''; }
+.cm-colltoolbar__chev {
+  width: 14px;
+  height: 14px;
+  transition: transform 200ms ease;
+}
+.cm-colltoolbar__filters[open] .cm-colltoolbar__chev { transform: rotate(180deg); }
+.cm-colltoolbar__badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cm-ink);
+  color: var(--cm-white);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.cm-colltoolbar__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  width: min(360px, calc(100vw - 32px));
+  max-height: 70vh;
+  overflow-y: auto;
+  background: var(--cm-white);
+  border: 1px solid var(--cm-ink-15);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  padding: 14px 16px;
+}
+.cm-colltoolbar__form > .cm-facetgroup { border-top: 1px solid var(--cm-ink-08); padding-block: 10px; }
+.cm-colltoolbar__form > .cm-facetgroup:first-of-type { border-top: 0; padding-block-start: 0; }
+.cm-colltoolbar__empty { font-size: 13px; color: var(--cm-ink-70); margin: 8px 0 0; }
+.cm-colltoolbar__foot { margin-block-start: 8px; padding-block-start: 12px; border-top: 1px solid var(--cm-ink-08); text-align: right; }
+.cm-colltoolbar__clear {
+  font-size: 12px;
+  color: var(--cm-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cm-colltoolbar__sortwrap {
+  justify-self: end;
+  position: relative;
+}
+.cm-colltoolbar__sort {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 8px 34px 8px 14px;
+  border: 1px solid var(--cm-ink-15);
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cm-ink);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' stroke='%230a0a0a' stroke-width='1.6'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px 14px;
+}
+
+@media (max-width: 640px) {
+  .cm-colltoolbar { grid-template-columns: auto auto; row-gap: 8px; }
+  .cm-colltoolbar__count { grid-column: 1 / -1; padding-inline-start: 0; }
+  .cm-colltoolbar__panel { width: calc(100vw - 32px); }
 }

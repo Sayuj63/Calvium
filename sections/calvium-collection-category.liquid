@@ -51,147 +51,132 @@
       {%- endif -%}
     </div>
 
-    <div class="cm-collcat__layout">
-      {%- comment -%} ---------- SIDEBAR: facet filter panel ---------- {%- endcomment -%}
-      <aside class="cm-facetsbar" aria-label="Filters" data-cm-facetsbar>
-        <div class="cm-facetsbar__head">
-          <p class="cm-facetsbar__title">Filters</p>
-          {%- assign has_active = false -%}
-          {%- for f in collection.filters -%}
-            {%- if f.active_values.size > 0 or f.min_value.value or f.max_value.value -%}{%- assign has_active = true -%}{%- endif -%}
-          {%- endfor -%}
-          {%- if has_active -%}
-            <a href="{{ collection.url }}" class="cm-facetsbar__clear">Clear all</a>
-          {%- endif -%}
-          <button type="button" class="cm-facetsbar__close" data-cm-facetsbar-close aria-label="Close filters">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-          </button>
-        </div>
+    {%- comment -%} ---------- TOOLBAR: Filters dropdown + count + sort ---------- {%- endcomment -%}
+    {%- assign active_count = 0 -%}
+    {%- for f in collection.filters -%}{%- assign active_count = active_count | plus: f.active_values.size -%}{%- endfor -%}
 
-        <form method="get" action="{{ collection.url }}" data-cm-facet-form class="cm-facetsbar__form">
-          <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by }}">
+    <div class="cm-colltoolbar" data-cm-colltoolbar>
+      <details class="cm-colltoolbar__filters" data-cm-filters>
+        <summary class="cm-colltoolbar__trigger" aria-label="Filters">
+          <span>Filters</span>
+          {%- if active_count > 0 -%}<span class="cm-colltoolbar__badge">{{ active_count }}</span>{%- endif -%}
+          <svg class="cm-colltoolbar__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
 
-          {%- for filter in collection.filters -%}
-            {%- case filter.type -%}
-              {%- when 'price_range' -%}
-                <details class="cm-facetgroup" {% if filter.min_value.value or filter.max_value.value %}open{% endif %}>
-                  <summary>
-                    <span>{{ filter.label }}</span>
-                    {%- if filter.min_value.value or filter.max_value.value -%}<span class="cm-facetgroup__badge">•</span>{%- endif -%}
-                  </summary>
-                  <div class="cm-facetgroup__body">
-                    <div class="cm-facetgroup__price">
-                      <label>
-                        <span class="cm-facetgroup__lbl">Min</span>
-                        <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency }}">
-                      </label>
-                      <label>
-                        <span class="cm-facetgroup__lbl">Max</span>
-                        <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="{{ filter.range_max | money_without_currency }}" min="0" max="{{ filter.range_max | money_without_currency }}">
-                      </label>
-                      <button type="submit" class="cm-facetgroup__apply">Apply</button>
-                    </div>
-                  </div>
-                </details>
+        <div class="cm-colltoolbar__panel">
+          <form method="get" action="{{ collection.url }}" data-cm-facet-form class="cm-colltoolbar__form">
+            <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by }}">
 
-              {%- else -%}
-                {%- if filter.values.size > 0 -%}
-                  <details class="cm-facetgroup" {% if filter.active_values.size > 0 %}open{% endif %}>
+            {%- for filter in collection.filters -%}
+              {%- case filter.type -%}
+                {%- when 'price_range' -%}
+                  <details class="cm-facetgroup" {% if filter.min_value.value or filter.max_value.value %}open{% endif %}>
                     <summary>
                       <span>{{ filter.label }}</span>
-                      {%- if filter.active_values.size > 0 -%}
-                        <span class="cm-facetgroup__badge">{{ filter.active_values.size }}</span>
-                      {%- endif -%}
+                      {%- if filter.min_value.value or filter.max_value.value -%}<span class="cm-facetgroup__badge">•</span>{%- endif -%}
                     </summary>
                     <div class="cm-facetgroup__body">
-                      <ul class="cm-facetgroup__list" role="list">
-                        {%- for value in filter.values -%}
-                          <li>
-                            <label class="cm-facetopt {% if value.count == 0 and value.active == false %}is-disabled{% endif %}">
-                              <input
-                                type="checkbox"
-                                name="{{ value.param_name }}"
-                                value="{{ value.value }}"
-                                {% if value.active %}checked{% endif %}
-                                {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                              >
-                              <span class="cm-facetopt__label">{{ value.label }}</span>
-                              <span class="cm-facetopt__count">({{ value.count }})</span>
-                            </label>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
+                      <div class="cm-facetgroup__price">
+                        <label>
+                          <span class="cm-facetgroup__lbl">Min</span>
+                          <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency }}">
+                        </label>
+                        <label>
+                          <span class="cm-facetgroup__lbl">Max</span>
+                          <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="{{ filter.range_max | money_without_currency }}" min="0" max="{{ filter.range_max | money_without_currency }}">
+                        </label>
+                        <button type="submit" class="cm-facetgroup__apply">Apply</button>
+                      </div>
                     </div>
                   </details>
-                {%- endif -%}
-            {%- endcase -%}
-          {%- endfor -%}
 
-          {%- if collection.filters.size == 0 -%}
-            <p class="cm-facetsbar__empty">No filters configured for this collection.<br><span>Enable filters in Shopify Admin → Search &amp; discovery.</span></p>
-          {%- endif -%}
-
-          <div class="cm-facetsbar__foot">
-            <button type="submit" class="cm-facetsbar__submit">Show {{ collection.products_count }} products</button>
-          </div>
-        </form>
-      </aside>
-
-      {%- comment -%} ---------- MAIN: sort bar + grid ---------- {%- endcomment -%}
-      <div class="cm-collcat__main">
-        <div class="cm-collcat__sortbar">
-          <button type="button" class="cm-collcat__mobilefilter" data-cm-facetsbar-open aria-controls="cm-facetsbar" aria-expanded="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
-            <span>Filter</span>
-            {%- assign active_count = 0 -%}
-            {%- for f in collection.filters -%}{%- assign active_count = active_count | plus: f.active_values.size -%}{%- endfor -%}
-            {%- if active_count > 0 -%}
-              <span class="cm-collcat__mobilefilter-badge">{{ active_count }}</span>
-            {%- endif -%}
-          </button>
-
-          <span class="cm-collcat__count">{{ collection.products_count }} products</span>
-
-          <label class="cm-collcat__sortwrap">
-            <span class="visually-hidden">Sort by</span>
-            <select class="cm-collcat__sort" data-cm-sort>
-              {%- for opt in collection.sort_options -%}
-                <option value="{{ opt.value }}" {% if opt.value == collection.sort_by %}selected{% endif %}>{{ opt.name }}</option>
-              {%- endfor -%}
-            </select>
-          </label>
-        </div>
-
-        <div class="cm-grid cm-grid--dense cm-collcat__grid">
-          {%- for p in collection.products -%}
-            {%- render 'cm-product-card',
-                 product: p,
-                 show_percent: section.settings.show_percent,
-                 show_swatches: section.settings.show_swatches,
-                 max_swatches: section.settings.max_swatches,
-                 show_atc: section.settings.show_atc -%}
-          {%- else -%}
-            <div class="cm-collcat__empty">
-              <p class="cm-collcat__empty-title">No products match those filters</p>
-              <a href="{{ collection.url }}" class="cm-collcat__reset">Reset filters</a>
-            </div>
-          {%- endfor -%}
-        </div>
-
-        {%- if paginate.pages > 1 -%}
-          <nav class="cm-paginate" aria-label="Pagination">
-            {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" aria-label="Previous">‹</a>{%- endif -%}
-            {%- for part in paginate.parts -%}
-              {%- if part.is_link -%}
-                <a href="{{ part.url }}">{{ part.title }}</a>
-              {%- else -%}
-                <span class="{% if part.title == paginate.current_page %}is-active{% endif %}">{{ part.title }}</span>
-              {%- endif -%}
+                {%- else -%}
+                  {%- if filter.values.size > 0 -%}
+                    <details class="cm-facetgroup" {% if filter.active_values.size > 0 %}open{% endif %}>
+                      <summary>
+                        <span>{{ filter.label }}</span>
+                        {%- if filter.active_values.size > 0 -%}<span class="cm-facetgroup__badge">{{ filter.active_values.size }}</span>{%- endif -%}
+                      </summary>
+                      <div class="cm-facetgroup__body">
+                        <ul class="cm-facetgroup__list" role="list">
+                          {%- for value in filter.values -%}
+                            <li>
+                              <label class="cm-facetopt {% if value.count == 0 and value.active == false %}is-disabled{% endif %}">
+                                <input
+                                  type="checkbox"
+                                  name="{{ value.param_name }}"
+                                  value="{{ value.value }}"
+                                  {% if value.active %}checked{% endif %}
+                                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                >
+                                <span class="cm-facetopt__label">{{ value.label }}</span>
+                                <span class="cm-facetopt__count">({{ value.count }})</span>
+                              </label>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                    </details>
+                  {%- endif -%}
+              {%- endcase -%}
             {%- endfor -%}
-            {%- if paginate.next -%}<a href="{{ paginate.next.url }}" aria-label="Next">›</a>{%- endif -%}
-          </nav>
-        {%- endif -%}
+
+            {%- if collection.filters.size == 0 -%}
+              <p class="cm-colltoolbar__empty">No filters configured. Enable them in Shopify Admin → Search &amp; discovery.</p>
+            {%- endif -%}
+
+            {%- if active_count > 0 -%}
+              <div class="cm-colltoolbar__foot">
+                <a href="{{ collection.url }}" class="cm-colltoolbar__clear">Clear all</a>
+              </div>
+            {%- endif -%}
+          </form>
+        </div>
+      </details>
+
+      <span class="cm-colltoolbar__count">{{ collection.products_count }} products</span>
+
+      <label class="cm-colltoolbar__sortwrap">
+        <span class="visually-hidden">Sort by</span>
+        <select class="cm-colltoolbar__sort" data-cm-sort>
+          {%- for opt in collection.sort_options -%}
+            <option value="{{ opt.value }}" {% if opt.value == collection.sort_by %}selected{% endif %}>{{ opt.name }}</option>
+          {%- endfor -%}
+        </select>
+      </label>
+    </div>
+
+    {%- comment -%} ---------- PRODUCT GRID ---------- {%- endcomment -%}
+    <div class="cm-collcat__main">
+      <div class="cm-grid cm-grid--dense cm-collcat__grid">
+        {%- for p in collection.products -%}
+          {%- render 'cm-product-card',
+               product: p,
+               show_percent: section.settings.show_percent,
+               show_swatches: section.settings.show_swatches,
+               max_swatches: section.settings.max_swatches,
+               show_atc: section.settings.show_atc -%}
+        {%- else -%}
+          <div class="cm-collcat__empty">
+            <p class="cm-collcat__empty-title">No products match those filters</p>
+            <a href="{{ collection.url }}" class="cm-collcat__reset">Reset filters</a>
+          </div>
+        {%- endfor -%}
       </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="cm-paginate" aria-label="Pagination">
+          {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" aria-label="Previous">‹</a>{%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}">{{ part.title }}</a>
+            {%- else -%}
+              <span class="{% if part.title == paginate.current_page %}is-active{% endif %}">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}<a href="{{ paginate.next.url }}" aria-label="Next">›</a>{%- endif -%}
+        </nav>
+      {%- endif -%}
     </div>
   </div>
 </section>
@@ -202,22 +187,7 @@
     var root = document.querySelector('.cm-collcat');
     if (!root) return;
 
-    var sidebar = root.querySelector('[data-cm-facetsbar]');
-    var openBtns = root.querySelectorAll('[data-cm-facetsbar-open]');
-    var closeBtn = sidebar && sidebar.querySelector('[data-cm-facetsbar-close]');
-
-    function setOpen(open) {
-      if (!sidebar) return;
-      sidebar.classList.toggle('is-open', open);
-      openBtns.forEach(function (b) { b.setAttribute('aria-expanded', open ? 'true' : 'false'); });
-      document.documentElement.classList.toggle('cm-facetsbar-open', open);
-    }
-    openBtns.forEach(function (btn) { btn.addEventListener('click', function () { setOpen(true); }); });
-    if (closeBtn) closeBtn.addEventListener('click', function () { setOpen(false); });
-    if (sidebar) sidebar.addEventListener('click', function (e) { if (e.target === sidebar) setOpen(false); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
-
-    // Auto-submit form on any checkbox change (progressive enhancement)
+    // Auto-submit filter form on any checkbox change (progressive enhancement)
     var form = root.querySelector('[data-cm-facet-form]');
     if (form) {
       form.addEventListener('change', function (e) {
@@ -235,6 +205,19 @@
         var url = new URL(window.location.href);
         url.searchParams.set('sort_by', e.target.value);
         window.location.href = url.toString();
+      });
+    }
+
+    // Close the Filters <details> when clicking outside
+    var filtersDetails = root.querySelector('[data-cm-filters]');
+    if (filtersDetails) {
+      document.addEventListener('click', function (e) {
+        if (!filtersDetails.open) return;
+        if (filtersDetails.contains(e.target)) return;
+        filtersDetails.open = false;
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && filtersDetails.open) filtersDetails.open = false;
       });
     }
   })();
