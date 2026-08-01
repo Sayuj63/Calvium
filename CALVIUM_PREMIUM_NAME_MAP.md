@@ -1,131 +1,150 @@
-# Calvium — Premium Product Name Map
+# Calvium — Premium Product Name Map (v2)
 
 Generated: 2026-08-01
 
 Source: `products_split_by_color.csv` (94 products, 480 rows)
 Output: `products_split_by_color_PREMIUM.csv`
 
-## Color palette (old → premium)
+Spec: `Calvium_Shopify_Product_List (1).docx` — Sections 2 & 3
 
-| Old | New |
-|---|---|
-| black | Onyx |
-| brown | Cognac |
-| green | Verdant |
-| khaki | Sahara |
-| mud | Truffle |
-| tan | Camel |
-| wine | Bordeaux |
-| grey | Graphite |
-| beige | Champagne |
-| white | Ivory |
-| red | Ruby |
-| yellow | Amber |
-| sage green | Sage |
-| dark blue | Sapphire |
-| beige off white | Vanilla |
-| coffee | Mocha |
-| dark grey | Slate |
-| light grey | Silver |
-| army green | Olive |
-| black green | Forest Obsidian |
-| blues | Cobalt |
+## Section 1 — Categories (5 lifestyle + 2 utility)
 
-## Product renames
+| Category | Shopify slug | Description |
+|---|---|---|
+| Everyday Icons | /collections/everyday-icons | The bags you reach for without thinking. |
+| Work Ready | /collections/work-ready | From the first meeting to the last one. |
+| Carry-Ons | /collections/carry-ons | For the trip you planned and the one you didn't. |
+| Day to Night | /collections/day-to-night | Office to after-hours without switching bags. |
+| On the Move | /collections/on-the-move | Hands-free leather for the way you actually live. |
+| New Arrivals | /collections/new-arrivals | Fresh into the Calvium edit. |
+| All Bags | /collections/all | The full Calvium collection. |
 
-| Old handle | Old title | Old color | Premium color | New title | New handle |
-|---|---|---|---|---|---|
-| `calvium-vector-transit` | Calvium Vector Transit | — | — | Calvium Vector Transit | `calvium-vector-transit` |
-| `calvium-fluit-green` | Calvium Fluit - Green | Green | Verdant | Calvium Fluit in Verdant | `calvium-fluit-in-verdant` |
-| `calvium-fluit-tan` | Calvium Fluit - Tan | Tan | Camel | Calvium Fluit in Camel | `calvium-fluit-in-camel` |
-| `calvium-fluit-wine` | Calvium Fluit - Wine | Wine | Bordeaux | Calvium Fluit in Bordeaux | `calvium-fluit-in-bordeaux` |
-| `calvium-cubus-brown` | Calvium Cubus - Brown | Brown | Cognac | Calvium Cubus in Cognac | `calvium-cubus-in-cognac` |
-| `calvium-cubus-green` | Calvium Cubus - Green | Green | Verdant | Calvium Cubus in Verdant | `calvium-cubus-in-verdant` |
-| `calvium-delta-green` | Calvium Delta - Green | Green | Verdant | Calvium Delta in Verdant | `calvium-delta-in-verdant` |
-| `calvium-delta-mud` | Calvium Delta - Mud | Mud | Truffle | Calvium Delta in Truffle | `calvium-delta-in-truffle` |
-| `calvium-delta-tan` | Calvium Delta - Tan | Tan | Camel | Calvium Delta in Camel | `calvium-delta-in-camel` |
-| `calvium-magna-black` | Calvium Magna - Black | Black | Onyx | Calvium Magna in Onyx | `calvium-magna-in-onyx` |
-| `calvium-magna-khaki` | Calvium Magna - Khaki | Khaki | Sahara | Calvium Magna in Sahara | `calvium-magna-in-sahara` |
-| `calvium-magna-mud` | Calvium Magna - Mud | Mud | Truffle | Calvium Magna in Truffle | `calvium-magna-in-truffle` |
-| `calvium-magna-tan` | Calvium Magna - Tan | Tan | Camel | Calvium Magna in Camel | `calvium-magna-in-camel` |
-| `calvium-recta-grey` | Calvium Recta - Grey | Grey | Graphite | Calvium Recta in Graphite | `calvium-recta-in-graphite` |
-| `calvium-recta-tan` | Calvium Recta - Tan | Tan | Camel | Calvium Recta in Camel | `calvium-recta-in-camel` |
-| `calvium-nodus` | Calvium Nodus | — | — | Calvium Nodus | `calvium-nodus` |
-| `calvium-arcus-black` | Calvium Arcus - Black | Black | Onyx | Calvium Arcus in Onyx | `calvium-arcus-in-onyx` |
-| `calvium-arcus-tan` | Calvium Arcus - Tan | Tan | Camel | Calvium Arcus in Camel | `calvium-arcus-in-camel` |
-| `calvium-orbis-brown` | Calvium Orbis - Brown | Brown | Cognac | Calvium Orbis in Cognac | `calvium-orbis-in-cognac` |
-| `calvium-orbis-tan` | Calvium Orbis - Tan | Tan | Camel | Calvium Orbis in Camel | `calvium-orbis-in-camel` |
-| `calvium-orbis-wine` | Calvium Orbis - Wine | Wine | Bordeaux | Calvium Orbis in Bordeaux | `calvium-orbis-in-bordeaux` |
-| `calvium-bipartis-green` | Calvium Bipartis - Green | Green | Verdant | Calvium Bipartis in Verdant | `calvium-bipartis-in-verdant` |
-| `calvium-bipartis-mud` | Calvium Bipartis - Mud | Mud | Truffle | Calvium Bipartis in Truffle | `calvium-bipartis-in-truffle` |
-| `calvium-transitus-1-green` | Calvium Transitus - Green | Green | Verdant | Calvium Transitus in Verdant | `calvium-transitus-in-verdant` |
-| `calvium-transitus-1-grey` | Calvium Transitus - Grey | Grey | Graphite | Calvium Transitus in Graphite | `calvium-transitus-in-graphite` |
-| `calvium-transitus-khaki` | Calvium Transitus - Khaki | Khaki | Sahara | Calvium Transitus in Sahara | `calvium-transitus-in-sahara` |
-| `calvium-transitus-sage-green` | Calvium Transitus - Sage Green | Sage Green | Sage | Calvium Transitus in Sage | `calvium-transitus-in-sage` |
-| `calvium-modus-black` | Calvium Modus - Black | Black | Onyx | Calvium Modus in Onyx | `calvium-modus-in-onyx` |
-| `calvium-modus-green` | Calvium Modus - Green | Green | Verdant | Calvium Modus in Verdant | `calvium-modus-in-verdant` |
-| `calvium-modus-grey` | Calvium Modus - Grey | Grey | Graphite | Calvium Modus in Graphite | `calvium-modus-in-graphite` |
-| `calvium-columna-khaki` | Calvium Columna - Khaki | Khaki | Sahara | Calvium Columna in Sahara | `calvium-columna-in-sahara` |
-| `calvium-columna-mud` | Calvium Columna - Mud | Mud | Truffle | Calvium Columna in Truffle | `calvium-columna-in-truffle` |
-| `calvium-columna-tan` | Calvium Columna - Tan | Tan | Camel | Calvium Columna in Camel | `calvium-columna-in-camel` |
-| `sigillum-petite-coffee` | Calvium Sigillum Petite - Coffee | Coffee | Mocha | Calvium Sigillum Petite in Mocha | `calvium-sigillum-petite-in-mocha` |
-| `sigillum-petite-khaki` | Calvium Sigillum Petite - Khaki | Khaki | Sahara | Calvium Sigillum Petite in Sahara | `calvium-sigillum-petite-in-sahara` |
-| `sigillum-petite-wine` | Calvium Sigillum Petite - Wine | Wine | Bordeaux | Calvium Sigillum Petite in Bordeaux | `calvium-sigillum-petite-in-bordeaux` |
-| `calvium-libra-khaki` | Calvium Libra - Khaki | Khaki | Sahara | Calvium Libra in Sahara | `calvium-libra-in-sahara` |
-| `calvium-libra-tan` | Calvium Libra - Tan | Tan | Camel | Calvium Libra in Camel | `calvium-libra-in-camel` |
-| `calvium-libra-wine` | Calvium Libra - Wine | Wine | Bordeaux | Calvium Libra in Bordeaux | `calvium-libra-in-bordeaux` |
-| `calvium-vector` | Calvium Vector | — | — | Calvium Vector | `calvium-vector` |
-| `calvium-axis` | Calvium Axis | — | — | Calvium Axis | `calvium-axis` |
-| `plico-black` | Calvium Plico - Black | Black | Onyx | Calvium Plico in Onyx | `calvium-plico-in-onyx` |
-| `plico-brown` | Calvium Plico - Brown | Brown | Cognac | Calvium Plico in Cognac | `calvium-plico-in-cognac` |
-| `plico-tan` | Calvium Plico - Tan | Tan | Camel | Calvium Plico in Camel | `calvium-plico-in-camel` |
-| `plico-wine` | Calvium Plico - Wine | Wine | Bordeaux | Calvium Plico in Bordeaux | `calvium-plico-in-bordeaux` |
-| `orb-black` | Orb - Black | Black | Onyx | Calvium Orb in Onyx | `calvium-orb-in-onyx` |
-| `orb-mud` | Orb - Mud | Mud | Truffle | Calvium Orb in Truffle | `calvium-orb-in-truffle` |
-| `tessera-sage-green` | Calvium Tessera - Sage Green | Sage Green | Sage | Calvium Tessera in Sage | `calvium-tessera-in-sage` |
-| `tessera-white` | Calvium Tessera - White | White | Ivory | Calvium Tessera in Ivory | `calvium-tessera-in-ivory` |
-| `gemina-black` | Calvium Gemina - Black | Black | Onyx | Calvium Gemina in Onyx | `calvium-gemina-in-onyx` |
-| `gemina-white` | Calvium Gemina - White | White | Ivory | Calvium Gemina in Ivory | `calvium-gemina-in-ivory` |
-| `sigillum-mini-dark-blue` | Calvium Sigillum Mini - Dark Blue | Dark Blue | Sapphire | Calvium Sigillum Mini in Sapphire | `calvium-sigillum-mini-in-sapphire` |
-| `sigillum-mini-khaki` | Calvium Sigillum Mini - Khaki | Khaki | Sahara | Calvium Sigillum Mini in Sahara | `calvium-sigillum-mini-in-sahara` |
-| `pico-khaki` | Calvium Pico - Khaki | Khaki | Sahara | Calvium Pico in Sahara | `calvium-pico-in-sahara` |
-| `pico-tan` | Calvium Pico - Tan | Tan | Camel | Calvium Pico in Camel | `calvium-pico-in-camel` |
-| `sigillum-khaki` | Calvium Sigillum - Khaki | Khaki | Sahara | Calvium Sigillum in Sahara | `calvium-sigillum-in-sahara` |
-| `sigillum-sage-green` | Calvium Sigillum - Sage Green | Sage Green | Sage | Calvium Sigillum in Sage | `calvium-sigillum-in-sage` |
-| `sigillum-tan` | Calvium Sigillum - Tan | Tan | Camel | Calvium Sigillum in Camel | `calvium-sigillum-in-camel` |
-| `cella-khaki` | Calvium Cella - Khaki | Khaki | Sahara | Calvium Cella in Sahara | `calvium-cella-in-sahara` |
-| `cella-sage-green` | Calvium Cella - Sage Green | Sage Green | Sage | Calvium Cella in Sage | `calvium-cella-in-sage` |
-| `cella-white` | Calvium Cella - White | White | Ivory | Calvium Cella in Ivory | `calvium-cella-in-ivory` |
-| `column-blues` | Calvium Column - Blues | Blues | Cobalt | Calvium Column in Cobalt | `calvium-column-in-cobalt` |
-| `column-khaki` | Calvium Column - Khaki | Khaki | Sahara | Calvium Column in Sahara | `calvium-column-in-sahara` |
-| `column-sage-green` | Calvium Column - Sage Green | Sage Green | Sage | Calvium Column in Sage | `calvium-column-in-sage` |
-| `core-khaki` | Calvium Core - Khaki | Khaki | Sahara | Calvium Core in Sahara | `calvium-core-in-sahara` |
-| `core-sage-green` | Calvium Core - Sage Green | Sage Green | Sage | Calvium Core in Sage | `calvium-core-in-sage` |
-| `core-white` | Calvium Core - White | White | Ivory | Calvium Core in Ivory | `calvium-core-in-ivory` |
-| `nexus-beige` | Calvium Nexus - Beige | Beige | Champagne | Calvium Nexus in Champagne | `calvium-nexus-in-champagne` |
-| `nexus-sage-green` | Calvium Nexus - Sage Green | Sage Green | Sage | Calvium Nexus in Sage | `calvium-nexus-in-sage` |
-| `nexus-tan` | Calvium Nexus - Tan | Tan | Camel | Calvium Nexus in Camel | `calvium-nexus-in-camel` |
-| `meridian-black` | Calvium Meridian - Black | Black | Onyx | Calvium Meridian in Onyx | `calvium-meridian-in-onyx` |
-| `meridian-brown` | Calvium Meridian - Brown | Brown | Cognac | Calvium Meridian in Cognac | `calvium-meridian-in-cognac` |
-| `senator-beige-off-white` | Calvium Senator - Beige Off White | Beige Off White | Vanilla | Calvium Senator in Vanilla | `calvium-senator-in-vanilla` |
-| `senator-black` | Calvium Senator - Black | Black | Onyx | Calvium Senator in Onyx | `calvium-senator-in-onyx` |
-| `senator-brown` | Calvium Senator - Brown | Brown | Cognac | Calvium Senator in Cognac | `calvium-senator-in-cognac` |
-| `ratio-army-green` | Calvium Ratio - Army Green | Army Green | Olive | Calvium Ratio in Olive | `calvium-ratio-in-olive` |
-| `ratio-black` | Calvium Ratio - Black | Black | Onyx | Calvium Ratio in Onyx | `calvium-ratio-in-onyx` |
-| `ratio-brown` | Calvium Ratio - Brown | Brown | Cognac | Calvium Ratio in Cognac | `calvium-ratio-in-cognac` |
-| `ratio-dark-blue` | Calvium Ratio - Dark Blue | Dark Blue | Sapphire | Calvium Ratio in Sapphire | `calvium-ratio-in-sapphire` |
-| `ratio-tan` | Calvium Ratio - Tan | Tan | Camel | Calvium Ratio in Camel | `calvium-ratio-in-camel` |
-| `ratio-wine` | Calvium Ratio - Wine | Wine | Bordeaux | Calvium Ratio in Bordeaux | `calvium-ratio-in-bordeaux` |
-| `solis-beige-off-white` | Solis - Beige Off White | Beige Off White | Vanilla | Calvium Solis in Vanilla | `calvium-solis-in-vanilla` |
-| `solis-black` | Solis - Black | Black | Onyx | Calvium Solis in Onyx | `calvium-solis-in-onyx` |
-| `solis-black-green` | Solis - Black Green | Black Green | Forest Obsidian | Calvium Solis in Forest Obsidian | `calvium-solis-in-forest-obsidian` |
-| `solis-khaki` | Solis - Khaki | Khaki | Sahara | Calvium Solis in Sahara | `calvium-solis-in-sahara` |
-| `solis-red` | Solis - Red | Red | Ruby | Calvium Solis in Ruby | `calvium-solis-in-ruby` |
-| `solis-tan` | Solis - Tan | Tan | Camel | Calvium Solis in Camel | `calvium-solis-in-camel` |
-| `solis-yellow` | Solis - Yellow | Yellow | Amber | Calvium Solis in Amber | `calvium-solis-in-amber` |
-| `calvium-nova-beige-off-white` | Calvium Nova - Beige Off White | Beige Off White | Vanilla | Calvium Nova in Vanilla | `calvium-nova-in-vanilla` |
-| `calvium-nova-black` | Calvium Nova - Black | Black | Onyx | Calvium Nova in Onyx | `calvium-nova-in-onyx` |
-| `calvium-nova-brown` | Calvium Nova - Brown | Brown | Cognac | Calvium Nova in Cognac | `calvium-nova-in-cognac` |
-| `calvium-nova-coffee` | Calvium Nova - Coffee | Coffee | Mocha | Calvium Nova in Mocha | `calvium-nova-in-mocha` |
-| `calvium-nova-dark-grey` | Calvium Nova - Dark Grey | Dark Grey | Slate | Calvium Nova in Slate | `calvium-nova-in-slate` |
-| `calvium-nova-light-grey` | Calvium Nova - Light Grey | Light Grey | Silver | Calvium Nova in Silver | `calvium-nova-in-silver` |
+Shopify auto-collection rule: **Tag equals "<Category name>"** (case-sensitive). Every product row in the CSV carries its category as a tag.
+
+## Section 2 — Premium colour palette
+
+| Original | Premium | Notes |
+|---|---|---|
+| black | Midnight Black | |
+| tan | Cognac Tan | |
+| brown | Havana Brown | |
+| green | Forest Green | |
+| mud | River Clay | |
+| khaki | Golden Khaki | |
+| sage green | Morning Sage | |
+| white | Ivory Cream | |
+| blue | Slate Blue | |
+| blues | Slate Blue | |
+| dark blue | Navy Dusk | |
+| wine | Bordeaux | |
+| coffee | Espresso | |
+| grey | Ash Grey | |
+| beige | Champagne | |
+| beige off white | Vanilla Cream | |
+| yellow | Saffron | |
+| red | Crimson | |
+| dark grey | Slate | |
+| light grey | Pearl Grey | |
+| army green | Olive Field | |
+| black green | Forest Obsidian | |
+
+Additional colours (Beige, Yellow, Red, etc.) that were not in the section-2 palette were mapped to sensible premium equivalents (Champagne, Saffron, Crimson…).
+
+## Section 3 — Product renames (94 products)
+
+| Old handle | Old title | Type | Category | Premium colour | New title | New handle |
+|---|---|---|---|---|---|---|
+| `calvium-vector-transit` | Calvium Vector Transit | Unisex Crossbody Bag | On the Move | — | Calvium Vector Transit | Unisex Crossbody Bag | `calvium-vector-transit-unisex-crossbody-bag` |
+| `calvium-fluit-green` | Calvium Fluit - Green | Hobo Shoulder Bag | Everyday Icons | Forest Green | Calvium Fluit | Hobo Shoulder Bag | Forest Green | `calvium-fluit-hobo-shoulder-bag-forest-green` |
+| `calvium-fluit-tan` | Calvium Fluit - Tan | Hobo Shoulder Bag | Everyday Icons | Cognac Tan | Calvium Fluit | Hobo Shoulder Bag | Cognac Tan | `calvium-fluit-hobo-shoulder-bag-cognac-tan` |
+| `calvium-fluit-wine` | Calvium Fluit - Wine | Hobo Shoulder Bag | Everyday Icons | Bordeaux | Calvium Fluit | Hobo Shoulder Bag | Bordeaux | `calvium-fluit-hobo-shoulder-bag-bordeaux` |
+| `calvium-cubus-brown` | Calvium Cubus - Brown | Box Bag | Day to Night | Havana Brown | Calvium Cubus | Box Bag | Havana Brown | `calvium-cubus-box-bag-havana-brown` |
+| `calvium-cubus-green` | Calvium Cubus - Green | Box Bag | Day to Night | Forest Green | Calvium Cubus | Box Bag | Forest Green | `calvium-cubus-box-bag-forest-green` |
+| `calvium-delta-green` | Calvium Delta - Green | Bucket Bag | Everyday Icons | Forest Green | Calvium Delta | Bucket Bag | Forest Green | `calvium-delta-bucket-bag-forest-green` |
+| `calvium-delta-mud` | Calvium Delta - Mud | Bucket Bag | Everyday Icons | River Clay | Calvium Delta | Bucket Bag | River Clay | `calvium-delta-bucket-bag-river-clay` |
+| `calvium-delta-tan` | Calvium Delta - Tan | Bucket Bag | Everyday Icons | Cognac Tan | Calvium Delta | Bucket Bag | Cognac Tan | `calvium-delta-bucket-bag-cognac-tan` |
+| `calvium-magna-black` | Calvium Magna - Black | Slouch Shoulder Bag | Everyday Icons | Midnight Black | Calvium Magna | Slouch Shoulder Bag | Midnight Black | `calvium-magna-slouch-shoulder-bag-midnight-black` |
+| `calvium-magna-khaki` | Calvium Magna - Khaki | Slouch Shoulder Bag | Everyday Icons | Golden Khaki | Calvium Magna | Slouch Shoulder Bag | Golden Khaki | `calvium-magna-slouch-shoulder-bag-golden-khaki` |
+| `calvium-magna-mud` | Calvium Magna - Mud | Slouch Shoulder Bag | Everyday Icons | River Clay | Calvium Magna | Slouch Shoulder Bag | River Clay | `calvium-magna-slouch-shoulder-bag-river-clay` |
+| `calvium-magna-tan` | Calvium Magna - Tan | Slouch Shoulder Bag | Everyday Icons | Cognac Tan | Calvium Magna | Slouch Shoulder Bag | Cognac Tan | `calvium-magna-slouch-shoulder-bag-cognac-tan` |
+| `calvium-recta-grey` | Calvium Recta - Grey | Structured Bag | Everyday Icons | Ash Grey | Calvium Recta | Structured Bag | Ash Grey | `calvium-recta-structured-bag-ash-grey` |
+| `calvium-recta-tan` | Calvium Recta - Tan | Structured Bag | Everyday Icons | Cognac Tan | Calvium Recta | Structured Bag | Cognac Tan | `calvium-recta-structured-bag-cognac-tan` |
+| `calvium-nodus` | Calvium Nodus | Knot Detail Tote | Everyday Icons | — | Calvium Nodus | Knot Detail Tote | `calvium-nodus-knot-detail-tote` |
+| `calvium-arcus-black` | Calvium Arcus - Black | Shoulder Bag | Everyday Icons | Midnight Black | Calvium Arcus | Shoulder Bag | Midnight Black | `calvium-arcus-shoulder-bag-midnight-black` |
+| `calvium-arcus-tan` | Calvium Arcus - Tan | Shoulder Bag | Everyday Icons | Cognac Tan | Calvium Arcus | Shoulder Bag | Cognac Tan | `calvium-arcus-shoulder-bag-cognac-tan` |
+| `calvium-orbis-brown` | Calvium Orbis - Brown | Round Crossbody Bag | Day to Night | Havana Brown | Calvium Orbis | Round Crossbody Bag | Havana Brown | `calvium-orbis-round-crossbody-bag-havana-brown` |
+| `calvium-orbis-tan` | Calvium Orbis - Tan | Round Crossbody Bag | Day to Night | Cognac Tan | Calvium Orbis | Round Crossbody Bag | Cognac Tan | `calvium-orbis-round-crossbody-bag-cognac-tan` |
+| `calvium-orbis-wine` | Calvium Orbis - Wine | Round Crossbody Bag | Day to Night | Bordeaux | Calvium Orbis | Round Crossbody Bag | Bordeaux | `calvium-orbis-round-crossbody-bag-bordeaux` |
+| `calvium-bipartis-green` | Calvium Bipartis - Green | Sling Bag | On the Move | Forest Green | Calvium Bipartis | Sling Bag | Forest Green | `calvium-bipartis-sling-bag-forest-green` |
+| `calvium-bipartis-mud` | Calvium Bipartis - Mud | Sling Bag | On the Move | River Clay | Calvium Bipartis | Sling Bag | River Clay | `calvium-bipartis-sling-bag-river-clay` |
+| `calvium-transitus-1-green` | Calvium Transitus - Green | Duffle Sling Bag | Carry-Ons | Forest Green | Calvium Transitus | Duffle Sling Bag | Forest Green | `calvium-transitus-duffle-sling-bag-forest-green` |
+| `calvium-transitus-1-grey` | Calvium Transitus - Grey | Duffle Sling Bag | Carry-Ons | Ash Grey | Calvium Transitus | Duffle Sling Bag | Ash Grey | `calvium-transitus-duffle-sling-bag-ash-grey` |
+| `calvium-transitus-khaki` | Calvium Transitus - Khaki | Duffle Sling Bag | Carry-Ons | Golden Khaki | Calvium Transitus | Duffle Sling Bag | Golden Khaki | `calvium-transitus-duffle-sling-bag-golden-khaki` |
+| `calvium-transitus-sage-green` | Calvium Transitus - Sage Green | Duffle Sling Bag | Carry-Ons | Morning Sage | Calvium Transitus | Duffle Sling Bag | Morning Sage | `calvium-transitus-duffle-sling-bag-morning-sage` |
+| `calvium-modus-black` | Calvium Modus - Black | Crossbody Bag | On the Move | Midnight Black | Calvium Modus | Crossbody Bag | Midnight Black | `calvium-modus-crossbody-bag-midnight-black` |
+| `calvium-modus-green` | Calvium Modus - Green | Crossbody Bag | On the Move | Forest Green | Calvium Modus | Crossbody Bag | Forest Green | `calvium-modus-crossbody-bag-forest-green` |
+| `calvium-modus-grey` | Calvium Modus - Grey | Crossbody Bag | On the Move | Ash Grey | Calvium Modus | Crossbody Bag | Ash Grey | `calvium-modus-crossbody-bag-ash-grey` |
+| `calvium-columna-khaki` | Calvium Columna - Khaki | Shoulder Tote | Work Ready | Golden Khaki | Calvium Columna | Shoulder Tote | Golden Khaki | `calvium-columna-shoulder-tote-golden-khaki` |
+| `calvium-columna-mud` | Calvium Columna - Mud | Shoulder Tote | Work Ready | River Clay | Calvium Columna | Shoulder Tote | River Clay | `calvium-columna-shoulder-tote-river-clay` |
+| `calvium-columna-tan` | Calvium Columna - Tan | Shoulder Tote | Work Ready | Cognac Tan | Calvium Columna | Shoulder Tote | Cognac Tan | `calvium-columna-shoulder-tote-cognac-tan` |
+| `sigillum-petite-coffee` | Calvium Sigillum Petite - Coffee | Compact Sling Bag | Everyday Icons | Espresso | Calvium Sigillum Petite | Compact Sling Bag | Espresso | `calvium-sigillum-petite-compact-sling-bag-espresso` |
+| `sigillum-petite-khaki` | Calvium Sigillum Petite - Khaki | Compact Sling Bag | Everyday Icons | Golden Khaki | Calvium Sigillum Petite | Compact Sling Bag | Golden Khaki | `calvium-sigillum-petite-compact-sling-bag-golden-khaki` |
+| `sigillum-petite-wine` | Calvium Sigillum Petite - Wine | Compact Sling Bag | Everyday Icons | Bordeaux | Calvium Sigillum Petite | Compact Sling Bag | Bordeaux | `calvium-sigillum-petite-compact-sling-bag-bordeaux` |
+| `calvium-libra-khaki` | Calvium Libra - Khaki | Shoulder Bag | Everyday Icons | Golden Khaki | Calvium Libra | Shoulder Bag | Golden Khaki | `calvium-libra-shoulder-bag-golden-khaki` |
+| `calvium-libra-tan` | Calvium Libra - Tan | Shoulder Bag | Everyday Icons | Cognac Tan | Calvium Libra | Shoulder Bag | Cognac Tan | `calvium-libra-shoulder-bag-cognac-tan` |
+| `calvium-libra-wine` | Calvium Libra - Wine | Shoulder Bag | Everyday Icons | Bordeaux | Calvium Libra | Shoulder Bag | Bordeaux | `calvium-libra-shoulder-bag-bordeaux` |
+| `calvium-vector` | Calvium Vector | Unisex Crossbody Bag | On the Move | — | Calvium Vector | Unisex Crossbody Bag | `calvium-vector-unisex-crossbody-bag` |
+| `calvium-axis` | Calvium Axis | Crossbody Bag | On the Move | — | Calvium Axis | Crossbody Bag | `calvium-axis-crossbody-bag` |
+| `plico-black` | Calvium Plico - Black | Crossbody Bag | On the Move | Midnight Black | Calvium Plico | Crossbody Bag | Midnight Black | `calvium-plico-crossbody-bag-midnight-black` |
+| `plico-brown` | Calvium Plico - Brown | Crossbody Bag | On the Move | Havana Brown | Calvium Plico | Crossbody Bag | Havana Brown | `calvium-plico-crossbody-bag-havana-brown` |
+| `plico-tan` | Calvium Plico - Tan | Crossbody Bag | On the Move | Cognac Tan | Calvium Plico | Crossbody Bag | Cognac Tan | `calvium-plico-crossbody-bag-cognac-tan` |
+| `plico-wine` | Calvium Plico - Wine | Crossbody Bag | On the Move | Bordeaux | Calvium Plico | Crossbody Bag | Bordeaux | `calvium-plico-crossbody-bag-bordeaux` |
+| `orb-black` | Orb - Black | Round Crossbody Bag | Day to Night | Midnight Black | Calvium Orb | Round Crossbody Bag | Midnight Black | `calvium-orb-round-crossbody-bag-midnight-black` |
+| `orb-mud` | Orb - Mud | Round Crossbody Bag | Day to Night | River Clay | Calvium Orb | Round Crossbody Bag | River Clay | `calvium-orb-round-crossbody-bag-river-clay` |
+| `tessera-sage-green` | Calvium Tessera - Sage Green | Pebble Crossbody Bag | Everyday Icons | Morning Sage | Calvium Tessera | Pebble Crossbody Bag | Morning Sage | `calvium-tessera-pebble-crossbody-bag-morning-sage` |
+| `tessera-white` | Calvium Tessera - White | Pebble Crossbody Bag | Everyday Icons | Ivory Cream | Calvium Tessera | Pebble Crossbody Bag | Ivory Cream | `calvium-tessera-pebble-crossbody-bag-ivory-cream` |
+| `gemina-black` | Calvium Gemina - Black | Crossbody Bag | Everyday Icons | Midnight Black | Calvium Gemina | Crossbody Bag | Midnight Black | `calvium-gemina-crossbody-bag-midnight-black` |
+| `gemina-white` | Calvium Gemina - White | Crossbody Bag | Everyday Icons | Ivory Cream | Calvium Gemina | Crossbody Bag | Ivory Cream | `calvium-gemina-crossbody-bag-ivory-cream` |
+| `sigillum-mini-dark-blue` | Calvium Sigillum Mini - Dark Blue | Mini Top Handle Bag | Day to Night | Navy Dusk | Calvium Sigillum Mini | Mini Top Handle Bag | Navy Dusk | `calvium-sigillum-mini-mini-top-handle-bag-navy-dusk` |
+| `sigillum-mini-khaki` | Calvium Sigillum Mini - Khaki | Mini Top Handle Bag | Day to Night | Golden Khaki | Calvium Sigillum Mini | Mini Top Handle Bag | Golden Khaki | `calvium-sigillum-mini-mini-top-handle-bag-golden-khaki` |
+| `pico-khaki` | Calvium Pico - Khaki | Mini Handbag | Day to Night | Golden Khaki | Calvium Pico | Mini Handbag | Golden Khaki | `calvium-pico-mini-handbag-golden-khaki` |
+| `pico-tan` | Calvium Pico - Tan | Mini Handbag | Day to Night | Cognac Tan | Calvium Pico | Mini Handbag | Cognac Tan | `calvium-pico-mini-handbag-cognac-tan` |
+| `sigillum-khaki` | Calvium Sigillum - Khaki | Top Handle Handbag | Work Ready | Golden Khaki | Calvium Sigillum | Top Handle Handbag | Golden Khaki | `calvium-sigillum-top-handle-handbag-golden-khaki` |
+| `sigillum-sage-green` | Calvium Sigillum - Sage Green | Top Handle Handbag | Work Ready | Morning Sage | Calvium Sigillum | Top Handle Handbag | Morning Sage | `calvium-sigillum-top-handle-handbag-morning-sage` |
+| `sigillum-tan` | Calvium Sigillum - Tan | Top Handle Handbag | Work Ready | Cognac Tan | Calvium Sigillum | Top Handle Handbag | Cognac Tan | `calvium-sigillum-top-handle-handbag-cognac-tan` |
+| `cella-khaki` | Calvium Cella - Khaki | Top Handle Bag | Work Ready | Golden Khaki | Calvium Cella | Top Handle Bag | Golden Khaki | `calvium-cella-top-handle-bag-golden-khaki` |
+| `cella-sage-green` | Calvium Cella - Sage Green | Top Handle Bag | Work Ready | Morning Sage | Calvium Cella | Top Handle Bag | Morning Sage | `calvium-cella-top-handle-bag-morning-sage` |
+| `cella-white` | Calvium Cella - White | Top Handle Bag | Work Ready | Ivory Cream | Calvium Cella | Top Handle Bag | Ivory Cream | `calvium-cella-top-handle-bag-ivory-cream` |
+| `column-blues` | Calvium Column - Blues | Work Tote | Work Ready | Slate Blue | Calvium Column | Work Tote | Slate Blue | `calvium-column-work-tote-slate-blue` |
+| `column-khaki` | Calvium Column - Khaki | Work Tote | Work Ready | Golden Khaki | Calvium Column | Work Tote | Golden Khaki | `calvium-column-work-tote-golden-khaki` |
+| `column-sage-green` | Calvium Column - Sage Green | Work Tote | Work Ready | Morning Sage | Calvium Column | Work Tote | Morning Sage | `calvium-column-work-tote-morning-sage` |
+| `core-khaki` | Calvium Core - Khaki | Charm Sling Bag | Day to Night | Golden Khaki | Calvium Core | Charm Sling Bag | Golden Khaki | `calvium-core-charm-sling-bag-golden-khaki` |
+| `core-sage-green` | Calvium Core - Sage Green | Charm Sling Bag | Day to Night | Morning Sage | Calvium Core | Charm Sling Bag | Morning Sage | `calvium-core-charm-sling-bag-morning-sage` |
+| `core-white` | Calvium Core - White | Charm Sling Bag | Day to Night | Ivory Cream | Calvium Core | Charm Sling Bag | Ivory Cream | `calvium-core-charm-sling-bag-ivory-cream` |
+| `nexus-beige` | Calvium Nexus - Beige | Structured Handbag | Work Ready | Champagne | Calvium Nexus | Structured Handbag | Champagne | `calvium-nexus-structured-handbag-champagne` |
+| `nexus-sage-green` | Calvium Nexus - Sage Green | Structured Handbag | Work Ready | Morning Sage | Calvium Nexus | Structured Handbag | Morning Sage | `calvium-nexus-structured-handbag-morning-sage` |
+| `nexus-tan` | Calvium Nexus - Tan | Structured Handbag | Work Ready | Cognac Tan | Calvium Nexus | Structured Handbag | Cognac Tan | `calvium-nexus-structured-handbag-cognac-tan` |
+| `meridian-black` | Calvium Meridian - Black | Executive Laptop Bag | Work Ready | Midnight Black | Calvium Meridian | Executive Laptop Bag | Midnight Black | `calvium-meridian-executive-laptop-bag-midnight-black` |
+| `meridian-brown` | Calvium Meridian - Brown | Executive Laptop Bag | Work Ready | Havana Brown | Calvium Meridian | Executive Laptop Bag | Havana Brown | `calvium-meridian-executive-laptop-bag-havana-brown` |
+| `senator-beige-off-white` | Calvium Senator - Beige Off White | Handbag | Work Ready | Vanilla Cream | Calvium Senator | Handbag | Vanilla Cream | `calvium-senator-handbag-vanilla-cream` |
+| `senator-black` | Calvium Senator - Black | Handbag | Work Ready | Midnight Black | Calvium Senator | Handbag | Midnight Black | `calvium-senator-handbag-midnight-black` |
+| `senator-brown` | Calvium Senator - Brown | Handbag | Work Ready | Havana Brown | Calvium Senator | Handbag | Havana Brown | `calvium-senator-handbag-havana-brown` |
+| `ratio-army-green` | Calvium Ratio - Army Green | Handbag | Work Ready | Olive Field | Calvium Ratio | Handbag | Olive Field | `calvium-ratio-handbag-olive-field` |
+| `ratio-black` | Calvium Ratio - Black | Handbag | Work Ready | Midnight Black | Calvium Ratio | Handbag | Midnight Black | `calvium-ratio-handbag-midnight-black` |
+| `ratio-brown` | Calvium Ratio - Brown | Handbag | Work Ready | Havana Brown | Calvium Ratio | Handbag | Havana Brown | `calvium-ratio-handbag-havana-brown` |
+| `ratio-dark-blue` | Calvium Ratio - Dark Blue | Handbag | Work Ready | Navy Dusk | Calvium Ratio | Handbag | Navy Dusk | `calvium-ratio-handbag-navy-dusk` |
+| `ratio-tan` | Calvium Ratio - Tan | Handbag | Work Ready | Cognac Tan | Calvium Ratio | Handbag | Cognac Tan | `calvium-ratio-handbag-cognac-tan` |
+| `ratio-wine` | Calvium Ratio - Wine | Handbag | Work Ready | Bordeaux | Calvium Ratio | Handbag | Bordeaux | `calvium-ratio-handbag-bordeaux` |
+| `solis-beige-off-white` | Solis - Beige Off White | Shoulder Bag | Everyday Icons | Vanilla Cream | Calvium Solis | Shoulder Bag | Vanilla Cream | `calvium-solis-shoulder-bag-vanilla-cream` |
+| `solis-black` | Solis - Black | Shoulder Bag | Everyday Icons | Midnight Black | Calvium Solis | Shoulder Bag | Midnight Black | `calvium-solis-shoulder-bag-midnight-black` |
+| `solis-black-green` | Solis - Black Green | Shoulder Bag | Everyday Icons | Forest Obsidian | Calvium Solis | Shoulder Bag | Forest Obsidian | `calvium-solis-shoulder-bag-forest-obsidian` |
+| `solis-khaki` | Solis - Khaki | Shoulder Bag | Everyday Icons | Golden Khaki | Calvium Solis | Shoulder Bag | Golden Khaki | `calvium-solis-shoulder-bag-golden-khaki` |
+| `solis-red` | Solis - Red | Shoulder Bag | Everyday Icons | Crimson | Calvium Solis | Shoulder Bag | Crimson | `calvium-solis-shoulder-bag-crimson` |
+| `solis-tan` | Solis - Tan | Shoulder Bag | Everyday Icons | Cognac Tan | Calvium Solis | Shoulder Bag | Cognac Tan | `calvium-solis-shoulder-bag-cognac-tan` |
+| `solis-yellow` | Solis - Yellow | Shoulder Bag | Everyday Icons | Saffron | Calvium Solis | Shoulder Bag | Saffron | `calvium-solis-shoulder-bag-saffron` |
+| `calvium-nova-beige-off-white` | Calvium Nova - Beige Off White | Shoulder Bag | Everyday Icons | Vanilla Cream | Calvium Nova | Shoulder Bag | Vanilla Cream | `calvium-nova-shoulder-bag-vanilla-cream` |
+| `calvium-nova-black` | Calvium Nova - Black | Shoulder Bag | Everyday Icons | Midnight Black | Calvium Nova | Shoulder Bag | Midnight Black | `calvium-nova-shoulder-bag-midnight-black` |
+| `calvium-nova-brown` | Calvium Nova - Brown | Shoulder Bag | Everyday Icons | Havana Brown | Calvium Nova | Shoulder Bag | Havana Brown | `calvium-nova-shoulder-bag-havana-brown` |
+| `calvium-nova-coffee` | Calvium Nova - Coffee | Shoulder Bag | Everyday Icons | Espresso | Calvium Nova | Shoulder Bag | Espresso | `calvium-nova-shoulder-bag-espresso` |
+| `calvium-nova-dark-grey` | Calvium Nova - Dark Grey | Shoulder Bag | Everyday Icons | Slate | Calvium Nova | Shoulder Bag | Slate | `calvium-nova-shoulder-bag-slate` |
+| `calvium-nova-light-grey` | Calvium Nova - Light Grey | Shoulder Bag | Everyday Icons | Pearl Grey | Calvium Nova | Shoulder Bag | Pearl Grey | `calvium-nova-shoulder-bag-pearl-grey` |
