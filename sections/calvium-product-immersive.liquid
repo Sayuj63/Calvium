@@ -234,6 +234,7 @@
         </div>
       {%- endif -%}
 
+      <p class="cm-pdp-im__mrp">MRP inclusive of all taxes</p>
       <p class="cm-pdp-im__price">
         <strong data-cm-price>{{ current_variant.price | money }}</strong>
         {%- if on_sale -%}
@@ -241,7 +242,6 @@
           <span class="percent">{{ percent_off }}% OFF</span>
         {%- endif -%}
       </p>
-      <p class="cm-pdp-im__mrp">MRP inclusive of all taxes</p>
 
       {%- if section.settings.short_description != blank -%}
         <p class="cm-pdp-im__short">{{ section.settings.short_description }}</p>

@@ -1889,6 +1889,100 @@ iframe[src*="recaptcha"],
 }
 
 /* ============================================================
+   PDP — Add to cart button
+   Root cause: `.cm-pdp-lux__atc` lives in a grid `1fr auto` row where
+   the 1fr column can end up narrower than the "ADD TO CART" text (13px
+   with 0.14em letter-spacing) when the sticky sidebar is tight. The
+   button then clips into a black slab. Force width:100% + centre the
+   text + minimum height so it always renders legibly.
+   ============================================================ */
+.cm-pdp-im__cta-row .cm-pdp-lux__atc {
+  width: 100%;
+  min-height: 52px;
+  text-align: center;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Cart drawer empty state — "Continue shopping" turned into a
+   black-on-black rectangle on hover because .cm-button:hover only
+   sets background to var(--cm-ink) but never restated the text
+   colour, so an ancestor inheritance ate the white. Lock in the
+   solid variant's colour + a subtle hover contrast so it stays
+   readable.
+   ============================================================ */
+.cm-cart__empty .cm-button--solid,
+.cm-cart__empty a.cm-button--solid {
+  color: #fff;
+  background: var(--cm-ink);
+  border-color: var(--cm-ink);
+  text-decoration: none;
+}
+.cm-cart__empty .cm-button--solid:hover,
+.cm-cart__empty a.cm-button--solid:hover,
+.cm-cart__empty a.cm-button--solid:focus-visible {
+  color: #fff;
+  background: #222;
+  border-color: #222;
+  text-decoration: none;
+}
+
+/* ============================================================
+   Policy / terms / static pages — center-aligned layout.
+   Fix: main-page.liquid used to auto-inject <h1 class="page-title">
+   which duplicated the merchant's own text-block heading. That h1
+   is gone now (see sections/main-page.liquid). This block centers
+   what's left. Safety net: if any cached page still renders the
+   old .page-title, hide it.
+   ============================================================ */
+.template-page .page-title { display: none; }
+
+.template-page .shopify-section main,
+.template-page .section-content-wrapper,
+.template-page .rte,
+.template-page .text-block {
+  text-align: center;
+}
+.template-page .text-block {
+  margin-inline: auto;
+}
+.template-page .rte {
+  max-width: 820px;
+  margin-inline: auto;
+}
+.template-page .rte h1,
+.template-page .rte h2,
+.template-page .rte h3,
+.template-page .rte p,
+.template-page .rte ul,
+.template-page .rte ol {
+  text-align: center;
+  list-style-position: inside;
+}
+
+/* ============================================================
+   Footer social icons — re-anchor. Previous fix targeted
+   `.section-footer .list-social` but on rendered DOM the list is
+   inside a flex-column parent whose default cross-axis is stretch,
+   so the ul spans full width already. The bug is that the theme
+   applies `sm:justify-center` (undefined utility) on the ul, not
+   the parent — so items inside the ul stay flex-start. Add a rule
+   that also fixes the parent flex-column so both the ul and its
+   children center under the logo, no matter which one owns the flex.
+   ============================================================ */
+.section-footer [id*="_social_icons_"] > .flex.flex-column {
+  align-items: center;
+  text-align: center;
+}
+.section-footer [id*="_social_icons_"] .list-social {
+  justify-content: center;
+  width: 100%;
+}
+
+/* ============================================================
    Collection page — new toolbar (Filters dropdown / count / sort).
    Kills the old hero underline + facet sidebar dividers, replaces
    with a single row bordered top+bottom.

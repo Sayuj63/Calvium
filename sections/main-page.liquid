@@ -1,15 +1,11 @@
 {%- comment -%}
-  Policy-page handle whitelist — Privacy/Return/Shipping/Terms etc. don't carry
-  a visible heading block in their main-page section. For those pages we always
-  render <h1>{{ page.title }}</h1>. Other pages (Contact, About, FAQ) already
-  supply their own heading block(s), so we leave them alone to avoid duplicates.
+  Merchant now adds a text-block heading directly on every policy page in
+  the Shopify page editor, so auto-injecting an <h1> here duplicates the
+  title. Just render the configured blocks + page.content — page templates
+  handle their own heading now.
 {%- endcomment -%}
-{%- assign policy_handles = 'privacy-policy,return-policy,shipping-policy,refund-policy,terms-of-service,terms-and-conditions,terms-conditions,cookie-policy' | split: ',' -%}
 
 {% capture children %}
-  {%- if policy_handles contains page.handle and page.title != blank -%}
-    <h1 class="page-title" style="margin:0 0 24px; font-family: var(--font-heading--family, inherit); font-weight: 700; font-size: 3.2rem; line-height: 1.1; text-transform: none;">{{ page.title }}</h1>
-  {%- endif -%}
   {% content_for 'blocks' %}
   {{ page.content }}
 {% endcapture %}
