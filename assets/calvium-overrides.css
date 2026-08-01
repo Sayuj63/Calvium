@@ -1859,12 +1859,49 @@ iframe[src*="recaptcha"],
 .cm-igfeed__head { align-items: center !important; }
 
 /* ============================================================
-   Footer contact — remove underlines from every link inside
-   the Contact Us column so email / whatsapp / address read cleanly.
+   Footer Contact Us column — consistent left-alignment + no
+   underlines on every link (email / whatsapp / address).
+
+   Real DOM (verified from live HTML):
+     .footer .group-block .rte-formatter.text-block.paragraph.rte
+       > <p><a>…</a></p>
+
+   Previous fix targeted `.footer-block--text a` — that class doesn't
+   exist in the rendered DOM. Use the real selector chain.
+
+   The second text-block (whatsapp + address) was rendering visually
+   centred while the email block was left because `text-wrap: pretty`
+   plus `fit-content` block width plus a wrapping <br/> made the
+   short lines float to their own inline-block center. Forcing
+   text-align: left + width: 100% inside the .footer group-block
+   column pins every line to the left edge.
    ============================================================ */
-.footer-block--text a,
-.footer-block--text a:hover,
-.footer-block--text a:focus { text-decoration: none !important; border-bottom: 0 !important; }
+.footer .group-block-content .text-block,
+.footer .group-block-content rte-formatter.text-block {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+}
+.footer .group-block-content .text-block > *,
+.footer .group-block-content rte-formatter > * {
+  text-align: left;
+}
+.footer .group-block-content rte-formatter p,
+.footer .group-block-content .text-block p {
+  text-align: left;
+  margin-block: 0 8px;
+}
+.footer .group-block-content rte-formatter a,
+.footer .group-block-content .text-block a {
+  text-decoration: none;
+  border-bottom: 0;
+  color: inherit;
+}
+.footer .group-block-content rte-formatter a:hover,
+.footer .group-block-content .text-block a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 /* ============================================================
    Footer social icons — center under the logo.
