@@ -1,0 +1,53 @@
+{
+  "sections": {
+    "faq": {
+      "type": "calvium-faq",
+      "blocks": {
+        "grp_shipping":  { "type": "group", "settings": { "label": "Shipping" } },
+        "q_shipping_1":  { "type": "item",  "settings": { "question": "How long does shipping take?", "answer": "<p>All India orders ship within 24 hours of placement and arrive in 3–7 working days. You'll get a tracking link over WhatsApp once your order leaves our warehouse.</p>" } },
+        "q_shipping_2":  { "type": "item",  "settings": { "question": "Do you ship internationally?", "answer": "<p>Not yet — we currently ship only within India. International shipping is on our roadmap for 2026.</p>" } },
+        "q_shipping_3":  { "type": "item",  "settings": { "question": "Is shipping free?", "answer": "<p>Yes, all orders above ₹999 ship free. Orders below that carry a flat ₹99 shipping fee.</p>" } },
+
+        "grp_returns":   { "type": "group", "settings": { "label": "Returns & Exchanges" } },
+        "q_returns_1":   { "type": "item",  "settings": { "question": "What is your return policy?", "answer": "<p>We offer 15-day easy returns on all unused products with original tags and packaging. Full details on our <a href=\"/pages/return-policy\">Return Policy</a> page.</p>" } },
+        "q_returns_2":   { "type": "item",  "settings": { "question": "How do I initiate a return?", "answer": "<p>WhatsApp us on +91 91350 30303 with your order ID and a photo of the item. Our team will schedule a pickup within 24–48 hours.</p>" } },
+        "q_returns_3":   { "type": "item",  "settings": { "question": "When will I receive my refund?", "answer": "<p>Refunds are processed within 7–10 working days of us receiving the returned item, back to the original payment method.</p>" } },
+
+        "grp_product":   { "type": "group", "settings": { "label": "Product & Care" } },
+        "q_product_1":   { "type": "item",  "settings": { "question": "What material are your bags made from?", "answer": "<p>Our bags use premium vegan leather with brass-finish hardware and cotton lining. Every piece is hand-finished by our workshop in Mumbai.</p>" } },
+        "q_product_2":   { "type": "item",  "settings": { "question": "How do I care for my bag?", "answer": "<p>Wipe with a soft dry cloth. Avoid direct sunlight for long periods and store in the dust bag when not in use. Do not machine wash.</p>" } },
+        "q_product_3":   { "type": "item",  "settings": { "question": "Do you offer a warranty?", "answer": "<p>Yes — every Calvium bag is covered by a 6-month manufacturing defect warranty. This does not cover normal wear or misuse.</p>" } },
+
+        "grp_orders":    { "type": "group", "settings": { "label": "Orders & Payment" } },
+        "q_orders_1":    { "type": "item",  "settings": { "question": "What payment methods do you accept?", "answer": "<p>UPI, all major credit/debit cards, net banking, and cash on delivery (COD) across India. Prepaid orders get an additional 5% off at checkout.</p>" } },
+        "q_orders_2":    { "type": "item",  "settings": { "question": "Can I modify or cancel my order?", "answer": "<p>You can cancel or modify your order within 2 hours of placement. WhatsApp +91 91350 30303 with your order ID and we'll take care of it.</p>" } },
+        "q_orders_3":    { "type": "item",  "settings": { "question": "How can I track my order?", "answer": "<p>You'll receive a tracking link on WhatsApp once your order ships. You can also track it from your account page.</p>" } },
+
+        "grp_about":     { "type": "group", "settings": { "label": "About Calvium" } },
+        "q_about_1":     { "type": "item",  "settings": { "question": "Where are Calvium bags made?", "answer": "<p>Every bag is designed and hand-finished in our workshop in Ghatkopar, Mumbai. We work with a small team of skilled artisans.</p>" } },
+        "q_about_2":     { "type": "item",  "settings": { "question": "Are your products cruelty-free?", "answer": "<p>Yes — Calvium is 100% vegan. We use plant-based and synthetic materials that mimic the feel of leather without any animal-derived components.</p>" } }
+      },
+      "block_order": [
+        "grp_shipping","q_shipping_1","q_shipping_2","q_shipping_3",
+        "grp_returns","q_returns_1","q_returns_2","q_returns_3",
+        "grp_product","q_product_1","q_product_2","q_product_3",
+        "grp_orders","q_orders_1","q_orders_2","q_orders_3",
+        "grp_about","q_about_1","q_about_2"
+      ],
+      "settings": {
+        "eyebrow": "SUPPORT",
+        "heading": "Frequently Asked Questions",
+        "subheading": "Everything you need to know about our bags, shipping, returns, and care.",
+        "show_search": true,
+        "search_placeholder": "Search FAQs…",
+        "show_contact": true,
+        "contact_title": "Reach out — we usually reply in a few hours.",
+        "contact_whatsapp": "https://wa.me/919135030303",
+        "contact_email": "info@calvium.in",
+        "padding_top": 60,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["faq"]
+}

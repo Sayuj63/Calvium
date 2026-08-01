@@ -1,0 +1,192 @@
+{%- comment -%}
+  Calvium — FAQ page.
+  Grouped accordion FAQs with a search filter, contact CTA at the end.
+  All content is editable via section blocks (Group + Item).
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+
+{%- assign has_blocks = false -%}
+{%- if section.blocks.size > 0 -%}{%- assign has_blocks = true -%}{%- endif -%}
+
+<section class="cm-section cm-faq" data-cm-faq style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;">
+  <div class="cm-container cm-faq__container">
+
+    <header class="cm-faq__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="cm-faq__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="cm-faq__title">{{ section.settings.heading | default: 'Frequently Asked Questions' }}</h1>
+      {%- if section.settings.subheading != blank -%}
+        <p class="cm-faq__sub">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.show_search -%}
+        <label class="cm-faq__search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" placeholder="{{ section.settings.search_placeholder | default: 'Search FAQs…' }}" data-cm-faq-search aria-label="Search FAQs" autocomplete="off">
+        </label>
+      {%- endif -%}
+    </header>
+
+    {%- if has_blocks -%}
+      <div class="cm-faq__groups">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'group' -%}
+              <section class="cm-faqgroup" data-cm-faq-group data-cm-faq-title="{{ block.settings.label | escape }}" {{ block.shopify_attributes }}>
+                <h2 class="cm-faqgroup__title">{{ block.settings.label | default: 'General' }}</h2>
+              </section>
+            {%- when 'item' -%}
+              <details class="cm-faqitem" data-cm-faq-item data-cm-faq-q="{{ block.settings.question | strip_html | downcase | escape }}" data-cm-faq-a="{{ block.settings.answer | strip_html | downcase | escape }}" {{ block.shopify_attributes }}>
+                <summary class="cm-faqitem__q">
+                  <span>{{ block.settings.question | default: 'Question' }}</span>
+                  <svg class="cm-faqitem__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </summary>
+                <div class="cm-faqitem__a">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+
+      <p class="cm-faq__empty" data-cm-faq-empty hidden>No matching questions. Try a different search.</p>
+    {%- else -%}
+      <p class="cm-faq__empty">Add FAQ groups and items in the theme editor.</p>
+    {%- endif -%}
+
+    {%- if section.settings.show_contact -%}
+      <div class="cm-faq__contact">
+        <p class="cm-faq__contact-eyebrow">Still have questions?</p>
+        <h2 class="cm-faq__contact-title">{{ section.settings.contact_title | default: 'Reach out — we usually reply in a few hours.' }}</h2>
+        <div class="cm-faq__contact-actions">
+          {%- if section.settings.contact_whatsapp != blank -%}
+            <a href="{{ section.settings.contact_whatsapp }}" target="_blank" rel="noopener" class="cm-faq__contact-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 0 1-12.7 7.4L3 21l1.6-4.7A8.5 8.5 0 1 1 20.5 12Z"/></svg>
+              WhatsApp us
+            </a>
+          {%- endif -%}
+          {%- if section.settings.contact_email != blank -%}
+            <a href="mailto:{{ section.settings.contact_email }}" class="cm-faq__contact-btn cm-faq__contact-btn--ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="m4 6 8 6 8-6"/></svg>
+              Email support
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-cm-faq]');
+    if (!root) return;
+    var searchInput = root.querySelector('[data-cm-faq-search]');
+    var empty = root.querySelector('[data-cm-faq-empty]');
+    var items = Array.prototype.slice.call(root.querySelectorAll('[data-cm-faq-item]'));
+    var groups = Array.prototype.slice.call(root.querySelectorAll('[data-cm-faq-group]'));
+
+    if (!searchInput) return;
+
+    function normalize(s) { return (s || '').toLowerCase().trim(); }
+
+    function filter(q) {
+      var query = normalize(q);
+      var anyVisible = false;
+      items.forEach(function (item) {
+        if (!query) { item.hidden = false; anyVisible = true; return; }
+        var Q = item.getAttribute('data-cm-faq-q') || '';
+        var A = item.getAttribute('data-cm-faq-a') || '';
+        var match = Q.indexOf(query) !== -1 || A.indexOf(query) !== -1;
+        item.hidden = !match;
+        if (match) anyVisible = true;
+      });
+      groups.forEach(function (g) {
+        var next = g.nextElementSibling;
+        var groupVisible = false;
+        while (next && !next.matches('[data-cm-faq-group]')) {
+          if (next.matches('[data-cm-faq-item]') && !next.hidden) { groupVisible = true; break; }
+          next = next.nextElementSibling;
+        }
+        g.hidden = !groupVisible;
+      });
+      if (empty) empty.hidden = anyVisible;
+    }
+
+    searchInput.addEventListener('input', function (e) { filter(e.target.value); });
+    searchInput.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.target.value = ''; filter(''); } });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Calvium — FAQ",
+  "class": "shopify-section--cm-faq",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Head" },
+    { "type": "text",     "id": "eyebrow",             "label": "Eyebrow",             "default": "SUPPORT" },
+    { "type": "text",     "id": "heading",             "label": "Heading",             "default": "Frequently Asked Questions" },
+    { "type": "textarea", "id": "subheading",          "label": "Subheading",          "default": "Everything you need to know about our bags, shipping, returns, and care." },
+    { "type": "checkbox", "id": "show_search",         "label": "Enable search",       "default": true },
+    { "type": "text",     "id": "search_placeholder",  "label": "Search placeholder",  "default": "Search FAQs…" },
+    { "type": "header", "content": "Contact CTA" },
+    { "type": "checkbox", "id": "show_contact",        "label": "Show contact box at end", "default": true },
+    { "type": "text",     "id": "contact_title",       "label": "Contact heading",     "default": "Reach out — we usually reply in a few hours." },
+    { "type": "url",      "id": "contact_whatsapp",    "label": "WhatsApp link (wa.me/…)", "default": "https://wa.me/919135030303" },
+    { "type": "text",     "id": "contact_email",       "label": "Support email",       "default": "info@calvium.in" },
+    { "type": "header", "content": "Padding" },
+    { "type": "range",    "id": "padding_top",         "label": "Padding top",         "min": 0, "max": 120, "step": 4, "default": 60 },
+    { "type": "range",    "id": "padding_bottom",      "label": "Padding bottom",      "min": 0, "max": 120, "step": 4, "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Group heading",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Group label", "default": "Shipping" }
+      ]
+    },
+    {
+      "type": "item",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text",       "id": "question", "label": "Question", "default": "How long does shipping take?" },
+        { "type": "richtext",   "id": "answer",   "label": "Answer",   "default": "<p>All India orders ship within 24 hours of placement and arrive in 3–7 working days.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 50,
+  "presets": [
+    {
+      "name": "Calvium — FAQ",
+      "blocks": [
+        { "type": "group", "settings": { "label": "Shipping" } },
+        { "type": "item",  "settings": { "question": "How long does shipping take?", "answer": "<p>All India orders ship within 24 hours of placement and arrive in 3–7 working days. You'll get a tracking link over WhatsApp once your order leaves our warehouse.</p>" } },
+        { "type": "item",  "settings": { "question": "Do you ship internationally?", "answer": "<p>Not yet — we currently ship only within India. International shipping is on our roadmap for 2026.</p>" } },
+        { "type": "item",  "settings": { "question": "Is shipping free?", "answer": "<p>Yes, all orders above ₹999 ship free. Orders below that carry a flat ₹99 shipping fee.</p>" } },
+
+        { "type": "group", "settings": { "label": "Returns & Exchanges" } },
+        { "type": "item",  "settings": { "question": "What is your return policy?", "answer": "<p>We offer 15-day easy returns on all unused products with original tags and packaging. Full details on our <a href=\"/pages/return-policy\">Return Policy</a> page.</p>" } },
+        { "type": "item",  "settings": { "question": "How do I initiate a return?", "answer": "<p>WhatsApp us on +91 91350 30303 with your order ID and a photo of the item. Our team will schedule a pickup within 24–48 hours.</p>" } },
+        { "type": "item",  "settings": { "question": "When will I receive my refund?", "answer": "<p>Refunds are processed within 7–10 working days of us receiving the returned item, back to the original payment method.</p>" } },
+
+        { "type": "group", "settings": { "label": "Product & Care" } },
+        { "type": "item",  "settings": { "question": "What material are your bags made from?", "answer": "<p>Our bags use premium vegan leather with brass-finish hardware and cotton lining. Every piece is hand-finished by our workshop in Mumbai.</p>" } },
+        { "type": "item",  "settings": { "question": "How do I care for my bag?", "answer": "<p>Wipe with a soft dry cloth. Avoid direct sunlight for long periods and store in the dust bag when not in use. Do not machine wash.</p>" } },
+        { "type": "item",  "settings": { "question": "Do you offer a warranty?", "answer": "<p>Yes — every Calvium bag is covered by a 6-month manufacturing defect warranty. This does not cover normal wear or misuse.</p>" } },
+
+        { "type": "group", "settings": { "label": "Orders & Payment" } },
+        { "type": "item",  "settings": { "question": "What payment methods do you accept?", "answer": "<p>UPI, all major credit/debit cards, net banking, and cash on delivery (COD) across India. Prepaid orders get an additional 5% off at checkout.</p>" } },
+        { "type": "item",  "settings": { "question": "Can I modify or cancel my order?", "answer": "<p>You can cancel or modify your order within 2 hours of placement. WhatsApp +91 91350 30303 with your order ID and we'll take care of it.</p>" } },
+        { "type": "item",  "settings": { "question": "How can I track my order?", "answer": "<p>You'll receive a tracking link on WhatsApp once your order ships. You can also track it from your account page.</p>" } },
+
+        { "type": "group", "settings": { "label": "About Calvium" } },
+        { "type": "item",  "settings": { "question": "Where are Calvium bags made?", "answer": "<p>Every bag is designed and hand-finished in our workshop in Ghatkopar, Mumbai. We work with a small team of skilled artisans.</p>" } },
+        { "type": "item",  "settings": { "question": "Are your products cruelty-free?", "answer": "<p>Yes — Calvium is 100% vegan. We use plant-based and synthetic materials that mimic the feel of leather without any animal-derived components.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

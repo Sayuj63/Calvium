@@ -1931,36 +1931,230 @@ iframe[src*="recaptcha"],
 }
 
 /* ============================================================
-   Policy / terms / static pages — center-aligned layout.
-   Fix: main-page.liquid used to auto-inject <h1 class="page-title">
-   which duplicated the merchant's own text-block heading. That h1
-   is gone now (see sections/main-page.liquid). This block centers
-   what's left. Safety net: if any cached page still renders the
-   old .page-title, hide it.
-   ============================================================ */
-.template-page .page-title { display: none; }
+   Policy / terms pages — always-centred title + centred body.
 
-.template-page .shopify-section main,
-.template-page .section-content-wrapper,
-.template-page .rte,
-.template-page .text-block {
+   Root cause the previous fix missed:
+   The section-content-wrapper carries class .layout-panel-flex--column
+   with base rule `align-items: var(--horizontal-alignment)`. The Halo
+   section defaults --horizontal-alignment to flex-start via inline
+   style, so every child <p> is a flex item pinned to the LEFT edge —
+   text-align:center inside a fit-content paragraph has no visible effect.
+
+   Fix: on template-page only, force align-items: center on the
+   layout-panel-flex--column with a specificity that beats the base
+   rule (0,3,0 vs 0,1,0), and give bare <p> / <h*> paragraphs a
+   max-width so the centred text has room to breathe.
+
+   Also: main-page.liquid now auto-injects <h1 class="policy-title">
+   for policy handles — style it centred, big, and remove the old
+   .page-title fallback we hid earlier.
+   ============================================================ */
+.template-page .policy-title {
+  font-family: var(--cm-font-heading, var(--font-heading--family, inherit));
+  font-weight: 700;
+  font-size: clamp(3.2rem, 5.5vw, 5.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 8px auto 32px;
   text-align: center;
 }
-.template-page .text-block {
-  margin-inline: auto;
+
+.template-page .section-content-wrapper.layout-panel-flex--column {
+  align-items: center;
 }
-.template-page .rte {
+.template-page .section-content-wrapper > p,
+.template-page .section-content-wrapper > h1,
+.template-page .section-content-wrapper > h2,
+.template-page .section-content-wrapper > h3,
+.template-page .section-content-wrapper > ul,
+.template-page .section-content-wrapper > ol,
+.template-page .section-content-wrapper > .text-block,
+.template-page .section-content-wrapper > .rte {
   max-width: 820px;
+  width: 100%;
+  text-align: center;
   margin-inline: auto;
 }
-.template-page .rte h1,
-.template-page .rte h2,
-.template-page .rte h3,
-.template-page .rte p,
-.template-page .rte ul,
-.template-page .rte ol {
-  text-align: center;
+.template-page .section-content-wrapper > ul,
+.template-page .section-content-wrapper > ol {
   list-style-position: inside;
+}
+.template-page .text-block { text-align: center; }
+.template-page .text-block > * { text-align: center; margin-inline: auto; }
+
+/* ============================================================
+   Calvium — FAQ page (sections/calvium-faq.liquid).
+   Clean grouped accordion with a search filter + contact CTA.
+   ============================================================ */
+.cm-faq { background: var(--cm-white); color: var(--cm-ink); }
+.cm-faq__container { max-width: 880px; margin-inline: auto; padding-inline: 24px; }
+
+.cm-faq__head { text-align: center; margin-bottom: 40px; }
+.cm-faq__eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cm-ink-70);
+  font-weight: 600;
+  margin: 0 0 14px;
+}
+.cm-faq__title {
+  font-family: var(--cm-font-heading);
+  font-weight: 700;
+  font-size: clamp(3rem, 5vw, 4.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+  color: var(--cm-ink);
+}
+.cm-faq__sub {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--cm-ink-70);
+  max-width: 60ch;
+  margin: 0 auto 28px;
+}
+.cm-faq__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 460px;
+  padding: 12px 18px;
+  border: 1px solid var(--cm-ink-15);
+  border-radius: 999px;
+  background: var(--cm-white);
+  transition: border-color 160ms ease;
+}
+.cm-faq__search:focus-within { border-color: var(--cm-ink); }
+.cm-faq__search svg { width: 18px; height: 18px; color: var(--cm-ink-70); flex-shrink: 0; }
+.cm-faq__search input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--cm-ink);
+}
+.cm-faq__search input::placeholder { color: var(--cm-ink-50); }
+
+.cm-faq__groups { display: flex; flex-direction: column; }
+.cm-faqgroup__title {
+  font-family: var(--cm-font-heading);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  margin: 32px 0 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--cm-ink-15);
+}
+.cm-faqgroup:first-child .cm-faqgroup__title { margin-top: 0; }
+
+.cm-faqitem {
+  border-bottom: 1px solid var(--cm-ink-08);
+}
+.cm-faqitem__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 4px;
+  font-family: var(--cm-font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--cm-ink);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.cm-faqitem__q::-webkit-details-marker { display: none; }
+.cm-faqitem__q::marker { content: ''; }
+.cm-faqitem__chev {
+  width: 18px;
+  height: 18px;
+  color: var(--cm-ink-70);
+  transition: transform 220ms ease;
+  flex-shrink: 0;
+}
+.cm-faqitem[open] .cm-faqitem__chev { transform: rotate(180deg); }
+.cm-faqitem__a {
+  padding: 0 4px 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--cm-ink-70);
+  animation: cm-faq-in 220ms ease both;
+}
+.cm-faqitem__a p { margin: 0 0 10px; }
+.cm-faqitem__a p:last-child { margin-bottom: 0; }
+.cm-faqitem__a a { color: var(--cm-ink); text-decoration: underline; text-underline-offset: 3px; }
+@keyframes cm-faq-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+.cm-faq__empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--cm-ink-70);
+  font-size: 14px;
+}
+
+.cm-faq__contact {
+  margin-top: 56px;
+  padding: 40px 32px;
+  background: var(--cm-cream, #f7f4ee);
+  border-radius: 8px;
+  text-align: center;
+}
+.cm-faq__contact-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cm-ink-70);
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+.cm-faq__contact-title {
+  font-family: var(--cm-font-heading);
+  font-size: clamp(2rem, 2.6vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+}
+.cm-faq__contact-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.cm-faq__contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: var(--cm-ink);
+  color: var(--cm-white);
+  border: 1.5px solid var(--cm-ink);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+.cm-faq__contact-btn:hover { background: transparent; color: var(--cm-ink); transform: translateY(-1px); }
+.cm-faq__contact-btn svg { width: 16px; height: 16px; }
+.cm-faq__contact-btn--ghost {
+  background: transparent;
+  color: var(--cm-ink);
+}
+.cm-faq__contact-btn--ghost:hover { background: var(--cm-ink); color: var(--cm-white); }
+
+@media (max-width: 640px) {
+  .cm-faq__container { padding-inline: 16px; }
+  .cm-faq__contact { padding: 32px 20px; }
+  .cm-faqitem__q { font-size: 15px; padding: 18px 2px; }
 }
 
 /* ============================================================
