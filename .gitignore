@@ -26,6 +26,7 @@
 *.backup.csv
 # Exception: the split-by-color CSV is a shipped artifact for the store admin to import
 !products_split_by_color.csv
+!products_split_by_color_PREMIUM.csv
 
 # Reference / clone theme (kept locally, not pushed)
 miraggio-clone/

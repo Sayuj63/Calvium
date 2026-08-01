@@ -1070,10 +1070,25 @@ class PreloadScreen extends HTMLElement {
     if (Shopify.designMode) {
       onLoadCallback();
     } else {
-      if (document.readyState === 'complete') {
-        onLoadCallback();
+      // Perf fix: don't wait for window.load (which blocks on every 3rd-party
+      // script/image). Reveal as soon as DOM is parsed OR after 800ms hard cap,
+      // whichever comes first. Preload logo mode still uses window.load.
+      const hasLogoMode = document.querySelector(".preload-screen[data-preload-screen-logo]");
+      if (hasLogoMode) {
+        if (document.readyState === 'complete') {
+          onLoadCallback();
+        } else {
+          window.addEventListener('load', onLoadCallback);
+        }
       } else {
-        window.addEventListener('load', onLoadCallback);
+        let fired = false;
+        const fireOnce = () => { if (fired) return; fired = true; onLoadCallback(); };
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          requestAnimationFrame(fireOnce);
+        } else {
+          document.addEventListener('DOMContentLoaded', fireOnce, { once: true });
+        }
+        setTimeout(fireOnce, 800);
       }
     }
   }

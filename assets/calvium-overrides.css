@@ -1799,3 +1799,88 @@ a.cm-testimonial__product:focus-visible {
 .cart-items-component + .shopify-section { margin-block-start: -40px; }
 .section--main-cart .cart-page { padding-block-end: 20px; }
 
+/* ============================================================
+   Hide Shopify native hCaptcha "Protected by hCaptcha" badge.
+   NOTE: this only hides the UI. To fully remove the hCaptcha
+   script + protection, go to Shopify Admin → Settings →
+   Customer accounts → Spam protection → Off.
+   ============================================================ */
+.shopify-tos-and-privacy-notice,
+.shopify-tos-notice,
+.hcaptcha-notice,
+[class*="hcaptcha-privacy"],
+[class*="hcap-privacy"],
+[class*="captcha-privacy"],
+.grecaptcha-badge,
+iframe[src*="hcaptcha.com"],
+iframe[src*="recaptcha"],
+#h_captcha_challenge_container,
+[data-hcaptcha-widget-id],
+[data-cptcha] + .shopify-tos-notice { display: none !important; visibility: hidden !important; }
+
+/* ============================================================
+   Promotion popup — center rock-solid in the viewport.
+   Was translate(-50%,-40%) initial + translate(-50%,-50%) final
+   which caused a top-shifted appearance. Now uses grid centering
+   which ignores any lingering transform.
+   ============================================================ */
+.modal--popup.promotionPopup { display: grid !important; place-items: center !important; }
+.modal--popup.promotionPopup .popup__inner {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+  max-height: min(92vh, 100%) !important;
+}
+.modal--popup.promotionPopup[open] .popup__inner { transform: none !important; }
+
+/* ============================================================
+   Lookbook ("THE STORY") — heading + CTA a bit bigger.
+   ============================================================ */
+.cm-lookbook__heading {
+  font-size: clamp(2.6rem, 3.6vw, 4.2rem) !important;
+  max-width: 26ch !important;
+}
+.cm-lookbook__cta {
+  padding: 16px 30px 16px 32px !important;
+  min-height: 56px !important;
+  font-size: 14px !important;
+  letter-spacing: 0.16em !important;
+}
+.cm-lookbook__cta svg { width: 20px !important; height: 20px !important; }
+
+/* ============================================================
+   Instagram grid — center-align the @handle button vertically
+   with the "Shop the feed / On Instagram" title block.
+   Was align-items:baseline (button floats above heading because
+   button has vertical padding). Center works for all breakpoints.
+   ============================================================ */
+.cm-igfeed__head { align-items: center !important; }
+
+/* ============================================================
+   Footer contact — remove underlines from every link inside
+   the Contact Us column so email / whatsapp / address read cleanly.
+   ============================================================ */
+.footer-block--text a,
+.footer-block--text a:hover,
+.footer-block--text a:focus { text-decoration: none !important; border-bottom: 0 !important; }
+
+/* ============================================================
+   Footer social icons — center under the logo instead of
+   left-aligned. Targets the social-icons block directly.
+   ============================================================ */
+.footer-block--social-icons-list,
+.footer .social-icons-list,
+.footer .social-list {
+  justify-content: center !important;
+  width: 100% !important;
+  text-align: center !important;
+}
+.footer-block--social-icons-list ul,
+.footer .social-icons-list ul,
+.footer .social-list ul {
+  justify-content: center !important;
+  width: 100% !important;
+  margin-inline: auto !important;
+}

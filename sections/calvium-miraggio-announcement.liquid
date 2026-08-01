@@ -15,21 +15,12 @@
 {%- if block_count > 1 and auto_rotate == nil -%}
   {%- assign auto_rotate = true -%}
 {%- endif -%}
-{%- assign show_nav = false -%}
-{%- if auto_rotate and block_count > 1 -%}{%- assign show_nav = true -%}{%- endif -%}
-
 <aside
-  class="cm-ann {% unless show_nav %}cm-ann--static{% endunless %}"
+  class="cm-ann cm-ann--no-nav{% unless auto_rotate and block_count > 1 %} cm-ann--static{% endunless %}"
   {% if auto_rotate %}data-cm-ann data-cm-interval="{{ section.settings.interval | default: 4 }}"{% endif %}
   style="background: {{ section.settings.bg_color | default: '#0a0a0a' }}; color: {{ section.settings.text_color | default: '#ffffff' }};"
 >
   <div class="cm-ann__track">
-    {%- if show_nav -%}
-      <button type="button" class="cm-ann__nav" data-cm-ann-prev aria-label="Previous">
-        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9 2l-5 5 5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    {%- endif -%}
-
     <div class="cm-ann__viewport" aria-live="polite">
       {%- if block_count > 0 -%}
         {%- for block in section.blocks -%}
@@ -47,12 +38,6 @@
         </div>
       {%- endif -%}
     </div>
-
-    {%- if show_nav -%}
-      <button type="button" class="cm-ann__nav" data-cm-ann-next aria-label="Next">
-        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    {%- endif -%}
   </div>
 </aside>
 
