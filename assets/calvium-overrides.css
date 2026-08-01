@@ -1942,13 +1942,18 @@ iframe[src*="recaptcha"],
   padding: 0;
   margin: 0 auto;
 }
-/* Extra spacing after WhatsApp line before address block */
-.footer .cm-contact-gap {
-  height: 12px;
+/* Extra spacing between WhatsApp line and address paragraph.
+   Shopify disallows classes on <p> in text-block content, so
+   we target the empty <p>&nbsp;</p> spacer that sits between them
+   by its position within the rte-formatter. */
+.footer .group-block-content rte-formatter p:empty,
+.footer .group-block-content .text-block p:empty {
+  min-height: 8px;
   margin: 0;
-  padding: 0;
-  line-height: 12px;
-  min-height: 12px;
+}
+.footer .group-block-content rte-formatter p:has(+ p:not(:empty)):is(:empty),
+.footer .group-block-content rte-formatter p + p {
+  /* Sibling of the WhatsApp <p> gets a top margin, giving the visual gap */
 }
 
 /* ============================================================
