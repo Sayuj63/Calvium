@@ -1,0 +1,56 @@
+{%- comment -%}
+  Calvium — Policy page.
+  Self-contained layout that renders a centred title + centred body
+  copy without touching the shared page.json/main-page.liquid path.
+  Handles: privacy-policy, return-policy, shipping-policy, terms.
+{%- endcomment -%}
+{{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
+
+<section class="cm-policy" style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;">
+  <div class="cm-container cm-policy__container">
+    {%- if section.settings.show_breadcrumb -%}
+      <p class="cm-policy__crumb">
+        <a href="{{ routes.root_url }}">Home</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ page.title }}</span>
+      </p>
+    {%- endif -%}
+
+    <h1 class="cm-policy__title">{{ section.settings.heading_override | default: page.title }}</h1>
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="cm-policy__sub">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <div class="cm-policy__body">
+      {{ page.content }}
+    </div>
+
+    {%- if section.settings.show_contact_cta -%}
+      <div class="cm-policy__cta">
+        <p class="cm-policy__cta-lead">Questions about this policy?</p>
+        <a href="{{ section.settings.contact_url | default: '/pages/contact' }}" class="cm-policy__cta-btn">Contact us</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Calvium — Policy Page",
+  "class": "shopify-section--cm-policy",
+  "tag": "section",
+  "settings": [
+    { "type": "text",     "id": "heading_override",   "label": "Heading override (optional — defaults to page title)" },
+    { "type": "textarea", "id": "subheading",         "label": "Subheading (optional)" },
+    { "type": "checkbox", "id": "show_breadcrumb",    "label": "Show Home / breadcrumb",  "default": true },
+    { "type": "checkbox", "id": "show_contact_cta",   "label": "Show Contact CTA at end",  "default": true },
+    { "type": "url",      "id": "contact_url",        "label": "Contact link" },
+    { "type": "range",    "id": "padding_top",        "label": "Padding top",    "min": 0, "max": 160, "step": 4, "default": 60 },
+    { "type": "range",    "id": "padding_bottom",     "label": "Padding bottom", "min": 0, "max": 160, "step": 4, "default": 80 }
+  ],
+  "presets": [
+    { "name": "Calvium — Policy Page" }
+  ]
+}
+{% endschema %}

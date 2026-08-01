@@ -1929,6 +1929,8 @@ iframe[src*="recaptcha"],
 .section-footer .group-block-content > [id*="_social_icons_"] {
   align-self: stretch;
   width: 100%;
+  text-align: center;
+  display: block;
 }
 .section-footer [id*="_social_icons_"] > .flex.flex-column {
   align-items: center;
@@ -1937,6 +1939,16 @@ iframe[src*="recaptcha"],
 .section-footer [id*="_social_icons_"] .list-social {
   justify-content: center;
   width: 100%;
+  padding: 0;
+  margin: 0 auto;
+}
+/* Extra spacing after WhatsApp line before address block */
+.footer .cm-contact-gap {
+  height: 12px;
+  margin: 0;
+  padding: 0;
+  line-height: 12px;
+  min-height: 12px;
 }
 
 /* ============================================================
@@ -2045,6 +2057,115 @@ iframe[src*="recaptcha"],
 }
 .template-page .text-block { text-align: center; }
 .template-page .text-block > * { text-align: center; margin-inline: auto; }
+
+/* ============================================================
+   Calvium — Policy page (sections/calvium-policy-page.liquid).
+   Standalone: does not rely on .template-page or main-page.liquid.
+   Bakes in centred title + centred body copy every time.
+   ============================================================ */
+.cm-policy { background: var(--cm-white, #fff); color: var(--cm-ink, #0e0e0e); }
+.cm-policy__container {
+  max-width: 780px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  text-align: center;
+}
+.cm-policy__crumb {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--cm-ink-70, rgba(0,0,0,.6));
+  margin: 0 0 28px;
+}
+.cm-policy__crumb a { color: inherit; text-decoration: none; }
+.cm-policy__crumb a:hover { text-decoration: underline; }
+.cm-policy__crumb span[aria-hidden] { margin: 0 8px; opacity: .5; }
+
+.cm-policy__title {
+  font-family: var(--cm-font-heading);
+  font-weight: 700;
+  font-size: clamp(3rem, 5.5vw, 5.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 auto 20px;
+  color: var(--cm-ink, #0e0e0e);
+}
+.cm-policy__sub {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--cm-ink-70, rgba(0,0,0,.6));
+  max-width: 62ch;
+  margin: 0 auto 40px;
+}
+.cm-policy__body {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--cm-ink-90, rgba(0,0,0,.85));
+  text-align: center;
+  max-width: 700px;
+  margin-inline: auto;
+}
+.cm-policy__body p { margin: 0 0 16px; text-align: center; }
+.cm-policy__body p:last-child { margin-bottom: 0; }
+.cm-policy__body h2,
+.cm-policy__body h3 {
+  font-family: var(--cm-font-heading);
+  font-weight: 700;
+  margin: 32px auto 12px;
+  text-align: center;
+}
+.cm-policy__body h2 { font-size: 22px; }
+.cm-policy__body h3 { font-size: 18px; }
+.cm-policy__body ul,
+.cm-policy__body ol {
+  text-align: center;
+  list-style-position: inside;
+  padding: 0;
+  margin: 0 auto 16px;
+  max-width: 620px;
+}
+.cm-policy__body li { margin-bottom: 6px; }
+.cm-policy__body a {
+  color: var(--cm-ink, #0e0e0e);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cm-policy__cta {
+  margin-top: 56px;
+  padding: 32px 24px;
+  background: var(--cm-cream, #f7f4ee);
+  border-radius: 8px;
+  text-align: center;
+}
+.cm-policy__cta-lead {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cm-ink-70, rgba(0,0,0,.6));
+  margin: 0 0 14px;
+}
+.cm-policy__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: var(--cm-ink, #0e0e0e);
+  color: #ffffff;
+  border: 1.5px solid var(--cm-ink, #0e0e0e);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease;
+}
+.cm-policy__cta-btn:hover { background: transparent; color: var(--cm-ink, #0e0e0e); }
+
+@media (max-width: 640px) {
+  .cm-policy__container { padding-inline: 20px; }
+  .cm-policy__title { font-size: clamp(2.4rem, 8vw, 3.6rem); }
+}
 
 /* ============================================================
    Calvium — FAQ page (sections/calvium-faq.liquid).
