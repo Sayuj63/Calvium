@@ -85,14 +85,14 @@
           "type": "mega",
           "settings": {
             "parent_label": "Shop By Category",
-            "col1_heading": "By Style",
-            "col1_links": "Everyday | /collections/everyday\nWork Essential | /collections/work-essential\nAfter Hours | /collections/after-hours\nNew Collection | /collections/new-collection",
-            "col2_heading": "By Silhouette",
-            "col2_links": "Tote Bag | /collections/tote-bag\nCrossbody | /collections/crossbody\nShoulder | /collections/shoulder\nHobo Bags | /collections/hobo-bags\nTop Handle | /collections/top-handle\nTop Handle Bags | /collections/top-handle-bags",
-            "col3_heading": "Specialty",
-            "col3_links": "Laptop Bags | /collections/laptop-bags\nMini & Micro | /collections/min-micro\nTravel Pouches | /collections/travel-pouches",
-            "col4_heading": "Shop All",
-            "col4_links": "Best Sellers | /collections/best-sellers\nAll Products | /collections/all"
+            "col1_heading": "Lifestyle",
+            "col1_links": "Everyday Icons | /collections/everyday-icons\nWork Ready | /collections/work-ready\nDay to Night | /collections/day-to-night\nOn the Move | /collections/on-the-move\nCarry-Ons | /collections/carry-ons",
+            "col2_heading": "Shop All",
+            "col2_links": "New Arrivals | /collections/new-arrivals\nAll Bags | /collections/all",
+            "col3_heading": "",
+            "col3_links": "",
+            "col4_heading": "",
+            "col4_links": ""
           }
         }
       },

@@ -1,6 +1,6 @@
 # Calvium — Premium Product Name Map (v2)
 
-Generated: 2026-08-01
+Generated: 2026-08-02
 
 Source: `products_split_by_color.csv` (94 products, 480 rows)
 Output: `products_split_by_color_PREMIUM.csv`
