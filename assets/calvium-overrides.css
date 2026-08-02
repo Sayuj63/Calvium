@@ -2249,7 +2249,6 @@ iframe[src*="recaptcha"],
   letter-spacing: 0.02em;
   margin: 32px 0 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--cm-ink-15);
 }
 .cm-faqgroup:first-child .cm-faqgroup__title { margin-top: 0; }
 
