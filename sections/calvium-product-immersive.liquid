@@ -247,6 +247,7 @@
         <p class="cm-pdp-im__short">{{ section.settings.short_description }}</p>
       {%- endif -%}
 
+      {%- comment -%} cache-bust rev-2026-08-03 {%- endcomment -%}
       {% render 'cm-cross-product-swatches', product: product %}
 
 
