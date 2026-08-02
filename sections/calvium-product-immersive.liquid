@@ -247,7 +247,10 @@
         <p class="cm-pdp-im__short">{{ section.settings.short_description }}</p>
       {%- endif -%}
 
+      <!-- CROSS-SWATCH-RENDER-CALL-ABOUT-TO-EXECUTE -->
       {% render 'cm-cross-product-swatches', product: product %}
+      <!-- CROSS-SWATCH-RENDER-CALL-DONE -->
+
 
       <form class="cm-pdp-im__form" method="post" action="{{ routes.cart_add_url }}" data-cm-picker>
         {%- unless product.has_only_default_variant -%}
