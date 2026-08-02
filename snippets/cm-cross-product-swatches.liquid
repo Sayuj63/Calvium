@@ -28,7 +28,37 @@
 
 {%- assign siblings_csv = product.metafields.custom.color_siblings -%}
 
-<div data-x-debug data-siblings-len="{{ siblings_csv.size | default: 0 }}" data-siblings-value="{{ siblings_csv | truncate: 200 }}"></div>
+{%- comment -%}
+  Auto-build siblings list from tags when metafield isn't set.
+  Look up "calvium-<model>-<premium-color>" handles via all_products[]
+  which bypasses the 50-item collections.all cap.
+{%- endcomment -%}
+{%- if siblings_csv == blank -%}
+  {%- assign auto_group = '' -%}
+  {%- for t in product.tags -%}
+    {%- if t contains 'color-group:' -%}
+      {%- assign auto_group = t | remove: 'color-group:' | strip -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if auto_group != blank -%}
+    {%- assign premium_colors = 'midnight-black,cognac-tan,cognac,havana-brown,forest-green,river-clay,golden-khaki,morning-sage,ivory-cream,slate-blue,navy-dusk,bordeaux,espresso,ash-grey,champagne,vanilla-cream,saffron,crimson,slate,pearl-grey,olive-field,forest-obsidian' | split: ',' -%}
+    {%- assign auto_siblings = '' -%}
+    {%- for pc in premium_colors -%}
+      {%- assign candidate = 'calvium-' | append: auto_group | append: '-' | append: pc -%}
+      {%- assign check = all_products[candidate] -%}
+      {%- if check != empty and check.handle != blank -%}
+        {%- if auto_siblings == '' -%}
+          {%- assign auto_siblings = candidate -%}
+        {%- else -%}
+          {%- assign auto_siblings = auto_siblings | append: ',' | append: candidate -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if auto_siblings != '' -%}
+      {%- assign siblings_csv = auto_siblings -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
 
 {%- if siblings_csv != blank -%}
   {%- assign sibling_handles = siblings_csv | split: ',' -%}
