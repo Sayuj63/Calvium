@@ -28,6 +28,8 @@
 
 {%- assign siblings_csv = product.metafields.custom.color_siblings -%}
 
+<!-- CROSS-SWATCH-DEBUG: siblings_csv="{{ siblings_csv }}" tags_count={{ product.tags.size }} -->
+
 {%- if siblings_csv != blank -%}
   {%- assign sibling_handles = siblings_csv | split: ',' -%}
 
@@ -84,6 +86,7 @@
       {%- assign group_id = t | remove: 'color-group:' | strip -%}
     {%- endif -%}
   {%- endfor -%}
+  <!-- CROSS-SWATCH-DEBUG-FALLBACK: group_id="{{ group_id }}" collections_all_size={{ collections.all.products.size }} -->
   {%- if group_id != blank -%}
     {%- assign target_tag = 'color-group:' | append: group_id -%}
     {%- assign sibling_count = 0 -%}
@@ -92,6 +95,8 @@
         {%- assign sibling_count = sibling_count | plus: 1 -%}
       {%- endif -%}
     {%- endfor -%}
+    <!-- CROSS-SWATCH-DEBUG-COUNT: target_tag="{{ target_tag }}" sibling_count={{ sibling_count }} -->
+
     {%- if sibling_count > 1 -%}
       <div class="cm-picker cm-cross-swatches">
         <p class="cm-picker__label">
