@@ -247,9 +247,9 @@
         <p class="cm-pdp-im__short">{{ section.settings.short_description }}</p>
       {%- endif -%}
 
-      <!-- CROSS-SWATCH-RENDER-CALL-ABOUT-TO-EXECUTE -->
+      <div data-debug-marker="SNIPPET-CALLED"></div>
       {% render 'cm-cross-product-swatches', product: product %}
-      <!-- CROSS-SWATCH-RENDER-CALL-DONE -->
+      <div data-debug-marker="SNIPPET-DONE"></div>
 
 
       <form class="cm-pdp-im__form" method="post" action="{{ routes.cart_add_url }}" data-cm-picker>
