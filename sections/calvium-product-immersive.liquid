@@ -321,10 +321,58 @@
             {{ product.description | default: 'Structured silhouette, refined hardware, and interiors laid out for the way you actually carry.' }}
           </div>
         </details>
+        {%- comment -%}
+          Details & Dimensions: prefer custom.dimensions metafield when
+          set. If not (metafield not defined in Admin → Settings →
+          Custom data → Products), fall back to a hardcoded lookup by
+          the product's color-group:<model> tag. Same source-of-truth
+          as the description doc.
+        {%- endcomment -%}
+        {%- assign dims_html = product.metafields.custom.dimensions -%}
+        {%- if dims_html == blank -%}
+          {%- assign dim_group = '' -%}
+          {%- for t in product.tags -%}
+            {%- if t contains 'color-group:' -%}
+              {%- assign dim_group = t | remove: 'color-group:' | strip -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- case dim_group -%}
+            {%- when 'nova'            -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 27 cm</li><li><strong>Width:</strong> 36 cm</li><li><strong>Base:</strong> 10 cm</li></ul>' -%}
+            {%- when 'solis'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 25 cm</li><li><strong>Width:</strong> 32 cm</li></ul>' -%}
+            {%- when 'ratio'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 23 cm</li><li><strong>Width:</strong> 31 cm</li><li><strong>Base:</strong> 10 cm</li></ul>' -%}
+            {%- when 'meridian'        -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 30 cm</li><li><strong>Width:</strong> 35 cm</li><li><strong>Base:</strong> 10 cm</li></ul>' -%}
+            {%- when 'nexus'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 24 cm</li><li><strong>Width:</strong> 29 cm</li><li><strong>Base:</strong> 6 cm</li></ul>' -%}
+            {%- when 'core'            -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 24 cm</li><li><strong>Width:</strong> 30 cm</li><li><strong>Base:</strong> 9 cm</li></ul>' -%}
+            {%- when 'plico'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 15 cm</li><li><strong>Width:</strong> 23 cm</li><li><strong>Base:</strong> 8 cm</li></ul>' -%}
+            {%- when 'cella'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 25 cm</li><li><strong>Width:</strong> 30 cm</li><li><strong>Base:</strong> 10 cm</li></ul>' -%}
+            {%- when 'sigillum'        -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 21 cm</li><li><strong>Width:</strong> 35 cm</li><li><strong>Base:</strong> 12 cm</li></ul>' -%}
+            {%- when 'pico'            -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 16 cm</li><li><strong>Width:</strong> 18 cm</li><li><strong>Base:</strong> 11 cm</li></ul>' -%}
+            {%- when 'sigillum-mini'   -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 11 cm</li><li><strong>Width:</strong> 26 cm</li><li><strong>Base:</strong> 12 cm</li></ul>' -%}
+            {%- when 'gemina'          -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 14 cm</li><li><strong>Width:</strong> 19 cm</li><li><strong>Base:</strong> 7 cm</li></ul>' -%}
+            {%- when 'tessera'         -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 12 cm</li><li><strong>Width:</strong> 18 cm</li><li><strong>Base:</strong> 6 cm</li></ul>' -%}
+            {%- when 'orb'             -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 17 cm</li><li><strong>Width:</strong> 17 cm</li><li><strong>Base:</strong> 10 cm</li></ul>' -%}
+            {%- when 'vector'          -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 13 cm</li><li><strong>Width:</strong> 21 cm</li><li><strong>Base:</strong> 7 cm</li></ul>' -%}
+            {%- when 'libra'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 10 cm</li><li><strong>Width:</strong> 21 cm</li><li><strong>Base:</strong> 9 cm</li></ul>' -%}
+            {%- when 'sigillum-petite' -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 19 cm</li><li><strong>Width:</strong> 28 cm</li><li><strong>Base:</strong> 9 cm</li></ul>' -%}
+            {%- when 'columna'         -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 28 cm</li><li><strong>Width:</strong> 33 cm</li><li><strong>Base:</strong> 11 cm</li></ul>' -%}
+            {%- when 'modus'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 15 cm</li><li><strong>Width:</strong> 25 cm</li><li><strong>Base:</strong> 8 cm</li></ul>' -%}
+            {%- when 'transitus'       -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 26 cm</li><li><strong>Width:</strong> 36 cm</li><li><strong>Base:</strong> 12 cm</li></ul>' -%}
+            {%- when 'bipartis'        -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 18 cm</li><li><strong>Width:</strong> 25 cm</li><li><strong>Base:</strong> 9 cm</li></ul>' -%}
+            {%- when 'orbis'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 16 cm</li><li><strong>Width:</strong> 25 cm</li><li><strong>Base:</strong> 8 cm</li></ul>' -%}
+            {%- when 'arcus'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 21 cm</li><li><strong>Width:</strong> 29 cm</li><li><strong>Base:</strong> 8 cm</li></ul>' -%}
+            {%- when 'nodus'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 15 cm</li><li><strong>Width:</strong> 29 cm</li><li><strong>Base:</strong> 11 cm</li></ul>' -%}
+            {%- when 'recta'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 28 cm</li><li><strong>Width:</strong> 35 cm</li><li><strong>Base:</strong> 4 cm</li></ul>' -%}
+            {%- when 'magna'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 29 cm</li><li><strong>Width:</strong> 40 cm</li><li><strong>Base:</strong> 13 cm</li></ul>' -%}
+            {%- when 'delta'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 21 cm</li><li><strong>Width:</strong> 26 cm</li><li><strong>Base:</strong> 10 cm</li></ul>' -%}
+            {%- when 'cubus'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 12 cm</li><li><strong>Width:</strong> 17 cm</li><li><strong>Base:</strong> 8 cm</li></ul>' -%}
+            {%- when 'fluit'           -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 13 cm</li><li><strong>Width:</strong> 22 cm</li><li><strong>Base:</strong> 9 cm</li></ul>' -%}
+            {%- when 'vector-transit'  -%}{%- assign dims_html = '<ul><li><strong>Height:</strong> 43 cm</li><li><strong>Width:</strong> 32 cm</li><li><strong>Base:</strong> 12 cm</li></ul>' -%}
+          {%- endcase -%}
+        {%- endif -%}
         <details>
           <summary>Details &amp; Dimensions</summary>
           <div class="cm-pdp-im__accord-body">
-            {{ product.metafields.custom.dimensions | default: 'Refer to product images for size details. Contact us for exact measurements.' }}
+            {{ dims_html | default: 'Refer to product images for size details. Contact us for exact measurements.' }}
           </div>
         </details>
         <details>
