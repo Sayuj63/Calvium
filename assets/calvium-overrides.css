@@ -1680,13 +1680,11 @@ free-shipping-component .message {
   color: var(--cm-ink-70, #666);
   text-align: center;
   line-height: 1.25;
-  max-width: 76px;
-  word-break: break-word;
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  max-width: 100px;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 .cm-cross-swatch:hover .cm-cross-swatch__thumb {
   border-color: var(--cm-ink, #000);

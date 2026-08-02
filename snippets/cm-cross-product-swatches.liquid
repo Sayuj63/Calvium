@@ -79,18 +79,30 @@
           {%- assign h = handle | strip -%}
           {%- assign sib = all_products[h] -%}
           {%- if sib != empty -%}
-            {%- capture titlecase_sib -%}
-              {%- for t in sib.tags -%}
-                {%- if t contains 'color:' -%}
-                  {%- unless t contains 'color-group' -%}
-                    {%- assign raw = t | remove: 'color:' | strip -%}
-                    {%- assign parts = raw | split: '-' -%}
-                    {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
-                  {%- endunless -%}
-                {%- endif -%}
-              {%- endfor -%}
-            {%- endcapture -%}
-            {%- assign sib_color_label = titlecase_sib | strip -%}
+            {%- comment -%}
+              Colour label = the segment AFTER the last "|" in the sibling
+              title. Titles follow "Calvium <Model> | <Colour>" so this
+              always yields just "Midnight Black" / "Espresso" / etc.
+              Falls back to old tag-based method if the title has no pipe.
+            {%- endcomment -%}
+            {%- assign title_parts = sib.title | split: '|' -%}
+            {%- if title_parts.size > 1 -%}
+              {%- assign sib_color_label = title_parts | last | strip -%}
+            {%- else -%}
+              {%- capture titlecase_sib -%}
+                {%- for t in sib.tags -%}
+                  {%- assign tl = t | downcase -%}
+                  {%- if tl contains 'color:' -%}
+                    {%- unless tl contains 'color-group' -%}
+                      {%- assign raw = tl | remove: 'color:' | strip -%}
+                      {%- assign parts = raw | split: '-' -%}
+                      {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
+                    {%- endunless -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endcapture -%}
+              {%- assign sib_color_label = titlecase_sib | strip -%}
+            {%- endif -%}
             <a
               href="{{ sib.url }}"
               class="cm-cross-swatch {% if sib.id == product.id %}is-active{% endif %}"
