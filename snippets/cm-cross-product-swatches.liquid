@@ -41,7 +41,12 @@
     {%- endif -%}
   {%- endfor -%}
   {%- if auto_group != blank -%}
-    {%- assign premium_colors = 'midnight-black,cognac-tan,cognac,havana-brown,forest-green,river-clay,golden-khaki,morning-sage,ivory-cream,slate-blue,navy-dusk,bordeaux,espresso,ash-grey,champagne,vanilla-cream,saffron,crimson,slate,pearl-grey,olive-field,forest-obsidian' | split: ',' -%}
+    {%- comment -%}
+      Shopify caps all_products[handle] at 20 unique lookups per render.
+      List trimmed to the 18 premium colours actually in use across the
+      Calvium catalogue so we stay under the limit.
+    {%- endcomment -%}
+    {%- assign premium_colors = 'midnight-black,cognac-tan,havana-brown,forest-green,river-clay,golden-khaki,morning-sage,ivory-cream,slate-blue,navy-dusk,bordeaux,espresso,ash-grey,champagne,vanilla-cream,saffron,crimson,slate,pearl-grey' | split: ',' -%}
     {%- assign auto_siblings = '' -%}
     {%- for pc in premium_colors -%}
       {%- assign candidate = 'calvium-' | append: auto_group | append: '-' | append: pc -%}
