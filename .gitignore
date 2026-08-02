@@ -23,6 +23,7 @@
 *.xlsx
 *.xls
 *.csv
+!CALVIUM_MASTER_SHEET.xlsx
 *.backup.csv
 # Exception: the split-by-color CSV is a shipped artifact for the store admin to import
 !products_split_by_color.csv
