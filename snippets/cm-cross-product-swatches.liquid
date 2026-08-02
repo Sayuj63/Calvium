@@ -28,8 +28,6 @@
 
 {%- assign siblings_csv = product.metafields.custom.color_siblings -%}
 
-<div data-debug-snippet="entered" data-siblings-csv="{{ siblings_csv }}" data-tags-count="{{ product.tags.size }}"></div>
-
 {%- if siblings_csv != blank -%}
   {%- assign sibling_handles = siblings_csv | split: ',' -%}
 
@@ -86,7 +84,6 @@
       {%- assign group_id = t | remove: 'color-group:' | strip -%}
     {%- endif -%}
   {%- endfor -%}
-  <div data-debug-fallback="reached" data-group-id="{{ group_id }}" data-coll-size="{{ collections.all.products.size }}"></div>
   {%- if group_id != blank -%}
     {%- assign target_tag = 'color-group:' | append: group_id -%}
     {%- assign sibling_count = 0 -%}
@@ -95,7 +92,6 @@
         {%- assign sibling_count = sibling_count | plus: 1 -%}
       {%- endif -%}
     {%- endfor -%}
-    <div data-debug-count="{{ sibling_count }}" data-target-tag="{{ target_tag }}"></div>
 
     {%- if sibling_count > 1 -%}
       <div class="cm-picker cm-cross-swatches">
