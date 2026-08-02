@@ -29,9 +29,9 @@
 {%- assign siblings_csv = product.metafields.custom.color_siblings -%}
 
 {%- comment -%}
-  Auto-build siblings list from tags when metafield isn't set.
-  Look up "calvium-<model>-<premium-color>" handles via all_products[]
-  which bypasses the 50-item collections.all cap.
+  Fallback #1: auto-build siblings list from tags when metafield isn't
+  set. Look up "calvium-<model>-<premium-color>" handles via
+  all_products[] which bypasses Shopify's 50-item collections.all cap.
 {%- endcomment -%}
 {%- if siblings_csv == blank -%}
   {%- assign auto_group = '' -%}
