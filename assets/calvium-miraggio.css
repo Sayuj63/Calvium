@@ -2478,7 +2478,6 @@
 .cm-collcat__hero {
   padding-block: 20px 24px;
   margin-block-end: 16px;
-  border-bottom: 1px solid var(--cm-ink-15);
 }
 .cm-collcat__crumb {
   font-size: 12px;
