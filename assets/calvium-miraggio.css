@@ -3577,6 +3577,10 @@ html.cm-search-open { overflow: hidden; }
   justify-content: center;
   padding: 40px 0;
 }
+.cm-search__loading[hidden],
+.cm-search__results[hidden],
+.cm-search__no-results[hidden],
+.cm-search__empty[hidden] { display: none; }
 .cm-search__spinner {
   width: 22px;
   height: 22px;

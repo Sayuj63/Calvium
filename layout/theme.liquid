@@ -120,8 +120,10 @@
 
     {% render 'halo-popup' %}
 
-    {%- comment -%} Calvium premium cart drawer — triggered by any `data-cm-cart-open` element (e.g. the Calvium header cart icon). {%- endcomment -%}
-    {% render 'cm-cart-drawer' %}
+    {%- comment -%} Calvium premium cart drawer — now a section so the
+    Section Rendering API can refresh it in place after cart changes,
+    avoiding a full page reload. Triggered by any [data-cm-cart-open]. {%- endcomment -%}
+    {% section 'cm-cart-drawer' %}
 
     {% render 'halo-global' %}
     <script>

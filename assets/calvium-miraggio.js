@@ -198,9 +198,9 @@
   doc.querySelectorAll("[data-cm-cart-close], [data-cm-cart-overlay]").forEach((b) => b.addEventListener("click", closeCart));
   doc.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
 
-  // qty and remove buttons — AJAX to Shopify's cart API with an in-flight
-  // lock so rapid double-clicks can't queue multiple mutations against a stale
-  // input.value (was the source of "random qty" behaviour on repeated clicks).
+  // qty and remove buttons — AJAX to Shopify's cart API + Section
+  // Rendering API refresh of the drawer + header cart bubble. No full
+  // page reload. In-flight lock prevents double-click races.
   let cartActionInFlight = false;
   doc.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-cm-cart-qty], [data-cm-cart-remove], [data-cm-addon-add], [data-cm-rec-add]");
@@ -219,16 +219,14 @@
         const currentQty = Number(input?.value || 1);
         const nextQty = Math.max(0, currentQty + dir);
         if (!key) return;
-        // Update the input immediately so a second click reads the new value,
-        // not the stale one. Prevents "same qty spammed 3 times" pattern.
         if (input) input.value = nextQty;
         const ok = await updateLine(key, nextQty);
-        if (ok) window.location.reload();
+        if (ok) await refreshCartUI();
       } else if (btn.hasAttribute("data-cm-cart-remove")) {
         const key = btn.dataset.key;
         if (!key) return;
         const ok = await updateLine(key, 0);
-        if (ok) window.location.reload();
+        if (ok) await refreshCartUI();
       } else if (btn.hasAttribute("data-cm-addon-add") || btn.hasAttribute("data-cm-rec-add")) {
         const variantId = btn.dataset.variantId;
         if (!variantId) return;
@@ -238,7 +236,7 @@
             headers: { "Content-Type": "application/json", Accept: "application/json" },
             body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
           });
-          if (res.ok) window.location.reload();
+          if (res.ok) await refreshCartUI();
         } catch (err) {
           console.warn("[cm] add failed", err);
         }
@@ -258,6 +256,48 @@
       });
       return res.ok;
     } catch (err) { console.warn("[cm] cart update failed", err); return false; }
+  }
+
+  // Refresh the cart drawer HTML in-place via Shopify's Section Rendering
+  // API. Also update the header cart-count bubble. No page reload.
+  // Exposed on window so PDP form handler (different IIFE) can call it.
+  window.cmRefreshCart = refreshCartUI;
+  async function refreshCartUI() {
+    try {
+      const [drawerHtml, cartJson] = await Promise.all([
+        fetch(`/?sections=cm-cart-drawer&_=${Date.now()}`).then(r => r.ok ? r.json() : null),
+        fetch(`/cart.js`).then(r => r.ok ? r.json() : null),
+      ]);
+
+      // Swap drawer content
+      if (drawerHtml && drawerHtml["cm-cart-drawer"]) {
+        const parser = new DOMParser();
+        const wrapper = parser.parseFromString(drawerHtml["cm-cart-drawer"], "text/html");
+        const nextDrawer = wrapper.querySelector("[data-cm-cart]");
+        const currentDrawer = document.querySelector("[data-cm-cart]");
+        if (nextDrawer && currentDrawer) {
+          // Preserve open/closed state
+          const wasOpen = currentDrawer.classList.contains("is-open");
+          currentDrawer.replaceWith(nextDrawer);
+          if (wasOpen) nextDrawer.classList.add("is-open");
+        }
+      }
+
+      // Update header cart bubble
+      if (cartJson) {
+        const count = cartJson.item_count || 0;
+        document.querySelectorAll("[data-cm-cart-count], .cm-icon-btn--cart .cm-cart-bubble, .cart-count-bubble").forEach((el) => {
+          el.textContent = count;
+          el.hidden = count === 0;
+        });
+        document.querySelectorAll("[data-cm-cart-open]").forEach((btn) => {
+          btn.setAttribute("data-count", String(count));
+        });
+      }
+    } catch (err) {
+      console.warn("[cm] cart refresh failed, falling back to reload", err);
+      window.location.reload();
+    }
   }
 
   // -----------------------------------------------------------
@@ -354,6 +394,8 @@
         if (!res.ok) throw new Error();
         if (isBuyNow) { window.location.href = "/checkout"; return; }
         if (atc) atc.textContent = "Added ✓";
+        // Refresh drawer + cart bubble in place, then open the drawer.
+        if (typeof window.cmRefreshCart === "function") await window.cmRefreshCart();
         openCart();
       } catch { if (atc) atc.textContent = "Try again"; }
       finally { setTimeout(() => { if (atc && label) atc.textContent = label; }, 1400); }
@@ -452,18 +494,20 @@ class CalviumSearch extends HTMLElement {
 
     this.input.addEventListener("input", () => {
       const q = this.input.value.trim();
-      this.clearBtn.hidden = q.length === 0;
+      if (this.clearBtn) this.clearBtn.hidden = q.length === 0;
       clearTimeout(this.debounceTimer);
       this.debounceTimer = setTimeout(() => this.search(q), 250);
     });
 
-    this.clearBtn.addEventListener("click", () => {
-      this.input.value = "";
-      this.clearBtn.hidden = true;
-      this.currentQuery = "";
-      this.showEmpty();
-      this.input.focus();
-    });
+    if (this.clearBtn) {
+      this.clearBtn.addEventListener("click", () => {
+        this.input.value = "";
+        this.clearBtn.hidden = true;
+        this.currentQuery = "";
+        this.showEmpty();
+        this.input.focus();
+      });
+    }
 
     const clearRecentBtn = this.querySelector("[data-cm-search-clear-recent]");
     if (clearRecentBtn) clearRecentBtn.addEventListener("click", () => this.clearRecent());
