@@ -28,6 +28,8 @@
 
 {%- assign siblings_csv = product.metafields.custom.color_siblings -%}
 
+<div data-x-debug data-siblings-len="{{ siblings_csv.size | default: 0 }}" data-siblings-value="{{ siblings_csv | truncate: 200 }}"></div>
+
 {%- if siblings_csv != blank -%}
   {%- assign sibling_handles = siblings_csv | split: ',' -%}
 
