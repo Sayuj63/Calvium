@@ -5,8 +5,6 @@
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
- *
- * cache-bust: lookbook-caption-restructure-v2
  * ------------------------------------------------------------
  */
 {
@@ -113,32 +111,32 @@
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/EVERYDAY.jpg",
-            "label": "Everyday",
-            "link": "/collections/everyday"
+            "label": "Everyday Icons",
+            "link": "shopify://collections/everyday-icons"
           }
         },
         "tile_2": {
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/WORK-ESSENTIAL.jpg",
-            "label": "Work Essential",
-            "link": "/collections/tote-bags"
+            "label": "Work Ready",
+            "link": "shopify://collections/work-ready"
           }
         },
         "tile_3": {
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/AFTER-HOURS.jpg",
-            "label": "After Hours",
-            "link": "/collections/clutches"
+            "label": "Day to Night",
+            "link": "shopify://collections/day-to-night"
           }
         },
         "tile_4": {
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/NEW-COLLECTION.jpg",
-            "label": "New Collection",
-            "link": "/collections/new-arrivals"
+            "label": "New Arrivals",
+            "link": "shopify://collections/new-arrivals"
           }
         }
       },
@@ -249,7 +247,7 @@
         "layout": "split",
         "image_position": "left",
         "tone": "light",
-        "padding_top": 61,
+        "padding_top": 60,
         "padding_bottom": 60
       }
     },
