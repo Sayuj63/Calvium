@@ -354,6 +354,7 @@
         "t7",
         "t8"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "SHOP THE FEED",
         "heading": "On Instagram",
@@ -387,6 +388,7 @@
       "block_order": [
         "whatmore_shoppable_videos_app_block_dDdwzX"
       ],
+      "disabled": true,
       "settings": {
         "include_margins": false
       }

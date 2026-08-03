@@ -1198,7 +1198,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>© 2026, Calvium — Powered by Swytch Studios</p>",
+                    "text": "<p>© 2026, Calvium — Powered by Swytch Studio</p>",
                     "collection_description_only": false,
                     "collapse_text": false,
                     "typing_text": false,
