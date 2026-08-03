@@ -71,7 +71,7 @@
       }
     </style>
     {{ 'calvium-swatch-fix.css' | asset_url | stylesheet_tag }}
-    {%- comment -%} page-cache-bust: lookbook-caption-restructure-v3 {%- endcomment -%}
+    <meta name="cm-cache-version" content="lookbook-restructure-{{ 'now' | date: '%s' }}">
   </head>
 
   <body
