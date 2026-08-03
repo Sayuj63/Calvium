@@ -263,10 +263,27 @@
   // Exposed on window so PDP form handler (different IIFE) can call it.
   window.cmRefreshCart = refreshCartUI;
   async function refreshCartUI() {
+    // Guard against browsers that throttle/pause fetches on hidden tabs —
+    // if the tab isn't visible, defer the refresh until it comes back
+    // instead of letting a stalled fetch leave the drawer in a loading
+    // state forever.
+    if (document.hidden) {
+      const rerun = () => {
+        if (!document.hidden) {
+          document.removeEventListener("visibilitychange", rerun);
+          refreshCartUI();
+        }
+      };
+      document.addEventListener("visibilitychange", rerun);
+      return;
+    }
+    // AbortSignal.timeout(): hard-cap each request so a network stall
+    // can never hang the drawer indefinitely.
+    const timeout = (AbortSignal && AbortSignal.timeout) ? AbortSignal.timeout(8000) : undefined;
     try {
       const [drawerHtml, cartJson] = await Promise.all([
-        fetch(`/?sections=cm-cart-drawer&_=${Date.now()}`).then(r => r.ok ? r.json() : null),
-        fetch(`/cart.js`).then(r => r.ok ? r.json() : null),
+        fetch(`/?sections=cm-cart-drawer&_=${Date.now()}`, { signal: timeout }).then(r => r.ok ? r.json() : null),
+        fetch(`/cart.js`, { signal: timeout }).then(r => r.ok ? r.json() : null),
       ]);
 
       // Swap drawer content
@@ -295,10 +312,59 @@
         });
       }
     } catch (err) {
-      console.warn("[cm] cart refresh failed, falling back to reload", err);
-      window.location.reload();
+      console.warn("[cm] cart refresh failed", err);
+      // Do NOT force a page reload — releasing stuck locks and letting
+      // the user reload manually is less disruptive than yanking them
+      // out of whatever they were doing. releaseStuckLocks() runs on
+      // the next visibilitychange too, so this is belt + braces.
+      releaseStuckLocks();
     }
   }
+
+  // -----------------------------------------------------------
+  // Self-healing watchdog: when the tab returns from hidden or a
+  // back/forward-cache restore fires, verify that scroll locks and
+  // drawer states aren't stuck. Async close animations, throttled
+  // fetches, and bfcache restores can all leave <body> and <html>
+  // scroll-locked with no drawer actually visible — which is what
+  // makes the site feel frozen until the user reloads.
+  function isAnyDrawerActuallyOpen() {
+    // Custom cart drawer
+    if (document.querySelector('[data-cm-cart].is-open')) return true;
+    // Custom search overlay
+    if (document.documentElement.classList.contains('cm-search-open')) return true;
+    // Native <dialog> or <details> that carries scroll-lock
+    if (document.querySelector('dialog[scroll-lock][open], details[scroll-lock][open]')) return true;
+    // Halo/Ella side drawers using aria-hidden pattern
+    if (document.querySelector('[data-drawer-open="true"], [aria-hidden="false"].drawer, .drawer.is-open')) return true;
+    return false;
+  }
+  function releaseStuckLocks() {
+    if (isAnyDrawerActuallyOpen()) return;
+    const body = document.body;
+    const html = document.documentElement;
+    if (body.classList.contains('overflow-hidden')) body.classList.remove('overflow-hidden');
+    if (html.hasAttribute('scroll-lock')) html.removeAttribute('scroll-lock');
+    // Breakpoint-scoped variants (base.js side drawers add these too)
+    ['overflow-hidden-mobile', 'overflow-hidden-tablet', 'overflow-hidden-desktop'].forEach(c => {
+      if (body.classList.contains(c)) body.classList.remove(c);
+    });
+    // Belt + braces: any element with pointer-events:none inline from
+    // an aborted animation that would block interaction.
+    if (body.style.pointerEvents === 'none') body.style.pointerEvents = '';
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    // Let any deferred toggle events fire first, then heal.
+    setTimeout(releaseStuckLocks, 60);
+  });
+  window.addEventListener('pageshow', (e) => {
+    // e.persisted === true → bfcache restore. Either way, verify.
+    releaseStuckLocks();
+    // If the drawer was mid-refresh when the tab went to bfcache,
+    // re-sync the cart count so the header bubble matches server state.
+    if (e.persisted && !document.hidden) refreshCartUI();
+  });
 
   // -----------------------------------------------------------
   // Shop-by-Style tab switcher
