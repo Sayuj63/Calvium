@@ -155,6 +155,7 @@
     },
     "calvium_spotlight_hp": {
       "type": "calvium-spotlight",
+      "disabled": true,
       "settings": {
         "eyebrow": "THE CALVIUM STORY",
         "heading": "THE ART OF EVERYDAY ELEGANCE",
