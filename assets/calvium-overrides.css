@@ -1884,27 +1884,18 @@ iframe[src*="recaptcha"],
   color: #ffffff;
 }
 .cm-lookbook__eyebrow { color: #ffffff; }
-/* CTA sits on the same visual left as the eyebrow + heading text.
-   Trick: reduce the pill's internal left padding, then apply an equal
-   negative margin-left. The pill's TEXT (the "E" of EXPLORE) ends up
-   at exactly the caption's content-left position — same as the "L" of
-   Layered — while the pill outline shifts left just enough to compensate
-   for its own padding. No overflow clip because the shift (≈20px) is
-   well within the caption's 28px left padding. */
+/* CTA sits with its LEFT EDGE flush against the caption content edge —
+   same vertical line as the eyebrow + heading text. margin-left is
+   held at 0 so nothing offsets the pill; internal padding restored to
+   a balanced 30px so text sits comfortably inside the pill. */
 .cm-lookbook__cta {
-  padding: 16px 30px 16px 18px !important;
+  padding: 16px 30px !important;
   min-height: 56px !important;
   font-size: 14px !important;
   letter-spacing: 0.16em !important;
-  margin-left: -19.5px !important;
+  margin-left: 0 !important;
 }
 .cm-lookbook__cta svg { width: 20px !important; height: 20px !important; }
-@media (max-width: 749px) {
-  .cm-lookbook__cta {
-    padding: 14px 24px 14px 16px !important;
-    margin-left: -17.5px !important;
-  }
-}
 
 /* ============================================================
    Instagram grid — center-align the @handle button vertically
