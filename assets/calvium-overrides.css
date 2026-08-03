@@ -483,15 +483,21 @@ label[for^="Products-per-page-"] {
 }
 
 
-/* ----- 25. Cart APPLY button — tighter padding, sit flush with input ----- */
+/* ----- 25. Cart APPLY button — tighter padding, sit flush with input.
+   min-width guarantees "APPLY" fits inside overflow:hidden slide-up
+   wrapper — previously clipped to "APPL". ----- */
 .cart-discount__button,
 .cart-discount__form .button.button--primary {
-  padding: 0 18px !important;
-  min-width: unset !important;
+  padding: 0 20px !important;
+  min-width: 92px !important;
   height: 40px !important;
   min-height: 40px !important;
   font-size: 1.1rem !important;
   letter-spacing: 0.04em !important;
+  white-space: nowrap;
+}
+.cart-discount__button .button-text-main,
+.cart-discount__button .button-overflow {
   white-space: nowrap;
 }
 .cart-discount__form {
@@ -504,6 +510,46 @@ label[for^="Products-per-page-"] {
 .cart-discount__form .field__input {
   height: 40px !important;
   min-height: 40px !important;
+}
+
+
+/* ----- 25b. Contact page — SUBMIT + MESSAGE US uniform button styling.
+   Both start as white bg / black text / thin black border and invert on hover.
+   Kills the different Ella hover animations by overriding the CSS variables
+   the slide-up wrapper reads from — so the slide still animates, but with
+   consistent brand colours instead of the default primary/outline mismatch. */
+.contact-form .button,
+.contact-form button[type='submit'],
+a.button[href^='https://wa.me/']:not(.cm-contact-line) {
+  --color-primary-button-background: #ffffff;
+  --color-primary-button-text: #000000;
+  --color-primary-button-border: #000000;
+  --color-primary-button-hover-background: #000000;
+  --color-primary-button-hover-text: #ffffff;
+  --color-primary-button-hover-border: #000000;
+  --color-secondary-button-background: #ffffff;
+  --color-secondary-button-text: #000000;
+  --color-secondary-button-border: #000000;
+  --color-secondary-button-hover-background: #000000;
+  --color-secondary-button-hover-text: #ffffff;
+  --color-secondary-button-hover-border: #000000;
+  --color-effect-background: #000000;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
+  transition: background-color 0.25s ease, color 0.25s ease !important;
+}
+.contact-form .button:hover:not([disabled]),
+.contact-form button[type='submit']:hover:not([disabled]),
+a.button[href^='https://wa.me/']:not(.cm-contact-line):hover {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+.contact-form .button:hover .button-text-main,
+.contact-form button[type='submit']:hover .button-text-main,
+a.button[href^='https://wa.me/']:not(.cm-contact-line):hover .button-text-main {
+  color: #ffffff !important;
 }
 
 

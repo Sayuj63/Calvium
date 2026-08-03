@@ -11,13 +11,13 @@
     .shopify-section-group-footer-group .logo-block__image { max-width: 160px; }
   }
 
-  /* Auto-link plain-text emails and phone numbers in the footer text blocks */
+  /* Auto-link plain-text emails and phone numbers in the footer text blocks.
+     Underline removed on request — links stay clickable and inherit colour. */
   footer .text-block a[href^="mailto:"],
   footer .text-block a[href^="tel:"],
   footer .text-block a[href^="https://wa.me/"] {
     color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration: none;
   }
   /* WhatsApp / contact line — inline row with icon */
   footer .cm-contact-line {
@@ -30,7 +30,7 @@
   }
   footer .cm-contact-line + .cm-contact-line { margin-top: 6px; }
   footer .cm-contact-line svg { width: 16px; height: 16px; flex-shrink: 0; }
-  footer .cm-contact-line span { text-decoration: underline; text-underline-offset: 3px; }
+  footer .cm-contact-line span { text-decoration: none; }
 
   /* Center the social icons row under the (now larger) logo. Ella wraps
      each social link in an <li> inside a flex list; centring the list
