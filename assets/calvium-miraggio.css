@@ -3426,16 +3426,18 @@ html.cm-search-open { overflow: hidden; }
   color: var(--cm-ink);
   background: #fff;
   cursor: pointer;
-  transition: background 160ms, color 160ms, border-color 160ms;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
   white-space: nowrap;
   font-family: inherit;
 }
 .cm-search__pill:hover,
 .cm-search__pill:focus-visible {
-  background: var(--cm-ink);
-  color: #fff;
+  background: #fff;
+  color: var(--cm-ink);
   border-color: var(--cm-ink);
   outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
 
 .cm-search__recent-pill {
