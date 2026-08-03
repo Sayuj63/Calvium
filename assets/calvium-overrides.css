@@ -1884,21 +1884,46 @@ iframe[src*="recaptcha"],
   color: #ffffff;
 }
 .cm-lookbook__eyebrow { color: #ffffff; }
-/* CTA sits with its LEFT EDGE flush against the caption content edge
-   (same vertical line as the eyebrow + heading text) AND hugs its own
-   text — horizontal padding tightened so the pill length matches the
-   label + arrow rather than stretching wider. width: fit-content
-   guarantees the pill never fills the flex/block container. */
-.cm-lookbook__cta {
+
+/* Caption laid out as a bottom-aligned row: text on the left, CTA on
+   the right, both riding the same baseline. Existing dark gradient
+   toned down to a very light overlay — just enough to keep the text
+   legible against varied image backgrounds. */
+.cm-lookbook__caption {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 32px !important;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.08) 55%, rgba(0, 0, 0, 0.28) 100%) !important;
+}
+.cm-lookbook__caption-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.cm-lookbook__caption .cm-lookbook__cta {
   padding: 14px 16px !important;
   min-height: 48px !important;
   font-size: 14px !important;
   letter-spacing: 0.16em !important;
   margin-left: 0 !important;
+  flex: 0 0 auto;
+  align-self: flex-end !important;
   width: fit-content !important;
-  align-self: flex-start !important;
 }
 .cm-lookbook__cta svg { width: 20px !important; height: 20px !important; }
+
+/* Mobile: stack text + button vertically so the CTA doesn't jam
+   against the heading in narrow widths. */
+@media (max-width: 749px) {
+  .cm-lookbook__caption {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+  .cm-lookbook__caption .cm-lookbook__cta {
+    align-self: flex-start !important;
+  }
+}
 
 /* ============================================================
    Instagram grid — center-align the @handle button vertically
