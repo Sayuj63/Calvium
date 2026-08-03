@@ -19,23 +19,6 @@
         "short_description": ""
       }
     },
-    "recommendations": {
-      "type": "calvium-most-loved",
-      "settings": {
-        "heading": "YOU MAY ALSO LIKE",
-        "collection": "best-sellers",
-        "max_products": 8,
-        "cta_label": "",
-        "cta_url": "",
-        "tone": "light",
-        "show_percent": true,
-        "show_swatches": true,
-        "max_swatches": 4,
-        "show_atc": true,
-        "padding_top": 40,
-        "padding_bottom": 40
-      }
-    },
     "recently_viewed": {
       "type": "calvium-recently-viewed",
       "settings": {
@@ -113,7 +96,6 @@
   },
   "order": [
     "main",
-    "recommendations",
     "recently_viewed",
     "pdp_testimonials"
   ]
