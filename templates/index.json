@@ -33,6 +33,14 @@
     "calvium_shop_by_style": {
       "type": "calvium-shop-by-style",
       "blocks": {
+        "tab_qRLdqb": {
+          "type": "tab",
+          "settings": {
+            "label": "Day to Night",
+            "collection": "day-to-night",
+            "link": ""
+          }
+        },
         "tab_1": {
           "type": "tab",
           "settings": {
@@ -67,6 +75,7 @@
         }
       },
       "block_order": [
+        "tab_qRLdqb",
         "tab_1",
         "tab_2",
         "tab_3",
