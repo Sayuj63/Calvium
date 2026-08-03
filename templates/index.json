@@ -5,6 +5,8 @@
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
+ *
+ * cache-bust: lookbook-caption-restructure-v2
  * ------------------------------------------------------------
  */
 {
@@ -20,7 +22,7 @@
         "eyebrow": "",
         "heading": "Timeless style, made for modern lives.",
         "subheading": "",
-        "microcopy": "",
+        "microcopy": "Free shipping on orders above ₹999 · 7-day easy returns",
         "text_position": "left",
         "text_align": "left",
         "tone": "light",
@@ -33,14 +35,6 @@
     "calvium_shop_by_style": {
       "type": "calvium-shop-by-style",
       "blocks": {
-        "tab_qRLdqb": {
-          "type": "tab",
-          "settings": {
-            "label": "Day to Night",
-            "collection": "day-to-night",
-            "link": ""
-          }
-        },
         "tab_1": {
           "type": "tab",
           "settings": {
@@ -75,7 +69,6 @@
         }
       },
       "block_order": [
-        "tab_qRLdqb",
         "tab_1",
         "tab_2",
         "tab_3",
@@ -120,32 +113,32 @@
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/EVERYDAY.jpg",
-            "label": "Everyday Icons",
-            "link": "shopify://collections/everyday-icons"
+            "label": "Everyday",
+            "link": "/collections/everyday"
           }
         },
         "tile_2": {
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/WORK-ESSENTIAL.jpg",
-            "label": "Work Ready",
-            "link": "shopify://collections/work-ready"
+            "label": "Work Essential",
+            "link": "/collections/tote-bags"
           }
         },
         "tile_3": {
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/AFTER-HOURS.jpg",
-            "label": "Day to Night",
-            "link": "shopify://collections/day-to-night"
+            "label": "After Hours",
+            "link": "/collections/clutches"
           }
         },
         "tile_4": {
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/NEW-COLLECTION.jpg",
-            "label": "New Arrivals",
-            "link": "shopify://collections/new-arrivals"
+            "label": "New Collection",
+            "link": "/collections/new-arrivals"
           }
         }
       },
@@ -354,7 +347,6 @@
         "t7",
         "t8"
       ],
-      "disabled": true,
       "settings": {
         "eyebrow": "SHOP THE FEED",
         "heading": "On Instagram",
@@ -388,7 +380,6 @@
       "block_order": [
         "whatmore_shoppable_videos_app_block_dDdwzX"
       ],
-      "disabled": true,
       "settings": {
         "include_margins": false
       }
