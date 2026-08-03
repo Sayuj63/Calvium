@@ -1884,16 +1884,19 @@ iframe[src*="recaptcha"],
   color: #ffffff;
 }
 .cm-lookbook__eyebrow { color: #ffffff; }
-/* CTA sits with its LEFT EDGE flush against the caption content edge —
-   same vertical line as the eyebrow + heading text. margin-left is
-   held at 0 so nothing offsets the pill; internal padding restored to
-   a balanced 30px so text sits comfortably inside the pill. */
+/* CTA sits with its LEFT EDGE flush against the caption content edge
+   (same vertical line as the eyebrow + heading text) AND hugs its own
+   text — horizontal padding tightened so the pill length matches the
+   label + arrow rather than stretching wider. width: fit-content
+   guarantees the pill never fills the flex/block container. */
 .cm-lookbook__cta {
-  padding: 16px 30px !important;
-  min-height: 56px !important;
+  padding: 14px 16px !important;
+  min-height: 48px !important;
   font-size: 14px !important;
   letter-spacing: 0.16em !important;
   margin-left: 0 !important;
+  width: fit-content !important;
+  align-self: flex-start !important;
 }
 .cm-lookbook__cta svg { width: 20px !important; height: 20px !important; }
 
