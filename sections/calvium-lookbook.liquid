@@ -44,15 +44,17 @@
         {%- endif -%}
 
         <div class="cm-lookbook__caption">
-          {%- if section.settings.eyebrow != blank -%}
-            <span class="cm-lookbook__eyebrow">{{ section.settings.eyebrow }}</span>
-          {%- endif -%}
-          {%- if section.settings.heading != blank -%}
-            <h2 class="cm-lookbook__heading">{{ section.settings.heading }}</h2>
-          {%- endif -%}
-          {%- if section.settings.body != blank -%}
-            <p class="cm-lookbook__body">{{ section.settings.body }}</p>
-          {%- endif -%}
+          <div class="cm-lookbook__caption-text">
+            {%- if section.settings.eyebrow != blank -%}
+              <span class="cm-lookbook__eyebrow">{{ section.settings.eyebrow }}</span>
+            {%- endif -%}
+            {%- if section.settings.heading != blank -%}
+              <h2 class="cm-lookbook__heading">{{ section.settings.heading }}</h2>
+            {%- endif -%}
+            {%- if section.settings.body != blank -%}
+              <p class="cm-lookbook__body">{{ section.settings.body }}</p>
+            {%- endif -%}
+          </div>
           {%- if section.settings.cta_label != blank -%}
             <a href="{{ section.settings.cta_link | default: coll.url | default: '/collections/all' }}"
                class="cm-lookbook__cta">
