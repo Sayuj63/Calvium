@@ -5,8 +5,6 @@
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
- *
- * cache-bust: lookbook-caption-restructure-v2
  * ------------------------------------------------------------
  */
 {
@@ -22,7 +20,7 @@
         "eyebrow": "",
         "heading": "Timeless style, made for modern lives.",
         "subheading": "",
-        "microcopy": "Free shipping on orders above ₹999 · 7-day easy returns",
+        "microcopy": "",
         "text_position": "left",
         "text_align": "left",
         "tone": "light",
@@ -35,6 +33,14 @@
     "calvium_shop_by_style": {
       "type": "calvium-shop-by-style",
       "blocks": {
+        "tab_6XNaL3": {
+          "type": "tab",
+          "settings": {
+            "label": "",
+            "collection": "day-to-night",
+            "link": ""
+          }
+        },
         "tab_1": {
           "type": "tab",
           "settings": {
@@ -69,6 +75,7 @@
         }
       },
       "block_order": [
+        "tab_6XNaL3",
         "tab_1",
         "tab_2",
         "tab_3",
