@@ -172,7 +172,7 @@
                     "font": "heading",
                     "unit": "pixel",
                     "percent_width": 100,
-                    "pixel_height": 32,
+                    "pixel_height": 48,
                     "custom_mobile_size": false,
                     "unit_mobile": "percent",
                     "percent_width_mobile": 100,
@@ -183,31 +183,10 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {}
-                },
-                "social_icons_eUJT67": {
-                  "type": "social-icons",
-                  "name": "Social icons",
-                  "settings": {
-                    "social_style": "custom",
-                    "icon_size": 30,
-                    "icon_size_mobile": 30,
-                    "icon_color": "#525252",
-                    "icon_bg_color": "rgba(0,0,0,0)",
-                    "icon_border_color": "rgba(0,0,0,0)",
-                    "icon_color_hover": "#525252",
-                    "icon_bg_color_hover": "rgba(0,0,0,0)",
-                    "icon_border_color_hover": "rgba(0,0,0,0)",
-                    "gap_x": 15,
-                    "gap_y": 15,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0
-                  },
-                  "blocks": {}
                 }
               },
               "block_order": [
-                "logo_4zpqcH",
-                "social_icons_eUJT67"
+                "logo_4zpqcH"
               ]
             },
             "footer_column_RKxXJk": {
@@ -906,11 +885,32 @@
                         "text_XxXPUp",
                         "text_aDFPtK"
                       ]
+                    },
+                    "social_icons_eUJT67": {
+                      "type": "social-icons",
+                      "name": "Social icons",
+                      "settings": {
+                        "social_style": "custom",
+                        "icon_size": 30,
+                        "icon_size_mobile": 30,
+                        "icon_color": "#525252",
+                        "icon_bg_color": "rgba(0,0,0,0)",
+                        "icon_border_color": "rgba(0,0,0,0)",
+                        "icon_color_hover": "#525252",
+                        "icon_bg_color_hover": "rgba(0,0,0,0)",
+                        "icon_border_color_hover": "rgba(0,0,0,0)",
+                        "gap_x": 15,
+                        "gap_y": 15,
+                        "padding-block-start": 12,
+                        "padding-block-end": 0
+                      },
+                      "blocks": {}
                     }
                   },
                   "block_order": [
                     "text_EQtpkz",
-                    "group_MVhyaq"
+                    "group_MVhyaq",
+                    "social_icons_eUJT67"
                   ]
                 }
               },
