@@ -45,8 +45,6 @@
           {%- if _matched.image -%}
             <img src="{{ _matched.image | image_url: width: 120 }}"
                  alt="{{ value | escape }}" width="44" height="58" loading="lazy">
-          {%- else -%}
-            <span class="cm-picker__thumb-fallback">{{ value | truncate: 5, '' }}</span>
           {%- endif -%}
         </button>
       {%- endfor -%}
