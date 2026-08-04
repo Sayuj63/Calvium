@@ -26,7 +26,7 @@
         "tone": "light",
         "cta_label": "Shop the Edit",
         "cta_link": "/collections/all",
-        "cta2_label": "New Arrivals",
+        "cta2_label": "",
         "cta2_link": "/collections/new-arrivals"
       }
     },
