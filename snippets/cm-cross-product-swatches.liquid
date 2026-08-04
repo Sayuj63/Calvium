@@ -1,181 +1,55 @@
 {%- comment -%}
-  Cross-product color swatches.
-
-  Reads `product.metafields.custom.color_siblings` (comma-separated handles),
-  looks each one up via `all_products[handle]`, and renders a swatch. Each
-  swatch = image thumb + color name label below.
-
-  Multi-word colors like `beige-off-white` render as "Beige Off White" (title
-  case), not "Beige off white" (Liquid's plain `capitalize` filter caps only
-  the first letter).
-
-  Falls back to iterating `collections.all.products` if the metafield isn't
-  set (only works if siblings sit within the first ~250 products).
+  cm-cross-product-swatches.liquid — rebuilt 2026-08
+  Was: <a href> links to separate per-colour product pages (redirect on click).
+  Now: inline cm-picker__thumb buttons on the current product's Color option.
+       Works with calvium-product-immersive.liquid / luxury / editorial.
+       Requires products to have Option1 Name = "Color" with per-variant images.
 {%- endcomment -%}
 
-{%- capture titlecase_this -%}
-  {%- for t in product.tags -%}
-    {%- if t contains 'color:' -%}
-      {%- unless t contains 'color-group' -%}
-        {%- assign raw = t | remove: 'color:' | strip -%}
-        {%- assign parts = raw | split: '-' -%}
-        {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
-      {%- endunless -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endcapture -%}
-{%- assign this_color_label = titlecase_this | strip -%}
+{%- liquid
+  assign cm_color_option = nil
+  assign cm_color_index = nil
+  for opt in product.options_with_values
+    assign _n = opt.name | downcase
+    if _n contains 'color' or _n contains 'colour'
+      assign cm_color_option = opt
+      assign cm_color_index = forloop.index0
+      break
+    endif
+  endfor
+-%}
 
-{%- assign siblings_csv = product.metafields.custom.color_siblings -%}
-
-{%- comment -%}
-  Fallback #1: auto-build siblings list from tags when metafield isn't
-  set. Look up "calvium-<model>-<premium-color>" handles via
-  all_products[] which bypasses Shopify's 50-item collections.all cap.
-{%- endcomment -%}
-{%- if siblings_csv == blank -%}
-  {%- assign auto_group = '' -%}
-  {%- for t in product.tags -%}
-    {%- if t contains 'color-group:' -%}
-      {%- assign auto_group = t | remove: 'color-group:' | strip -%}
-    {%- endif -%}
-  {%- endfor -%}
-  {%- if auto_group != blank -%}
-    {%- comment -%}
-      Shopify caps all_products[handle] at 20 unique lookups per render.
-      List trimmed to the 18 premium colours actually in use across the
-      Calvium catalogue so we stay under the limit.
-    {%- endcomment -%}
-    {%- assign premium_colors = 'midnight-black,cognac-tan,havana-brown,forest-green,river-clay,golden-khaki,morning-sage,ivory-cream,slate-blue,navy-dusk,bordeaux,espresso,ash-grey,champagne,vanilla-cream,saffron,crimson,slate,pearl-grey' | split: ',' -%}
-    {%- assign auto_siblings = '' -%}
-    {%- for pc in premium_colors -%}
-      {%- assign candidate = 'calvium-' | append: auto_group | append: '-' | append: pc -%}
-      {%- assign check = all_products[candidate] -%}
-      {%- if check != empty and check.handle != blank -%}
-        {%- if auto_siblings == '' -%}
-          {%- assign auto_siblings = candidate -%}
-        {%- else -%}
-          {%- assign auto_siblings = auto_siblings | append: ',' | append: candidate -%}
-        {%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
-    {%- if auto_siblings != '' -%}
-      {%- assign siblings_csv = auto_siblings -%}
-    {%- endif -%}
-  {%- endif -%}
-{%- endif -%}
-
-{%- if siblings_csv != blank -%}
-  {%- assign sibling_handles = siblings_csv | split: ',' -%}
-
-  {%- if sibling_handles.size > 1 -%}
-    <div class="cm-picker cm-cross-swatches">
-      <p class="cm-picker__label">
-        <span>Color:</span>
-        <strong>{{ this_color_label | default: 'Select' }}</strong>
-      </p>
-      <div class="cm-cross-swatches__row">
-        {%- for handle in sibling_handles -%}
-          {%- assign h = handle | strip -%}
-          {%- assign sib = all_products[h] -%}
-          {%- if sib != empty -%}
-            {%- comment -%}
-              Colour label = the segment AFTER the last "|" in the sibling
-              title. Titles follow "Calvium <Model> | <Colour>" so this
-              always yields just "Midnight Black" / "Espresso" / etc.
-              Falls back to old tag-based method if the title has no pipe.
-            {%- endcomment -%}
-            {%- assign title_parts = sib.title | split: '|' -%}
-            {%- if title_parts.size > 1 -%}
-              {%- assign sib_color_label = title_parts | last | strip -%}
-            {%- else -%}
-              {%- capture titlecase_sib -%}
-                {%- for t in sib.tags -%}
-                  {%- assign tl = t | downcase -%}
-                  {%- if tl contains 'color:' -%}
-                    {%- unless tl contains 'color-group' -%}
-                      {%- assign raw = tl | remove: 'color:' | strip -%}
-                      {%- assign parts = raw | split: '-' -%}
-                      {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
-                    {%- endunless -%}
-                  {%- endif -%}
-                {%- endfor -%}
-              {%- endcapture -%}
-              {%- assign sib_color_label = titlecase_sib | strip -%}
-            {%- endif -%}
-            <a
-              href="{{ sib.url }}"
-              class="cm-cross-swatch {% if sib.id == product.id %}is-active{% endif %}"
-              title="{{ sib_color_label | default: sib.title | escape }}"
-              aria-label="{{ sib_color_label | default: sib.title | escape }}"
-              {% if sib.id == product.id %}aria-current="page"{% endif %}
-            >
-              <span class="cm-cross-swatch__thumb">
-                {%- if sib.featured_image -%}
-                  <img
-                    src="{{ sib.featured_image | image_url: width: 160 }}"
-                    alt="{{ sib_color_label | default: sib.title | escape }}"
-                    width="60" height="76" loading="lazy">
-                {%- endif -%}
-              </span>
-              <span class="cm-cross-swatch__name">{{ sib_color_label | default: sib.title }}</span>
-            </a>
+{%- if cm_color_option != blank and cm_color_option.values.size > 1 -%}
+  <div class="cm-picker cm-inline-color-swatches">
+    <p class="cm-picker__label">
+      <span>Color:</span>
+      <strong data-cm-picker-value>{{ cm_color_option.selected_value }}</strong>
+    </p>
+    <div class="cm-picker__row">
+      {%- for value in cm_color_option.values -%}
+        {%- assign _matched = nil -%}
+        {%- for v in product.variants -%}
+          {%- if v.options[cm_color_index] == value -%}
+            {%- assign _matched = v -%}
+            {%- break -%}
           {%- endif -%}
         {%- endfor -%}
-      </div>
+        <button
+          type="button"
+          class="cm-picker__thumb{% if value == cm_color_option.selected_value %} is-active{% endif %}{% unless _matched.available %} is-sold-out{% endunless %}"
+          data-option-name="{{ cm_color_option.name | escape }}"
+          data-option-value="{{ value | escape }}"
+          title="{{ value }}"
+          aria-label="{{ value }}{% unless _matched.available %} – sold out{% endunless %}"
+        >
+          {%- if _matched.image -%}
+            <img src="{{ _matched.image | image_url: width: 120 }}"
+                 alt="{{ value | escape }}" width="44" height="58" loading="lazy">
+          {%- else -%}
+            <span class="cm-picker__thumb-fallback">{{ value | truncate: 5, '' }}</span>
+          {%- endif -%}
+        </button>
+      {%- endfor -%}
     </div>
-  {%- endif -%}
-{%- else -%}
-  {%- comment -%} Fallback: iterate collections.all (limited to first 250 products). {%- endcomment -%}
-  {%- assign group_id = '' -%}
-  {%- for t in product.tags -%}
-    {%- if t contains 'color-group:' -%}
-      {%- assign group_id = t | remove: 'color-group:' | strip -%}
-    {%- endif -%}
-  {%- endfor -%}
-  {%- if group_id != blank -%}
-    {%- assign target_tag = 'color-group:' | append: group_id -%}
-    {%- assign sibling_count = 0 -%}
-    {%- for p in collections.all.products limit: 250 -%}
-      {%- if p.tags contains target_tag -%}
-        {%- assign sibling_count = sibling_count | plus: 1 -%}
-      {%- endif -%}
-    {%- endfor -%}
-
-    {%- if sibling_count > 1 -%}
-      <div class="cm-picker cm-cross-swatches">
-        <p class="cm-picker__label">
-          <span>Color:</span>
-          <strong>{{ this_color_label | default: 'Select' }}</strong>
-        </p>
-        <div class="cm-cross-swatches__row">
-          {%- for sib in collections.all.products limit: 250 -%}
-            {%- if sib.tags contains target_tag -%}
-              {%- capture titlecase_sib2 -%}
-                {%- for t in sib.tags -%}
-                  {%- if t contains 'color:' -%}
-                    {%- unless t contains 'color-group' -%}
-                      {%- assign raw = t | remove: 'color:' | strip -%}
-                      {%- assign parts = raw | split: '-' -%}
-                      {%- for p in parts -%}{%- if forloop.first == false %} {% endif %}{{ p | capitalize }}{%- endfor -%}
-                    {%- endunless -%}
-                  {%- endif -%}
-                {%- endfor -%}
-              {%- endcapture -%}
-              {%- assign sib_color_label = titlecase_sib2 | strip -%}
-              <a href="{{ sib.url }}" class="cm-cross-swatch {% if sib.id == product.id %}is-active{% endif %}"
-                 title="{{ sib_color_label | default: sib.title | escape }}">
-                <span class="cm-cross-swatch__thumb">
-                  {%- if sib.featured_image -%}
-                    <img src="{{ sib.featured_image | image_url: width: 160 }}" alt="{{ sib_color_label | escape }}" width="60" height="76" loading="lazy">
-                  {%- endif -%}
-                </span>
-                <span class="cm-cross-swatch__name">{{ sib_color_label | default: sib.title }}</span>
-              </a>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-      </div>
-    {%- endif -%}
-  {%- endif -%}
+  </div>
 {%- endif -%}

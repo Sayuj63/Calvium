@@ -14,10 +14,7 @@
   {%- assign percent_off = compare | minus: current_variant.price | times: 100.0 | divided_by: compare | round -%}
 {%- endif -%}
 
-{%- assign has_cross_group = false -%}
-{%- for tg in product.tags -%}
-  {%- if tg contains 'color-group:' -%}{%- assign has_cross_group = true -%}{%- endif -%}
-{%- endfor -%}
+
 
 <style>
   .cm-pdp-im { color: var(--cm-ink); font-family: var(--cm-font-body); background: #fff; }
@@ -255,10 +252,7 @@
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
             {%- assign lower_name = option.name | downcase -%}
-            {%- if has_cross_group -%}
-              {%- if lower_name contains 'color' or lower_name contains 'colour' -%}{%- continue -%}{%- endif -%}
-              {%- if lower_name == 'title' -%}{%- continue -%}{%- endif -%}
-            {%- endif -%}
+
             {%- if lower_name == 'title' and option.values.size == 1 and option.selected_value == 'Default Title' -%}
               {%- continue -%}
             {%- endif -%}
