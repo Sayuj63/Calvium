@@ -2573,23 +2573,3 @@ iframe[src*="recaptcha"],
   .cm-colltoolbar__count { grid-column: 1 / -1; padding-inline-start: 0; }
   .cm-colltoolbar__panel { width: calc(100vw - 32px); }
 }
-
-/* ==========================================================================
-   Footer alignment fix — 2026-08
-   Problem: Policy / Contact pages use .cm-container (max-width 1360px,
-   padding-inline clamp(16px,3vw,32px)) for their content sections.
-   The footer uses Shopify's .section.section--page-width which has its own
-   --page-margin padding. At wide viewports the two gutters mismatch, making
-   the footer columns look misaligned vs. the page content above.
-   Fix: on these pages, constrain the footer's inner wrapper to the same
-   1360px + clamp gutter so the columns line up with every other page section.
-   The homepage is unaffected because its sections all use the same Shopify
-   block system with consistent --page-margin.
-   ========================================================================== */
-.shopify-section-group-footer-group .section--page-width .section-content-wrapper,
-.shopify-section-group-footer-group .section--page-width .layout-panel-flex {
-  max-width: var(--cm-container, 1360px);
-  margin-inline: auto;
-  padding-inline: clamp(16px, 3vw, 32px);
-  box-sizing: border-box;
-}
