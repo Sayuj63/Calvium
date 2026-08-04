@@ -7,7 +7,7 @@
 {{ 'calvium-miraggio.css' | asset_url | stylesheet_tag }}
 
 <section class="cm-policy" style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;">
-  <div class="cm-container cm-policy__container">
+  <div class="page-width cm-policy__container">
     {%- if section.settings.show_breadcrumb -%}
       <p class="cm-policy__crumb">
         <a href="{{ routes.root_url }}">Home</a>
