@@ -300,6 +300,36 @@ label[for^="Products-per-page-"] {
 .product-form .quantity__button {
   background-color: #ffffff;
 }
+
+/* Calvium leather colour swatches — fixed palette until swatch media is
+   configured in Shopify. Used by PDP variant pickers and collection cards. */
+.color-swacth-color--midnight-black { --swatch--background-color: #101010 !important; }
+.color-swacth-color--cognac-tan { --swatch--background-color: #a9571e !important; }
+.color-swacth-color--havana-brown { --swatch--background-color: #593426 !important; }
+.color-swacth-color--forest-green { --swatch--background-color: #123b28 !important; }
+.color-swacth-color--river-clay { --swatch--background-color: #75695b !important; }
+.color-swacth-color--golden-khaki { --swatch--background-color: #9e7938 !important; }
+.color-swacth-color--morning-sage { --swatch--background-color: #89947a !important; }
+.color-swacth-color--ivory-cream { --swatch--background-color: #f0e9da !important; }
+.color-swacth-color--slate-blue { --swatch--background-color: #526f8b !important; }
+.color-swacth-color--navy-dusk { --swatch--background-color: #101d36 !important; }
+.color-swacth-color--bordeaux { --swatch--background-color: #6f1e2b !important; }
+.color-swacth-color--espresso { --swatch--background-color: #2e1d17 !important; }
+.color-swacth-color--ash-grey { --swatch--background-color: #85827f !important; }
+
+.cm-picker__thumb[data-option-value="Midnight Black"], .cm-card__swatch--color[title="Midnight Black"] { background: #101010 !important; }
+.cm-picker__thumb[data-option-value="Cognac Tan"], .cm-card__swatch--color[title="Cognac Tan"] { background: #a9571e !important; }
+.cm-picker__thumb[data-option-value="Havana Brown"], .cm-card__swatch--color[title="Havana Brown"] { background: #593426 !important; }
+.cm-picker__thumb[data-option-value="Forest Green"], .cm-card__swatch--color[title="Forest Green"] { background: #123b28 !important; }
+.cm-picker__thumb[data-option-value="River Clay"], .cm-card__swatch--color[title="River Clay"] { background: #75695b !important; }
+.cm-picker__thumb[data-option-value="Golden Khaki"], .cm-card__swatch--color[title="Golden Khaki"] { background: #9e7938 !important; }
+.cm-picker__thumb[data-option-value="Morning Sage"], .cm-card__swatch--color[title="Morning Sage"] { background: #89947a !important; }
+.cm-picker__thumb[data-option-value="Ivory Cream"], .cm-card__swatch--color[title="Ivory Cream"] { background: #f0e9da !important; }
+.cm-picker__thumb[data-option-value="Slate Blue"], .cm-card__swatch--color[title="Slate Blue"] { background: #526f8b !important; }
+.cm-picker__thumb[data-option-value="Navy Dusk"], .cm-card__swatch--color[title="Navy Dusk"] { background: #101d36 !important; }
+.cm-picker__thumb[data-option-value="Bordeaux"], .cm-card__swatch--color[title="Bordeaux"] { background: #6f1e2b !important; }
+.cm-picker__thumb[data-option-value="Espresso"], .cm-card__swatch--color[title="Espresso"] { background: #2e1d17 !important; }
+.cm-picker__thumb[data-option-value="Ash Grey"], .cm-card__swatch--color[title="Ash Grey"] { background: #85827f !important; }
 .product-form .quantity__button:hover {
   background-color: #f5f5f5;
 }
