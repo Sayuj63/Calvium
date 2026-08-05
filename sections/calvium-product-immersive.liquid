@@ -268,8 +268,6 @@
                     <button type="button" class="cm-picker__thumb {% if value == option.selected_value %}is-active{% endif %}" data-option-name="{{ option.name | escape }}" data-option-value="{{ value | escape }}" title="{{ value }}">
                       {%- if v_variant.featured_image -%}
                         <img src="{{ v_variant.featured_image | image_url: width: 120 }}" alt="{{ value | escape }}" width="44" height="58" loading="lazy">
-                      {%- else -%}
-                        <span class="cm-picker__thumb-fallback">{{ value }}</span>
                       {%- endif -%}
                     </button>
                   {%- endfor -%}
