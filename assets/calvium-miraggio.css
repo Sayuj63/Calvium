@@ -1435,6 +1435,13 @@
   width: 32px; border: 0; text-align: center;
   font-size: 13px; font-weight: 600;
   background: transparent;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.cm-cart__qty input::-webkit-inner-spin-button,
+.cm-cart__qty input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 .cm-cart__remove {
   background: none; border: 0;
