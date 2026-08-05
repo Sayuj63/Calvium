@@ -31,6 +31,39 @@
 {% comment %} Calvium overrides — must load LAST so it wins specificity {% endcomment %}
 <link rel="stylesheet" href="{{ 'calvium-overrides.css' | asset_url }}">
 
+{% comment %} Calvium leather swatch textures — temporary hard-coded mapping. {% endcomment %}
+<style>
+  .color-swacth-color--midnight-black { --swatch--background: url({{ 'cm-swatch-midnight-black.png' | asset_url }}) !important; }
+  .color-swacth-color--cognac-tan { --swatch--background: url({{ 'cm-swatch-cognac-tan.png' | asset_url }}) !important; }
+  .color-swacth-color--havana-brown { --swatch--background: url({{ 'cm-swatch-havana-brown.png' | asset_url }}) !important; }
+  .color-swacth-color--forest-green { --swatch--background: url({{ 'cm-swatch-forest-green.png' | asset_url }}) !important; }
+  .color-swacth-color--river-clay { --swatch--background: url({{ 'cm-swatch-river-clay.png' | asset_url }}) !important; }
+  .color-swacth-color--golden-khaki { --swatch--background: url({{ 'cm-swatch-golden-khaki.png' | asset_url }}) !important; }
+  .color-swacth-color--morning-sage { --swatch--background: url({{ 'cm-swatch-morning-sage.png' | asset_url }}) !important; }
+  .color-swacth-color--ivory-cream { --swatch--background: url({{ 'cm-swatch-ivory-cream.png' | asset_url }}) !important; }
+  .color-swacth-color--slate-blue { --swatch--background: url({{ 'cm-swatch-slate-blue.png' | asset_url }}) !important; }
+  .color-swacth-color--navy-dusk { --swatch--background: url({{ 'cm-swatch-navy-dusk.png' | asset_url }}) !important; }
+  .color-swacth-color--bordeaux { --swatch--background: url({{ 'cm-swatch-bordeaux.png' | asset_url }}) !important; }
+  .color-swacth-color--espresso { --swatch--background: url({{ 'cm-swatch-espresso.png' | asset_url }}) !important; }
+  .color-swacth-color--ash-grey { --swatch--background: url({{ 'cm-swatch-ash-grey.png' | asset_url }}) !important; }
+
+  .cm-picker__thumb[data-option-value="Midnight Black"], .cm-card__swatch--color[title="Midnight Black"] { background-image: url({{ 'cm-swatch-midnight-black.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Cognac Tan"], .cm-card__swatch--color[title="Cognac Tan"] { background-image: url({{ 'cm-swatch-cognac-tan.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Havana Brown"], .cm-card__swatch--color[title="Havana Brown"] { background-image: url({{ 'cm-swatch-havana-brown.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Forest Green"], .cm-card__swatch--color[title="Forest Green"] { background-image: url({{ 'cm-swatch-forest-green.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="River Clay"], .cm-card__swatch--color[title="River Clay"] { background-image: url({{ 'cm-swatch-river-clay.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Golden Khaki"], .cm-card__swatch--color[title="Golden Khaki"] { background-image: url({{ 'cm-swatch-golden-khaki.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Morning Sage"], .cm-card__swatch--color[title="Morning Sage"] { background-image: url({{ 'cm-swatch-morning-sage.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Ivory Cream"], .cm-card__swatch--color[title="Ivory Cream"] { background-image: url({{ 'cm-swatch-ivory-cream.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Slate Blue"], .cm-card__swatch--color[title="Slate Blue"] { background-image: url({{ 'cm-swatch-slate-blue.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Navy Dusk"], .cm-card__swatch--color[title="Navy Dusk"] { background-image: url({{ 'cm-swatch-navy-dusk.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Bordeaux"], .cm-card__swatch--color[title="Bordeaux"] { background-image: url({{ 'cm-swatch-bordeaux.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Espresso"], .cm-card__swatch--color[title="Espresso"] { background-image: url({{ 'cm-swatch-espresso.png' | asset_url }}) !important; }
+  .cm-picker__thumb[data-option-value="Ash Grey"], .cm-card__swatch--color[title="Ash Grey"] { background-image: url({{ 'cm-swatch-ash-grey.png' | asset_url }}) !important; }
+
+  .cm-picker__thumb, .cm-card__swatch--color { background-size: cover !important; background-position: center !important; }
+</style>
+
 {% comment %} Fallback for browsers that don't support preload {% endcomment %}
 <noscript>
   <link rel="stylesheet" href="{{ 'section.css' | asset_url }}">
