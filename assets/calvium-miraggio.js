@@ -435,8 +435,15 @@
         }
       }
       if (variant.featured_image?.src) {
-        const mainImg = document.querySelector(".cm-pdp-lux__main-img, .cm-pdp-ed__main-img, [data-cm-main-image]");
-        if (mainImg) mainImg.src = variant.featured_image.src.replace(/(\.(jpg|jpeg|png|webp))/i, "_800x$1");
+        // All Calvium PDP templates use the variant's featured image as the
+        // colour source.  The immersive PDP has its own main-image hook, so
+        // include it here as well; otherwise its swatches changed the cart
+        // variant but left the gallery showing the previous colour.
+        const mainImg = document.querySelector(".cm-pdp-lux__main-img, .cm-pdp-ed__main-img, [data-cm-main-image], [data-cm-pdp-main-img]");
+        if (mainImg) {
+          mainImg.src = variant.featured_image.src;
+          mainImg.removeAttribute("srcset");
+        }
       }
     };
     form.querySelectorAll(".cm-picker__thumb, .cm-picker__pill").forEach((btn) => {
