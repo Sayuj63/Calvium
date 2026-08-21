@@ -2717,15 +2717,13 @@ iframe[src*="recaptcha"],
   footer .cm-container,
   .shopify-section-group-footer-group .cm-container { }
 
-  /* CONTACT US heading center-aligned */
-  .shopify-section-group-footer-group [class*="footer_column"] h1:has(strong),
-  .shopify-section-group-footer-group [class*="footer_column"] h2:has(strong),
-  .shopify-section-group-footer-group [class*="footer_column"] h3:has(strong),
-  .shopify-section-group-footer-group [class*="footer_column"] h4:has(strong),
-  .shopify-section-group-footer-group [class*="footer_column"] h5:has(strong),
-  .shopify-section-group-footer-group [class*="footer_column"] h6:has(strong) {
-    text-align: center;
-    width: 100%;
+  /* CONTACT US heading center-aligned.
+     The block is a text-block whose <p> wraps <strong>CONTACT US</strong>.
+     Shopify rejects inline style on the <p>, so we target the text-block
+     that contains a <strong> element (the heading pattern) and center it. */
+  .shopify-section-group-footer-group .text-block:has(> p > strong:only-child),
+  .shopify-section-group-footer-group .text-block:has(> p > strong:only-child) p {
+    text-align: center !important;
   }
 
   /* Tighten column & block gaps in the footer stack on mobile */

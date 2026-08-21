@@ -503,7 +503,7 @@
                       "type": "text",
                       "name": "Heading",
                       "settings": {
-                        "text": "<p style=\"text-align:center;\"><strong>CONTACT US</strong></p>",
+                        "text": "<p><strong>CONTACT US</strong></p>",
                         "collection_description_only": false,
                         "collapse_text": false,
                         "typing_text": false,
