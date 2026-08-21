@@ -2662,3 +2662,210 @@ iframe[src*="recaptcha"],
 .cm-cart__rec-media {
   aspect-ratio: 4 / 5;
 }
+
+/* ============================================================
+   Mobile UI batch — 2026-08-21
+   Fixes bundled together after design review screenshots.
+   ============================================================ */
+
+/* 1. PDP gallery — thumbnails switch from a 5-column grid to a
+      horizontal-scroll strip on mobile. The color swatches also live in
+      a horizontal row further down the page; a wrapping grid of tiny
+      thumbnails visually competes with those swatches, so we make the
+      media thumbnails clearly a slider by giving them a fixed width and
+      overflow-x scrolling. */
+@media (max-width: 749px) {
+  .cm-pdp-im__thumbs {
+    display: flex;
+    grid-template-columns: none;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .cm-pdp-im__thumbs::-webkit-scrollbar { display: none; }
+  .cm-pdp-im__thumb {
+    flex: 0 0 22vw;
+    max-width: 96px;
+    min-width: 72px;
+    scroll-snap-align: start;
+  }
+}
+
+/* 2. "Recommended for you" (PDP) — cards were sized minmax(260px, 1fr)
+      which is fine on desktop but on a ~375px viewport minus 32px inline
+      padding, a single card fills the whole viewport and the neighbour
+      card is severely clipped. Shrink card width on mobile so ~1.6 cards
+      show and the neighbour is a visible peek instead of a hard crop. */
+@media (max-width: 749px) {
+  .cm-slider {
+    padding-inline: 16px;
+  }
+  .cm-slider__track {
+    grid-auto-columns: 62vw;
+    gap: 12px;
+  }
+}
+
+/* 3. Handled in sections/footer-group.json — nbsp glues "every day". */
+
+/* 4. Footer — mobile alignment + spacing.
+      CONTACT US heading centred, gaps tightened, social icons stay left. */
+@media (max-width: 749px) {
+  footer .cm-container,
+  .shopify-section-group-footer-group .cm-container { }
+
+  /* CONTACT US heading center-aligned */
+  .shopify-section-group-footer-group [class*="footer_column"] h1:has(strong),
+  .shopify-section-group-footer-group [class*="footer_column"] h2:has(strong),
+  .shopify-section-group-footer-group [class*="footer_column"] h3:has(strong),
+  .shopify-section-group-footer-group [class*="footer_column"] h4:has(strong),
+  .shopify-section-group-footer-group [class*="footer_column"] h5:has(strong),
+  .shopify-section-group-footer-group [class*="footer_column"] h6:has(strong) {
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Tighten column & block gaps in the footer stack on mobile */
+  .shopify-section-group-footer-group .layout-panel-flex { gap: 16px !important; }
+  .shopify-section-group-footer-group [class*="_footer-column"] { gap: 16px !important; }
+  .shopify-section-group-footer-group [class*="_footer-column"] .text-block { margin-block: 0 !important; }
+  footer .text-block:has(a[href^="https://maps.google.com/"]) {
+    margin-bottom: 12px !important;
+  }
+
+  /* Social icons — keep left-aligned (rule already exists in
+     sections/footer.liquid) but tighten the top gap */
+  footer .social-icons-block,
+  footer .list-social,
+  footer ul.list-social {
+    margin-top: 6px !important;
+    gap: 10px !important;
+  }
+}
+
+/* 5. Cart-drawer empty state — the Continue Shopping .button was
+      inheriting a hover state that made the label vanish against the
+      dark fill. Force readable contrast in both states, and drop the
+      dark background box in the empty view so "Your cart is empty"
+      is not sitting on top of a solid black rectangle. */
+.cart-drawer__empty-content .button,
+.cart-drawer__empty-content a.button {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000 !important;
+}
+.cart-drawer__empty-content .button:hover,
+.cart-drawer__empty-content a.button:hover {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: #000 !important;
+}
+.cart-drawer__empty-content .button .button-text-main,
+.cart-drawer__empty-content a.button .button-text-main {
+  color: inherit !important;
+}
+
+/* 6. Collection toolbar — mobile: Filters and Sort share row 1, count
+      drops to row 2. Screenshot showed count on row 2 and sort on row 3
+      because the count spanned 1/-1 and pushed sort down. */
+@media (max-width: 640px) {
+  .cm-colltoolbar {
+    grid-template-columns: auto 1fr;
+    row-gap: 10px;
+    column-gap: 12px;
+  }
+  .cm-colltoolbar__filters { grid-column: 1; grid-row: 1; justify-self: start; }
+  .cm-colltoolbar__sortwrap { grid-column: 2; grid-row: 1; justify-self: end; }
+  .cm-colltoolbar__count { grid-column: 1 / -1; grid-row: 2; padding-inline-start: 2px; }
+}
+
+/* 7. Mobile drawer submenu — sublink font-family was inheriting from
+      the Shopify theme body font, giving it a different rendered weight
+      to the top-level links. Pin both to var(--cm-font-body) so the
+      family + weight match top-to-bottom. */
+.cm-mobile-drawer__sublink,
+.cm-mobile-drawer__summary,
+.cm-mobile-drawer__submenu {
+  font-family: var(--cm-font-body);
+}
+
+/* 8. Collection product card ATC — "ADD TO CART" was wrapping to two
+      lines on narrow cards because the label ships with 0.12em letter
+      spacing. Force single line + shrink letter-spacing slightly on
+      narrow viewports so it fits. */
+.cm-card__atc {
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .cm-card__atc {
+    letter-spacing: 0.06em;
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+}
+
+/* 9. Hero CTA — on mobile the primary button was stretching to 320px
+      max-width with full-width fill. Result: "SHOP THE EDIT" reads as
+      a slab on a phone. Give it a natural width so it looks like a
+      button, not a banner. */
+@media (max-width: 749px) {
+  .cm-hero__ctas {
+    width: auto;
+    max-width: none;
+    align-items: flex-start;
+  }
+  .cm-hero .cm-hero__btn {
+    width: auto;
+    min-width: 0;
+    padding: 12px 22px;
+    min-height: 44px;
+    font-size: 11px;
+  }
+  .cm-hero--align-center .cm-hero__ctas { align-items: center; }
+}
+
+/* 10. NEW IN — auto-scrolling carousel on mobile too. Same animation
+       as desktop; smaller card width so 2.2 cards are visible.
+       `!important` on the display + [data-cm-cat-dup] rules because
+       miraggio.css ships the mobile grid + duplicate-hide with equal
+       specificity, and section stylesheet_tags can load after this file
+       in the DOM. */
+@media (max-width: 899px) {
+  .cm-cats.cm-cats--carousel {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    overflow: hidden;
+    position: relative;
+    padding-inline: 16px;
+  }
+  .cm-cats--carousel .cm-cats__track {
+    display: flex !important;
+    gap: 12px;
+    width: 100%;
+    will-change: transform;
+    animation: cmCatsScrollMobile 22s linear infinite;
+  }
+  .cm-cats--carousel:hover .cm-cats__track,
+  .cm-cats--carousel:focus-within .cm-cats__track {
+    animation-play-state: paused;
+  }
+  .cm-cats--carousel .cm-cat {
+    flex: 0 0 46%;
+    aspect-ratio: 3 / 4;
+  }
+  .cm-cats--carousel [data-cm-cat-dup] { display: flex !important; }
+  @keyframes cmCatsScrollMobile {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(calc(-100% - 12px), 0, 0); }
+  }
+}
+@media (max-width: 899px) and (prefers-reduced-motion: reduce) {
+  .cm-cats--carousel .cm-cats__track {
+    animation: none !important;
+    transform: none !important;
+  }
+}

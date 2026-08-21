@@ -188,7 +188,7 @@
                   "type": "text",
                   "name": "Text",
                   "settings": {
-                    "text": "<p>Considered leather essentials, crafted for every day.<br/>Made to be lived in — for years, not seasons.</p>",
+                    "text": "<p>Considered leather essentials, crafted for every&nbsp;day.<br/>Made to be lived in — for years, not seasons.</p>",
                     "collection_description_only": false,
                     "collapse_text": false,
                     "typing_text": false,
@@ -503,7 +503,7 @@
                       "type": "text",
                       "name": "Heading",
                       "settings": {
-                        "text": "<p><strong>CONTACT US</strong></p>",
+                        "text": "<p style=\"text-align:center;\"><strong>CONTACT US</strong></p>",
                         "collection_description_only": false,
                         "collapse_text": false,
                         "typing_text": false,
