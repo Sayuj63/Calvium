@@ -2714,28 +2714,34 @@ iframe[src*="recaptcha"],
       CONTACT US heading centred, gaps tightened, social icons LEFT.
       An older rule at .section-footer [id*="_social_icons_"] centres the
       icons — explicitly reverse it on mobile below. */
-/* Footer CONTACT US heading — LEFT-aligned to match the address block
-   underneath it. Target the block by Shopify block ID so we don't
-   depend on :has() support or markup shape. */
-.shopify-section-group-footer-group .text-block--text_Uy4xbz,
-footer .text-block--text_Uy4xbz {
+/* Footer CONTACT US heading — LEFT-aligned to match the address block.
+   IMPORTANT: Shopify emits the class as
+   `text-block--<SECTION_ID>__<BLOCK_ID>` (e.g.
+   `text-block--ATGRMVXY3WEFPVWRUQ__text_Uy4xbz`). The section ID changes
+   whenever the theme is duplicated / the section is re-added, so we use
+   a substring attribute selector on the block ID (`text_Uy4xbz`) which
+   is stable across section-ID churn. */
+.shopify-section-group-footer-group [class*="__text_Uy4xbz"],
+footer [class*="__text_Uy4xbz"] {
   align-self: flex-start !important;
   margin-inline: 0 !important;
+  margin-left: 0 !important;
   width: 100% !important;
   max-width: none !important;
   text-align: left !important;
   justify-content: flex-start !important;
+  align-items: flex-start !important;
 }
-.shopify-section-group-footer-group .text-block--text_Uy4xbz > *,
-.shopify-section-group-footer-group .text-block--text_Uy4xbz p,
-.shopify-section-group-footer-group .text-block--text_Uy4xbz strong,
-footer .text-block--text_Uy4xbz > *,
-footer .text-block--text_Uy4xbz p,
-footer .text-block--text_Uy4xbz strong {
+.shopify-section-group-footer-group [class*="__text_Uy4xbz"] > *,
+.shopify-section-group-footer-group [class*="__text_Uy4xbz"] p,
+.shopify-section-group-footer-group [class*="__text_Uy4xbz"] strong,
+footer [class*="__text_Uy4xbz"] > *,
+footer [class*="__text_Uy4xbz"] p,
+footer [class*="__text_Uy4xbz"] strong {
   text-align: left !important;
   width: auto !important;
-  display: inline !important;
   margin-inline: 0 !important;
+  margin-left: 0 !important;
 }
 
 @media (max-width: 749px) {
