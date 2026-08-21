@@ -100,6 +100,7 @@
         "cart_4F43pT",
         "wishlist_gGbpcz"
       ],
+      "disabled": true,
       "name": "Sticky toolbar mobile",
       "settings": {
         "icon_size": 20,
