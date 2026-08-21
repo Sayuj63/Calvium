@@ -128,16 +128,16 @@
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/WORK-ESSENTIAL.jpg",
-            "label": "Work Essential",
-            "link": "/collections/tote-bags"
+            "label": "Work Ready",
+            "link": "shopify://collections/work-ready"
           }
         },
         "tile_3": {
           "type": "tile",
           "settings": {
             "image": "shopify://shop_images/AFTER-HOURS.jpg",
-            "label": "After Hours",
-            "link": "/collections/clutches"
+            "label": "On the Move",
+            "link": "shopify://collections/on-the-move"
           }
         },
         "tile_4": {
@@ -145,7 +145,7 @@
           "settings": {
             "image": "shopify://shop_images/NEW-COLLECTION.jpg",
             "label": "New Collection",
-            "link": "/collections/new-arrivals"
+            "link": "shopify://collections/new-arrivals"
           }
         }
       },
