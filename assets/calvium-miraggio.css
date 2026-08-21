@@ -533,9 +533,10 @@
   gap: 2px;
 }
 .cm-mobile-drawer__subheading {
-  font-family: var(--cm-font-heading);
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-family: var(--cm-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--cm-ink-50);
   margin: 12px 0 6px;
