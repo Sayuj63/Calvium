@@ -2626,3 +2626,39 @@ iframe[src*="recaptcha"],
 .cm-card:hover .cm-card__img--secondary {
   transform: none;
 }
+
+
+/* ----- 27. Remaining cropped image frames — full-site audit 2026-08-21 -----
+   Measured every live image against the frame it renders in. `cover` is kept
+   wherever the image is a full-bleed editorial backdrop (hero, spotlight,
+   lookbook) or a small decorative thumb, because cropping is the intent there.
+   It is replaced only where the product or tile artwork is the subject.
+
+   Homepage category tiles: all four sources are 472x531 (0.889 w/h) in a 3/4
+   frame, losing 15.6% off each side. These carry an overlaid label so `contain`
+   would letterbox badly — instead the frame is retuned to 8/9 to match the
+   source exactly, which removes the crop with no layout change. */
+.cm-cat,
+.cm-cats--carousel .cm-cat {
+  aspect-ratio: 8 / 9;
+}
+
+/* Instagram grid: sources are 0.666–0.80 w/h portrait in a 1/1 frame, losing
+   20–33% off top and bottom. 4/5 is Instagram's own portrait ratio, so half
+   these tiles become an exact fit and the rest halve their crop. Still `cover` —
+   these are lifestyle shots, not product cutouts. */
+.cm-igfeed__tile {
+  aspect-ratio: 4 / 5;
+}
+
+/* Header mega-menu preview and cart-drawer recommendations both render product
+   photography, so they get the same treatment as the product cards above. */
+.cm-mega__preview img,
+.cm-cart__rec-media img {
+  object-fit: contain;
+  padding: 5%;
+  box-sizing: border-box;
+}
+.cm-cart__rec-media {
+  aspect-ratio: 4 / 5;
+}

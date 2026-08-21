@@ -75,10 +75,15 @@
   .cm-pdp-im__gallery { display: flex; flex-direction: column; gap: 12px; }
   .cm-pdp-im__main {
     background: var(--cm-cream-deep);
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
   }
-  .cm-pdp-im__main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* `contain`, not `cover`: catalogue photography spans 0.67–1.27 w/h, so a cover fit
+     in a fixed frame clipped 41 of 62 images by over 10% (worst case 41% of the width). */
+  .cm-pdp-im__main img {
+    width: 100%; height: 100%; object-fit: contain; display: block;
+    padding: 3%; box-sizing: border-box;
+  }
   .cm-pdp-im__thumbs {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -86,12 +91,15 @@
   }
   .cm-pdp-im__thumb {
     padding: 0; border: 1px solid var(--cm-ink-08); background: var(--cm-cream);
-    aspect-ratio: 3 / 4; overflow: hidden; cursor: pointer;
+    aspect-ratio: 4 / 5; overflow: hidden; cursor: pointer;
     transition: border-color 120ms ease, transform 150ms ease;
   }
   .cm-pdp-im__thumb:hover { transform: translateY(-1px); }
   .cm-pdp-im__thumb.is-active { border-color: var(--cm-ink); border-width: 2px; }
-  .cm-pdp-im__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cm-pdp-im__thumb img {
+    width: 100%; height: 100%; object-fit: contain; display: block;
+    padding: 4%; box-sizing: border-box;
+  }
 
   .cm-pdp-im__info {
     display: flex; flex-direction: column; gap: 14px;
@@ -198,7 +206,7 @@
             srcset="{{ product.featured_media | image_url: width: 700 }} 700w, {{ product.featured_media | image_url: width: 1100 }} 1100w, {{ product.featured_media | image_url: width: 1400 }} 1400w"
             sizes="(max-width: 900px) 100vw, 55vw"
             alt="{{ product.featured_media.alt | escape }}"
-            width="1400" height="1866"
+            width="1400" height="1750"
             fetchpriority="high" data-cm-pdp-main-img
           >
         {%- endif -%}
@@ -207,7 +215,7 @@
         <div class="cm-pdp-im__thumbs">
           {%- for media in product.media limit: 10 -%}
             <button type="button" class="cm-pdp-im__thumb {% if forloop.first %}is-active{% endif %}" data-cm-pdp-thumb data-src="{{ media | image_url: width: 1400 }}">
-              <img src="{{ media | image_url: width: 240 }}" alt="{{ media.alt | escape }}" width="240" height="320" loading="lazy">
+              <img src="{{ media | image_url: width: 240 }}" alt="{{ media.alt | escape }}" width="240" height="300" loading="lazy">
             </button>
           {%- endfor -%}
         </div>
