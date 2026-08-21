@@ -2715,21 +2715,32 @@ iframe[src*="recaptcha"],
       An older rule at .section-footer [id*="_social_icons_"] centres the
       icons — explicitly reverse it on mobile below. */
 /* Footer CONTACT US heading — center-aligned at every viewport.
-   Shopify rejects inline `style` on <p> in text blocks, so we target the
-   text-block whose <p> wraps a lone <strong> (the heading shape) and
-   centre it here. Also handle the block-level flex parent so the
-   inline-width text block itself sits centred in its column. */
-.shopify-section-group-footer-group .text-block:has(> p > strong:only-child) {
+   Target the specific text block by its Shopify block ID
+   (text-block--text_Uy4xbz) so the rule survives without :has() support
+   (older Safari/Chrome) and doesn't depend on markup shape. The block's
+   `width: fit-content` setting makes centering via text-align alone
+   fragile — set width to auto and use margin-auto on the flex parent's
+   cross axis via align-self so the block itself sits centred in its
+   column, then centre the text inside it. */
+.shopify-section-group-footer-group .text-block--text_Uy4xbz,
+footer .text-block--text_Uy4xbz {
   align-self: center !important;
   margin-inline: auto !important;
-  text-align: center !important;
   width: 100% !important;
+  max-width: none !important;
+  text-align: center !important;
+  justify-content: center !important;
 }
-.shopify-section-group-footer-group .text-block:has(> p > strong:only-child) p,
-.shopify-section-group-footer-group .text-block:has(> p > strong:only-child) strong {
+.shopify-section-group-footer-group .text-block--text_Uy4xbz > *,
+.shopify-section-group-footer-group .text-block--text_Uy4xbz p,
+.shopify-section-group-footer-group .text-block--text_Uy4xbz strong,
+footer .text-block--text_Uy4xbz > *,
+footer .text-block--text_Uy4xbz p,
+footer .text-block--text_Uy4xbz strong {
   text-align: center !important;
-  display: block !important;
   width: 100% !important;
+  display: block !important;
+  margin-inline: auto !important;
 }
 
 @media (max-width: 749px) {
