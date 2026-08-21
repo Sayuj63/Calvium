@@ -2603,3 +2603,26 @@ iframe[src*="recaptcha"],
   .cm-colltoolbar__count { grid-column: 1 / -1; padding-inline-start: 0; }
   .cm-colltoolbar__panel { width: calc(100vw - 32px); }
 }
+
+
+/* ----- 26. Product cards — stop cropping the bag -----
+   Requested 2026-08-21: collection/grid cards look "zoomed in" and the bag's edges
+   get clipped. Same root cause as the PDP gallery fix above: `.cm-card__figure` forces
+   aspect-ratio 3/4 (0.75) while `.cm-card__img` uses `object-fit: cover`, but the
+   catalogue photography ranges 0.67–1.27 w/h — so square and landscape shots lose up
+   to 40% off their sides. `contain` keeps the whole product visible; the 4/5 frame is
+   closer to the 0.8–1.0 range most shots actually sit in, so `contain` wastes less
+   vertical space. Applies everywhere cm-product-card renders (collection grid,
+   Shop by Style, Most Loved, search, wishlist). */
+.cm-card__figure {
+  aspect-ratio: 4 / 5;
+}
+.cm-card__img {
+  object-fit: contain;
+  padding: 5%;
+  box-sizing: border-box;
+}
+/* The hover cross-fade scaled the secondary image up, which re-introduced the crop. */
+.cm-card:hover .cm-card__img--secondary {
+  transform: none;
+}
