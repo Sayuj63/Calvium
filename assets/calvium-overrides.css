@@ -2759,6 +2759,37 @@ footer [class*="__text_Uy4xbz"] strong {
   .shopify-section-group-footer-group details > summary { padding-block: 10px !important; }
   .shopify-section-group-footer-group details > summary + * { padding-block-start: 6px !important; }
 
+  /* Copyright row (© 2026, Calvium ...) — collapse the vertical
+     whitespace above it on mobile. The copyright sits inside
+     group_hKktDt which ships with margin-block-start:60 on desktop and
+     the parent section adds padding-block-end:20; on mobile that stacks
+     into a visible empty band above the copyright. Zero the top margin
+     and tighten the copyright block itself. */
+  .shopify-section-group-footer-group [class*="__group_hKktDt"],
+  footer [class*="__group_hKktDt"] {
+    margin-block-start: 0 !important;
+    margin-top: 0 !important;
+    padding-block-start: 8px !important;
+    gap: 4px !important;
+  }
+  .shopify-section-group-footer-group [class*="__group_dKwfCa"],
+  footer [class*="__group_dKwfCa"] {
+    margin-block-start: 0 !important;
+    padding-block-start: 0 !important;
+    gap: 4px !important;
+  }
+  .shopify-section-group-footer-group [class*="__text_eAyqj6"],
+  footer [class*="__text_eAyqj6"] {
+    margin-block-start: 0 !important;
+    padding-block-start: 0 !important;
+  }
+  /* Reduce the whole footer's bottom padding too so the copyright isn't
+     floating in a big block-end gap either. */
+  .shopify-section-group-footer-group .section,
+  .shopify-section-group-footer-group section-footer .section {
+    padding-block-end: 12px !important;
+  }
+
   /* Social icons — force LEFT alignment on mobile.
      Override .section-footer [id*="_social_icons_"] > .flex.flex-column
      which sets align-items: center. Higher specificity + !important. */
