@@ -544,8 +544,10 @@
   display: block;
   padding: 10px 0;
   color: var(--cm-ink);
-  font-size: 14px;
+  font-family: var(--cm-font-body);
+  font-size: 15px;
   font-weight: 500;
+  letter-spacing: 0;
   text-decoration: none;
 }
 .cm-mobile-drawer__sublink:active { color: var(--cm-ink-70); }
