@@ -2694,17 +2694,16 @@ iframe[src*="recaptcha"],
   }
 }
 
-/* 2. "Recommended for you" (PDP) — cards were sized minmax(260px, 1fr)
-      which is fine on desktop but on a ~375px viewport minus 32px inline
-      padding, a single card fills the whole viewport and the neighbour
-      card is severely clipped. Shrink card width on mobile so ~1.6 cards
-      show and the neighbour is a visible peek instead of a hard crop. */
+/* 2. "Recommended for you" / Most-Loved slider (mobile).
+      User wants the card wide enough that the product image reads as the
+      hero — not a shrunken preview. 82vw fills the viewport with a small
+      peek so the visitor knows they can swipe. */
 @media (max-width: 749px) {
   .cm-slider {
     padding-inline: 16px;
   }
   .cm-slider__track {
-    grid-auto-columns: 62vw;
+    grid-auto-columns: 82vw;
     gap: 12px;
   }
 }
@@ -2712,35 +2711,49 @@ iframe[src*="recaptcha"],
 /* 3. Handled in sections/footer-group.json — nbsp glues "every day". */
 
 /* 4. Footer — mobile alignment + spacing.
-      CONTACT US heading centred, gaps tightened, social icons stay left. */
+      CONTACT US heading centred, gaps tightened, social icons LEFT.
+      An older rule at .section-footer [id*="_social_icons_"] centres the
+      icons — explicitly reverse it on mobile below. */
 @media (max-width: 749px) {
-  footer .cm-container,
-  .shopify-section-group-footer-group .cm-container { }
-
-  /* CONTACT US heading center-aligned.
-     The block is a text-block whose <p> wraps <strong>CONTACT US</strong>.
-     Shopify rejects inline style on the <p>, so we target the text-block
-     that contains a <strong> element (the heading pattern) and center it. */
+  /* CONTACT US heading center-aligned. Shopify rejects inline `style`
+     on <p>, so we target the text-block whose <p> wraps a lone <strong>
+     (the heading shape) and center it from CSS. */
   .shopify-section-group-footer-group .text-block:has(> p > strong:only-child),
   .shopify-section-group-footer-group .text-block:has(> p > strong:only-child) p {
     text-align: center !important;
   }
 
-  /* Tighten column & block gaps in the footer stack on mobile */
-  .shopify-section-group-footer-group .layout-panel-flex { gap: 16px !important; }
-  .shopify-section-group-footer-group [class*="_footer-column"] { gap: 16px !important; }
+  /* Tighten column & block gaps in the mobile footer stack */
+  .shopify-section-group-footer-group .layout-panel-flex { gap: 12px !important; }
+  .shopify-section-group-footer-group [class*="_footer-column"] { gap: 12px !important; }
   .shopify-section-group-footer-group [class*="_footer-column"] .text-block { margin-block: 0 !important; }
+  .shopify-section-group-footer-group .spacing-style { --spacing-block-gap: 12px; }
   footer .text-block:has(a[href^="https://maps.google.com/"]) {
-    margin-bottom: 12px !important;
+    margin-bottom: 8px !important;
   }
+  /* Menu accordions (COLLECTIONS / HELP) — shrink vertical whitespace */
+  .shopify-section-group-footer-group [class*="menu"] { --menu-spacing: 8px; }
+  .shopify-section-group-footer-group details > summary { padding-block: 10px !important; }
+  .shopify-section-group-footer-group details > summary + * { padding-block-start: 6px !important; }
 
-  /* Social icons — keep left-aligned (rule already exists in
-     sections/footer.liquid) but tighten the top gap */
+  /* Social icons — force LEFT alignment on mobile.
+     Override .section-footer [id*="_social_icons_"] > .flex.flex-column
+     which sets align-items: center. Higher specificity + !important. */
+  .section-footer [id*="_social_icons_"],
+  .section-footer [id*="_social_icons_"] > .flex,
+  .section-footer [id*="_social_icons_"] > .flex.flex-column {
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+  .section-footer [id*="_social_icons_"] .list-social,
   footer .social-icons-block,
-  footer .list-social,
   footer ul.list-social {
-    margin-top: 6px !important;
-    gap: 10px !important;
+    justify-content: flex-start !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    margin-top: 4px !important;
+    gap: 12px !important;
+    width: auto !important;
   }
 }
 
@@ -2780,14 +2793,30 @@ iframe[src*="recaptcha"],
   .cm-colltoolbar__count { grid-column: 1 / -1; grid-row: 2; padding-inline-start: 2px; }
 }
 
-/* 7. Mobile drawer submenu — sublink font-family was inheriting from
-      the Shopify theme body font, giving it a different rendered weight
-      to the top-level links. Pin both to var(--cm-font-body) so the
-      family + weight match top-to-bottom. */
-.cm-mobile-drawer__sublink,
+/* 7. Mobile drawer — unify typography top-to-bottom.
+      Sublinks were inheriting the theme body font, which rendered at a
+      different weight/family than the top-level links. Pin every link
+      inside the drawer to var(--cm-font-body) with the same size + weight
+      as the top-level rows (15px / 500) so the menu reads as one block. */
+.cm-mobile-drawer,
+.cm-mobile-drawer__panel,
+.cm-mobile-drawer__link,
 .cm-mobile-drawer__summary,
-.cm-mobile-drawer__submenu {
-  font-family: var(--cm-font-body);
+.cm-mobile-drawer__submenu,
+.cm-mobile-drawer__sublink,
+.cm-mobile-drawer__subheading {
+  font-family: var(--cm-font-body) !important;
+}
+.cm-mobile-drawer__sublink {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+}
+.cm-mobile-drawer__link,
+.cm-mobile-drawer__summary {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
 }
 
 /* 8. Collection product card ATC — "ADD TO CART" was wrapping to two

@@ -73,6 +73,65 @@
   }
 
   .cm-pdp-im__gallery { display: flex; flex-direction: column; gap: 12px; }
+
+  /* Mobile carousel — swipe through media items one-at-a-time.
+     Hidden on desktop; the main + thumbnails layout below is what
+     desktop uses. */
+  .cm-pdp-im__carousel { display: none; }
+  .cm-pdp-im__dots { display: none; }
+  @media (max-width: 899px) {
+    .cm-pdp-im__carousel {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 0;
+      margin-inline: calc(-1 * clamp(16px, 3vw, 32px));
+    }
+    .cm-pdp-im__carousel::-webkit-scrollbar { display: none; }
+    .cm-pdp-im__slide {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      background: var(--cm-cream-deep);
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cm-pdp-im__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 3%;
+      box-sizing: border-box;
+      display: block;
+    }
+    .cm-pdp-im__dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding-top: 8px;
+    }
+    .cm-pdp-im__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--cm-ink-15);
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .cm-pdp-im__dot.is-active {
+      background: var(--cm-ink);
+      transform: scale(1.15);
+    }
+    /* On mobile hide the desktop main image + thumbnail grid; the
+       carousel above IS the mobile gallery. */
+    .cm-pdp-im__main,
+    .cm-pdp-im__thumbs { display: none !important; }
+  }
+
   .cm-pdp-im__main {
     background: var(--cm-cream-deep);
     aspect-ratio: 4 / 5;
@@ -199,15 +258,45 @@
 
   <div class="cm-pdp-im__grid">
     <div class="cm-pdp-im__gallery">
+      {%- comment -%}
+        Mobile gallery: full-bleed horizontal-scroll carousel of every media
+        item, one image per swipe. Replaces the "main + thumbnails below"
+        layout that visually competed with the color-swatch thumb row.
+        Rendered as a separate element and toggled with the desktop layout
+        via CSS media query — desktop still gets the main + thumbnails grid.
+      {%- endcomment -%}
+      <div class="cm-pdp-im__carousel" data-cm-pdp-carousel role="region" aria-roledescription="carousel" aria-label="Product images">
+        {%- for media in product.media -%}
+          <div class="cm-pdp-im__slide" data-cm-pdp-slide>
+            <img
+              src="{{ media | image_url: width: 1400 }}"
+              srcset="{{ media | image_url: width: 700 }} 700w, {{ media | image_url: width: 1100 }} 1100w, {{ media | image_url: width: 1400 }} 1400w"
+              sizes="100vw"
+              alt="{{ media.alt | escape }}"
+              width="1400" height="1750"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              {% if forloop.first %}fetchpriority="high"{% endif %}
+            >
+          </div>
+        {%- endfor -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <div class="cm-pdp-im__dots" data-cm-pdp-dots aria-hidden="true">
+          {%- for media in product.media -%}
+            <span class="cm-pdp-im__dot {% if forloop.first %}is-active{% endif %}" data-cm-pdp-dot="{{ forloop.index0 }}"></span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
       <div class="cm-pdp-im__main" data-cm-pdp-main>
         {%- if product.featured_media -%}
           <img
             src="{{ product.featured_media | image_url: width: 1400 }}"
             srcset="{{ product.featured_media | image_url: width: 700 }} 700w, {{ product.featured_media | image_url: width: 1100 }} 1100w, {{ product.featured_media | image_url: width: 1400 }} 1400w"
-            sizes="(max-width: 900px) 100vw, 55vw"
+            sizes="55vw"
             alt="{{ product.featured_media.alt | escape }}"
             width="1400" height="1750"
-            fetchpriority="high" data-cm-pdp-main-img
+            data-cm-pdp-main-img
           >
         {%- endif -%}
       </div>
@@ -398,6 +487,32 @@
         if (mainImg) mainImg.src = t.dataset.src;
       });
     });
+
+    // Mobile carousel: sync dots with active slide as user swipes.
+    var carousel = gallery.querySelector('[data-cm-pdp-carousel]');
+    var dots = gallery.querySelectorAll('[data-cm-pdp-dot]');
+    if (carousel && dots.length) {
+      var setActive = function(idx) {
+        dots.forEach(function(d, i) { d.classList.toggle('is-active', i === idx); });
+      };
+      var raf = null;
+      carousel.addEventListener('scroll', function() {
+        if (raf) return;
+        raf = requestAnimationFrame(function() {
+          raf = null;
+          var slideW = carousel.clientWidth;
+          if (!slideW) return;
+          var idx = Math.round(carousel.scrollLeft / slideW);
+          setActive(idx);
+        });
+      });
+      dots.forEach(function(d) {
+        d.addEventListener('click', function() {
+          var idx = parseInt(d.dataset.cmPdpDot, 10) || 0;
+          carousel.scrollTo({ left: idx * carousel.clientWidth, behavior: 'smooth' });
+        });
+      });
+    }
   })();
 </script>
 
