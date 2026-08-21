@@ -2714,14 +2714,25 @@ iframe[src*="recaptcha"],
       CONTACT US heading centred, gaps tightened, social icons LEFT.
       An older rule at .section-footer [id*="_social_icons_"] centres the
       icons — explicitly reverse it on mobile below. */
+/* Footer CONTACT US heading — center-aligned at every viewport.
+   Shopify rejects inline `style` on <p> in text blocks, so we target the
+   text-block whose <p> wraps a lone <strong> (the heading shape) and
+   centre it here. Also handle the block-level flex parent so the
+   inline-width text block itself sits centred in its column. */
+.shopify-section-group-footer-group .text-block:has(> p > strong:only-child) {
+  align-self: center !important;
+  margin-inline: auto !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+.shopify-section-group-footer-group .text-block:has(> p > strong:only-child) p,
+.shopify-section-group-footer-group .text-block:has(> p > strong:only-child) strong {
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+}
+
 @media (max-width: 749px) {
-  /* CONTACT US heading center-aligned. Shopify rejects inline `style`
-     on <p>, so we target the text-block whose <p> wraps a lone <strong>
-     (the heading shape) and center it from CSS. */
-  .shopify-section-group-footer-group .text-block:has(> p > strong:only-child),
-  .shopify-section-group-footer-group .text-block:has(> p > strong:only-child) p {
-    text-align: center !important;
-  }
 
   /* Tighten column & block gaps in the mobile footer stack */
   .shopify-section-group-footer-group .layout-panel-flex { gap: 12px !important; }
