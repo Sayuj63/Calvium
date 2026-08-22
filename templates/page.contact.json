@@ -209,8 +209,7 @@
       },
       "block_order": [
         "breadcrumb_ya6HVh",
-        "text_6EzwC6",
-        "text_REW8Uw"
+        "text_6EzwC6"
       ],
       "settings": {
         "content_direction": "column",
@@ -417,7 +416,7 @@
             "vertical_alignment_mobile": "center",
             "horizontal_alignment_flex_direction_column_mobile": "flex-start",
             "vertical_alignment_flex_direction_column_mobile": "center",
-            "gap": 80,
+            "gap": 24,
             "width": "fill",
             "custom_width": 100,
             "width_tablet": "fill",
@@ -542,8 +541,8 @@
                 "margin-inline-start-mobile": 0,
                 "margin-inline-end": 0,
                 "margin-inline-end-mobile": 0,
-                "padding-block-start": 55,
-                "padding-block-end": 20,
+                "padding-block-start": 20,
+                "padding-block-end": 0,
                 "padding-inline-start": 20,
                 "padding-inline-end": 20
               },
@@ -898,10 +897,10 @@
                 "margin-inline-start-mobile": 0,
                 "margin-inline-end": 0,
                 "margin-inline-end-mobile": 0,
-                "padding-block-start": 55,
-                "padding-block-end": 55,
-                "padding-inline-start": 55,
-                "padding-inline-end": 55
+                "padding-block-start": 20,
+                "padding-block-end": 40,
+                "padding-inline-start": 20,
+                "padding-inline-end": 20
               },
               "blocks": {
                 "text_GdNXmE": {
