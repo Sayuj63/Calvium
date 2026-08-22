@@ -445,6 +445,22 @@
           mainImg.removeAttribute("srcset");
         }
       }
+      // Mobile: scroll the carousel to the variant's featured media so
+      // the picker acts as the image switcher on touch devices.
+      const mediaId = variant.featured_media?.id || variant.featured_image?.id;
+      if (mediaId) {
+        const carousel = document.querySelector("[data-cm-pdp-carousel]");
+        if (carousel) {
+          const slides = carousel.querySelectorAll("[data-cm-pdp-slide]");
+          for (let i = 0; i < slides.length; i++) {
+            if (String(slides[i].dataset.cmMediaId) === String(mediaId)) {
+              const w = carousel.clientWidth || slides[i].clientWidth;
+              carousel.scrollTo({ left: i * w, behavior: "smooth" });
+              break;
+            }
+          }
+        }
+      }
     };
     form.querySelectorAll(".cm-picker__thumb, .cm-picker__pill").forEach((btn) => {
       btn.addEventListener("click", () => {

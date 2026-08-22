@@ -15,9 +15,20 @@
      Underline removed on request — links stay clickable and inherit colour. */
   footer .text-block a[href^="mailto:"],
   footer .text-block a[href^="tel:"],
-  footer .text-block a[href^="https://wa.me/"] {
+  footer .text-block a[href^="https://wa.me/"],
+  footer .text-block a[href^="https://maps.google.com/"],
+  footer .text-block a[href^="http://maps.google.com/"] {
     color: inherit;
     text-decoration: none;
+  }
+
+  /* Kill the horizontal divider lines that appear on mobile under
+     COLLECTIONS / HELP collapsibles — the design uses spacing, not rules. */
+  @media (max-width: 749px) {
+    footer .footer__content-top details.grid__item,
+    .shopify-section-group-footer-group .footer__content-top details.grid__item {
+      border-bottom: 0 !important;
+    }
   }
   /* WhatsApp / contact line — inline row with icon */
   footer .cm-contact-line {

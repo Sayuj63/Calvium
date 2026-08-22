@@ -94,7 +94,7 @@
     .cm-pdp-im__slide {
       flex: 0 0 100%;
       scroll-snap-align: start;
-      background: var(--cm-cream-deep);
+      background: #fff;
       aspect-ratio: 4 / 5;
       overflow: hidden;
       display: flex;
@@ -133,7 +133,7 @@
   }
 
   .cm-pdp-im__main {
-    background: var(--cm-cream-deep);
+    background: #fff;
     aspect-ratio: 4 / 5;
     overflow: hidden;
   }
@@ -267,7 +267,7 @@
       {%- endcomment -%}
       <div class="cm-pdp-im__carousel" data-cm-pdp-carousel role="region" aria-roledescription="carousel" aria-label="Product images">
         {%- for media in product.media -%}
-          <div class="cm-pdp-im__slide" data-cm-pdp-slide>
+          <div class="cm-pdp-im__slide" data-cm-pdp-slide data-cm-media-id="{{ media.id }}">
             <img
               src="{{ media | image_url: width: 1400 }}"
               srcset="{{ media | image_url: width: 700 }} 700w, {{ media | image_url: width: 1100 }} 1100w, {{ media | image_url: width: 1400 }} 1400w"

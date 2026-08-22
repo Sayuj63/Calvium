@@ -2467,6 +2467,16 @@ iframe[src*="recaptcha"],
   .cm-faqitem__q { font-size: 15px; padding: 18px 2px; }
 }
 
+/* Mobile FAQ: real breathing room between the search box, first
+   category, and each subsequent category heading. The default 40px
+   under the head + 64px above category titles reads as cramped in
+   the screenshots — bump both on small screens. */
+@media (max-width: 749px) {
+  .cm-faq__head { margin-bottom: 56px; }
+  .cm-faqgroup__title { margin: 56px 0 18px; padding-top: 8px; }
+  .cm-faqgroup:first-child .cm-faqgroup__title { margin-top: 24px; }
+}
+
 /* ============================================================
    Footer social icons — re-anchor. Previous fix targeted
    `.section-footer .list-social` but on rendered DOM the list is

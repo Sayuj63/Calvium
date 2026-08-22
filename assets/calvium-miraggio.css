@@ -71,6 +71,14 @@
   text-underline-offset: 5px;
   color: inherit;
   white-space: nowrap;
+  /* Ensure the anchor stays clickable above any sibling that may
+     overlap on mobile (e.g. the slider viewport's transform layer),
+     and give it a real tap target without changing visual size. */
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+  padding: 8px 4px;
+  margin: -8px -4px;
 }
 
 .cm-eyebrow {
@@ -595,7 +603,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 3 / 4;
-  background: var(--cm-cream-deep);
+  background: var(--cm-white);
   border-radius: var(--cm-radius-lg);
 }
 
@@ -2998,6 +3006,27 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Cart page CHECKOUT button — the theme's default hover slides the label
+   up and slides a rotated background overlay across. On touch devices the
+   :hover state sticks after a tap, so the overlay covers the "Checkout"
+   text mid-scroll. Freeze the hover animation on pointer:coarse so the
+   label stays visible after the tap. */
+@media (hover: none) {
+  .section--main-cart .cart__checkout-button:hover .button-text-main,
+  .cart-drawer .cart__checkout-button:hover .button-text-main {
+    transform: none;
+    opacity: 1;
+  }
+  .section--main-cart .cart__checkout-button:hover .button-overflow:after,
+  .cart-drawer .cart__checkout-button:hover .button-overflow:after {
+    transform: translateY(100%);
+  }
+  .section--main-cart .cart__checkout-button:hover:after,
+  .cart-drawer .cart__checkout-button:hover:after {
+    transform: translate(-50%, -50%) rotate3d(0, 0, 2, 20deg) translate3d(-1.2em, 105%, 0);
+  }
 }
 
 /* Hide the empty green line-item discounts container that renders as a bar
