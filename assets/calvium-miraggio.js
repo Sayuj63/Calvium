@@ -190,13 +190,52 @@
   });
 
   // -----------------------------------------------------------
-  // Cart drawer helpers
-  const cartEl = doc.querySelector("[data-cm-cart]");
-  function openCart() { cartEl && cartEl.classList.add("is-open"); }
-  function closeCart() { cartEl && cartEl.classList.remove("is-open"); }
-  doc.querySelectorAll("[data-cm-cart-open]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); openCart(); }));
-  doc.querySelectorAll("[data-cm-cart-close], [data-cm-cart-overlay]").forEach((b) => b.addEventListener("click", closeCart));
+  // Cart drawer helpers.
+  // Resolve the drawer element FRESH every call — refreshCartUI() does a
+  // DOM replaceWith() on the drawer node, so a captured reference from
+  // init-time becomes a detached ghost after the first refresh. Adding
+  // .is-open to that ghost was the "drawer doesn't open" bug.
+  function getCartEl() { return doc.querySelector("[data-cm-cart]"); }
+  function openCart() { const el = getCartEl(); if (el) el.classList.add("is-open"); }
+  function closeCart() { const el = getCartEl(); if (el) el.classList.remove("is-open"); }
+  window.cmOpenCart = openCart;
+  window.cmCloseCart = closeCart;
+  // Delegate open/close so buttons injected by refreshCartUI keep working.
+  doc.addEventListener("click", (e) => {
+    if (e.target.closest("[data-cm-cart-open]")) { e.preventDefault(); openCart(); return; }
+    if (e.target.closest("[data-cm-cart-close], [data-cm-cart-overlay]")) { closeCart(); return; }
+  });
   doc.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
+
+  // Tiny inline toast — used when we can't rely on the drawer being
+  // visible (network stall, refresh failure). Non-blocking, auto-clears.
+  function cmToast(message, tone) {
+    let host = doc.querySelector("[data-cm-toast-host]");
+    if (!host) {
+      host = doc.createElement("div");
+      host.setAttribute("data-cm-toast-host", "");
+      host.style.cssText = "position:fixed;left:0;right:0;top:16px;display:flex;justify-content:center;pointer-events:none;z-index:9999;";
+      doc.body.appendChild(host);
+    }
+    const t = doc.createElement("div");
+    t.textContent = message;
+    t.style.cssText = "pointer-events:auto;padding:10px 16px;border-radius:999px;font:500 13px/1.2 var(--cm-font-body,inherit);letter-spacing:.02em;background:" + (tone === "error" ? "#b12704" : "#111") + ";color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.18);opacity:0;transform:translateY(-6px);transition:opacity 180ms,transform 180ms;";
+    host.appendChild(t);
+    requestAnimationFrame(() => { t.style.opacity = "1"; t.style.transform = "none"; });
+    setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateY(-6px)"; setTimeout(() => t.remove(), 220); }, 2400);
+  }
+  window.cmToast = cmToast;
+
+  // Optimistic cart-bubble bump so the header count reacts in <16ms even
+  // if the section refresh takes a second. refreshCartUI() will overwrite
+  // with the server truth afterwards.
+  function bumpCartBubble(delta) {
+    doc.querySelectorAll("[data-cm-cart-count], .cm-icon-btn--cart .cm-cart-bubble, .cart-count-bubble").forEach((el) => {
+      const n = Math.max(0, (parseInt(el.textContent, 10) || 0) + (delta || 0));
+      el.textContent = String(n);
+      el.hidden = n === 0;
+    });
+  }
 
   // qty and remove buttons — AJAX to Shopify's cart API + Section
   // Rendering API refresh of the drawer + header cart bubble. No full
@@ -230,15 +269,32 @@
       } else if (btn.hasAttribute("data-cm-addon-add") || btn.hasAttribute("data-cm-rec-add")) {
         const variantId = btn.dataset.variantId;
         if (!variantId) return;
+        const insideDrawer = !!btn.closest("[data-cm-cart]");
+        const ctrl = new AbortController();
+        const killer = setTimeout(() => ctrl.abort(), 12000);
         try {
           const res = await fetch("/cart/add.js", {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
+            body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] }),
+            signal: ctrl.signal,
           });
-          if (res.ok) await refreshCartUI();
+          if (!res.ok) {
+            let msg = "Couldn't add — try again";
+            try { const err = await res.json(); if (err?.description) msg = err.description; } catch {}
+            cmToast(msg, "error");
+          } else {
+            bumpCartBubble(1);
+            // Open drawer on collection-card / cross-sell adds; skip if
+            // the click already originated inside the open drawer.
+            if (!insideDrawer) openCart();
+            refreshCartUI();
+          }
         } catch (err) {
-          console.warn("[cm] add failed", err);
+          const isTimeout = err && err.name === "AbortError";
+          cmToast(isTimeout ? "Network is slow — try again" : "Couldn't add — try again", "error");
+        } finally {
+          clearTimeout(killer);
         }
       }
     } finally {
@@ -476,18 +532,62 @@
       const isBuyNow = e.submitter?.name === "checkout";
       e.preventDefault();
       const atc = form.querySelector("[data-cm-atc]");
-      const label = atc?.textContent;
-      if (atc) atc.textContent = "Adding…";
+      const label = atc?.dataset.cmLabel || atc?.textContent;
+      // Cache the original label once so repeat clicks don't capture
+      // "Adding…" / "Added ✓" and permanently break the button copy.
+      if (atc && !atc.dataset.cmLabel) atc.dataset.cmLabel = label;
+      // In-flight lock: prevent tap-tap-tap from adding 2-3 dupes.
+      if (form.dataset.cmSubmitting === "1") return;
+      form.dataset.cmSubmitting = "1";
+      if (atc) { atc.setAttribute("disabled", ""); atc.textContent = "Adding…"; }
+
+      // Hard cap the add call so a slow network can't hang the button
+      // forever. 12s is generous for a normal /cart/add.js.
+      const ctrl = new AbortController();
+      const killer = setTimeout(() => ctrl.abort(), 12000);
+
       try {
-        const res = await fetch("/cart/add.js", { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
-        if (!res.ok) throw new Error();
+        const res = await fetch("/cart/add.js", {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+          signal: ctrl.signal,
+        });
+        if (!res.ok) {
+          let msg = "Couldn't add — try again";
+          try { const err = await res.json(); if (err?.description) msg = err.description; } catch {}
+          throw new Error(msg);
+        }
         if (isBuyNow) { window.location.href = "/checkout"; return; }
         if (atc) atc.textContent = "Added ✓";
-        // Refresh drawer + cart bubble in place, then open the drawer.
-        if (typeof window.cmRefreshCart === "function") await window.cmRefreshCart();
+        // 1. Immediate feedback: bump the bubble now (server truth arrives
+        //    with refreshCartUI a moment later).
+        bumpCartBubble(1);
+        // 2. Open the drawer BEFORE we wait on the section render, so
+        //    the drawer appears in the next frame instead of ~1-2s later.
         openCart();
-      } catch { if (atc) atc.textContent = "Try again"; }
-      finally { setTimeout(() => { if (atc && label) atc.textContent = label; }, 1400); }
+        // 3. Refresh drawer HTML in the background — do NOT await, so
+        //    the button restores quickly and the flow doesn't feel stuck.
+        if (typeof window.cmRefreshCart === "function") {
+          window.cmRefreshCart().catch(() => {
+            cmToast("Added — refresh pending", "");
+          });
+        }
+      } catch (err) {
+        const isTimeout = err && err.name === "AbortError";
+        const msg = isTimeout ? "Network is slow — try again" : (err?.message || "Couldn't add — try again");
+        if (atc) atc.textContent = "Try again";
+        cmToast(msg, "error");
+      } finally {
+        clearTimeout(killer);
+        form.dataset.cmSubmitting = "";
+        setTimeout(() => {
+          if (!atc) return;
+          const original = atc.dataset.cmLabel;
+          if (original) atc.textContent = original;
+          atc.removeAttribute("disabled");
+        }, 1200);
+      }
     });
   });
 })();
