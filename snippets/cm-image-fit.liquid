@@ -58,8 +58,14 @@
     assign _out_height = _width | times: 1.0 | divided_by: _ratio | round
 
     # ------------------------------------------------------------
-    # Build srcset: each candidate width is paired with a height that
-    # matches the target ratio, so every URL delivered is pre-cropped.
+    # Build srcset: SERVE AT NATIVE ASPECT RATIO.
+    # Prior implementation used `crop:'center'` to pre-cut every image to the
+    # frame's AR. That worked for portrait product shots but chopped the top +
+    # bottom off any bag shot in landscape orientation (Modus, Transitus, Recta
+    # were showing only the middle horizontal slice). Now we hand the image to
+    # the browser at its native AR and rely on CSS `object-fit: contain` +
+    # white frame background so nothing is ever cropped. Landscape shots
+    # letterbox with subtle white bars instead of losing content.
     # ------------------------------------------------------------
     assign _widths_list = _widths | split: ','
     assign _srcset = ''
@@ -68,8 +74,7 @@
       if wi <= 0
         continue
       endif
-      assign hi = wi | times: 1.0 | divided_by: _ratio | round
-      assign url = image | image_url: width: wi, height: hi, crop: 'center'
+      assign url = image | image_url: width: wi
       if _srcset == ''
         assign _srcset = url | append: ' ' | append: wi | append: 'w'
       else
@@ -77,8 +82,7 @@
       endif
     endfor
 
-    # Default src = the max width variant, pre-cropped.
-    assign _src = image | image_url: width: _out_width, height: _out_height, crop: 'center'
+    assign _src = image | image_url: width: _out_width
   -%}
   <img
     src="{{ _src }}"

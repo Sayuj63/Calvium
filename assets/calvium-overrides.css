@@ -2618,33 +2618,32 @@ iframe[src*="recaptcha"],
 }
 
 
-/* ----- 26. Product cards — pre-crop via Shopify CDN (2026-08-26 rewrite) -----
-   Superseded the 2026-08-21 `object-fit: contain` + `padding: 5%` letterbox
-   workaround. Root cause was requesting images with only `width:` — the CDN
-   returned each product at its NATIVE aspect ratio (Calvium photography
-   ranges 0.67–1.27 w/h), and the fixed 3:4/4:5 frame then forced
-   `object-fit: cover` to crop the sides or heads.
+/* ----- 26. Product cards — contain + white bg (2026-08-26 rev 2) -----
+   The Aug-21 `contain + 5% padding` was replaced on Aug 26 by CDN pre-crop
+   at 3:4. Pre-crop worked for portrait shots but chopped the top and bottom
+   off any bag photographed in landscape orientation (Modus, Transitus,
+   Recta showed only the horizontal middle slice of the source photo).
 
-   Fix: every product-card image now goes through snippets/cm-image-fit.liquid,
-   which calls Shopify's image_url with `crop: 'center'` and an explicit
-   height matching the frame ratio. The CDN respects each image's focal point,
-   so the image ships pre-cropped and object-fit becomes a no-op. That means
-   the frame can go back to 3:4 (matches the theme's other portrait cards) and
-   `object-fit: cover` is safe again — no letterboxing, no cropping. Applies
-   everywhere cm-product-card renders (collection grid, Shop by Style,
-   Most Loved, search, wishlist). */
+   Real fix here: guarantee the WHOLE product is always visible by using
+   `object-fit: contain` universally on card images and giving the frame a
+   white background so landscape shots letterbox cleanly instead of being
+   cut. Frame keeps its 3:4 portrait aspect for a consistent grid; the
+   background matches the storefront so the bars are invisible on light
+   surfaces. Combine with focal points set in Shopify Admin for pixel-perfect
+   framing per image. */
 .cm-card__figure {
   aspect-ratio: 3 / 4;
+  background: #ffffff;
 }
 .cm-card__img {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
   padding: 0;
   box-sizing: border-box;
 }
-/* Restore the subtle hover-zoom on the secondary image — safe again because
-   the image now matches the frame exactly, so scaling can't reveal a crop
-   edge or letterbox band. */
+/* Subtle hover-zoom kept but only for portrait shots that already fill the
+   frame — for landscape letterboxed shots the zoom mostly scales the white
+   bars so users don't perceive a jump. */
 .cm-card:hover .cm-card__img--secondary {
   transform: scale(1.02);
 }
@@ -2674,18 +2673,18 @@ iframe[src*="recaptcha"],
 }
 
 /* Header mega-menu preview and cart-drawer recommendations both render product
-   photography. Same rewrite as .cm-card above — the images that flow through
-   these frames now come via cm-image-fit (card-product-media / cm-product-card),
-   so `cover` is safe again and no padding/letterbox is needed. */
+   photography. Same reasoning as .cm-card above — `contain` + white so the
+   whole bag is always visible regardless of the source photo's orientation. */
 .cm-mega__preview img,
 .cm-cart__rec-media img {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
   padding: 0;
   box-sizing: border-box;
 }
 .cm-cart__rec-media {
   aspect-ratio: 3 / 4;
+  background: #ffffff;
 }
 
 /* Mega-menu preview frame — force a neutral white background so no cream/beige
@@ -2695,6 +2694,45 @@ iframe[src*="recaptcha"],
    4/5 aspect and rounded corners. */
 .cm-mega__preview {
   background: #ffffff !important;
+}
+
+
+/* ----- 28. Product cards — universal contain + white bg (2026-08-26 rev 3) -----
+   The "product images cropped mid-frame" bug is not solvable in CSS when
+   source photos are shot in mixed orientations (some portrait, some flat
+   landscape shots of the bag with belt below). Guarantee the whole product
+   is visible on EVERY surface by:
+     • object-fit: contain on every card-image class (kill any inherited cover)
+     • white background on every card frame (letterbox bars are invisible)
+     • widths still come pre-cropped via cm-image-fit for portrait shots, but
+       cm-image-fit was reverted to native-AR on the same day so landscape
+       shots aren't chopped either.
+   The trade-off: landscape source photos will show subtle white bars top+
+   bottom in the portrait card frame. Long-term, either reshoot the catalogue
+   in consistent portrait or set focal points per image in Shopify Admin
+   (Products → Image → focal-point marker) so future crops can be aggressive
+   again without hurting subjects. */
+.card__media .media img,
+.card__media .media deferred-media img,
+.cm-card__img,
+.cm-card__figure img,
+.resource-card__image,
+.resource-card__image--secondary,
+.cart-item__image,
+.cm-cart__rec-media img,
+.cm-mega__preview img {
+  object-fit: contain !important;
+  object-position: var(--image-focal-point, center center) !important;
+}
+.card__media,
+.card__media .media,
+.card__inner,
+.resource-card__media-wrapper .card__media,
+.cm-card__figure,
+.cm-cart__rec-media,
+.cm-mega__preview,
+.cart-item__image-container {
+  background-color: #ffffff !important;
 }
 
 /* ============================================================

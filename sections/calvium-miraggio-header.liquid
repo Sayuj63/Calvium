@@ -77,8 +77,7 @@
                       {%- if mega_block.settings[head_k] != blank or mega_block.settings[links_k] != blank -%}
                         {%- assign col_img = '' -%}
                         {%- if mega_block.settings[img_k] != blank -%}
-                          {%- comment -%} Pre-crop to the mega-preview 4:5 frame so hover-swap stays clean-framed. {%- endcomment -%}
-                          {%- assign col_img = mega_block.settings[img_k] | image_url: width: 900, height: 1125, crop: 'center' -%}
+                          {%- assign col_img = mega_block.settings[img_k] | image_url: width: 900 -%}
                         {%- endif -%}
                         <div class="cm-mega__col" data-cm-mega-col data-col-image="{{ col_img }}">
                           {%- if mega_block.settings[head_k] != blank -%}
@@ -99,7 +98,7 @@
                                     {%- assign _handle_tail = href | split: '/collections/' | last -%}
                                     {%- assign coll_handle = _handle_tail | split: '/' | first | split: '?' | first -%}
                                     {%- if coll_handle != blank and collections[coll_handle].products.size > 0 -%}
-                                      {%- assign row_image = collections[coll_handle].products.first.featured_image | image_url: width: 600, height: 750, crop: 'center' | prepend: 'https:' -%}
+                                      {%- assign row_image = collections[coll_handle].products.first.featured_image | image_url: width: 600 | prepend: 'https:' -%}
                                     {%- endif -%}
                                   {%- endif -%}
                                   {%- if row_image == blank -%}{%- assign row_image = col_img -%}{%- endif -%}
@@ -121,13 +120,10 @@
 
                     <div class="cm-mega__preview">
                       {%- if mega_block.settings.default_preview != blank -%}
-                        {%- assign _mega_ratio = 0.8 -%}{%- comment -%} matches .cm-mega__preview aspect-ratio 4/5 {%- endcomment -%}
                         {%- assign _mega_img = mega_block.settings.default_preview -%}
-                        {%- assign _mega_w = 1200 -%}
-                        {%- assign _mega_h = _mega_w | times: 1.0 | divided_by: _mega_ratio | round -%}
                         <img
-                          src="{{ _mega_img | image_url: width: _mega_w, height: _mega_h, crop: 'center' }}"
-                          srcset="{{ _mega_img | image_url: width: 400, height: 500, crop: 'center' }} 400w, {{ _mega_img | image_url: width: 600, height: 750, crop: 'center' }} 600w, {{ _mega_img | image_url: width: 900, height: 1125, crop: 'center' }} 900w, {{ _mega_img | image_url: width: 1200, height: 1500, crop: 'center' }} 1200w"
+                          src="{{ _mega_img | image_url: width: 1200 }}"
+                          srcset="{{ _mega_img | image_url: width: 400 }} 400w, {{ _mega_img | image_url: width: 600 }} 600w, {{ _mega_img | image_url: width: 900 }} 900w, {{ _mega_img | image_url: width: 1200 }} 1200w"
                           sizes="600px"
                           alt="{{ link.title | escape }}"
                           width="600"

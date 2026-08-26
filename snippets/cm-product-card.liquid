@@ -163,15 +163,14 @@
         {%- endif -%}
         {%- if v_media -%}
           {%- comment -%}
-            Swatch cards target the same 3:4 frame as the main card image so
-            variant hover-swap doesn't jump aspect. Serve the swatch icon at
-            the swatch box's own 34/44 ratio (≈0.773 ≈ 3:4) via Shopify's CDN
-            crop:'center' so the tiny thumbnail doesn't chop the bag.
+            Serve variant hover-swap URLs at NATIVE aspect ratio. CSS
+            `object-fit: contain` on the card lets the browser letterbox
+            without chopping any bag orientation.
           {%- endcomment -%}
-          {%- assign primary_url = v_media | image_url: width: 900, height: 1200, crop: 'center' -%}
+          {%- assign primary_url = v_media | image_url: width: 900 -%}
           {%- assign secondary_url = primary_url -%}
           {%- if v_secondary_media -%}
-            {%- assign secondary_url = v_secondary_media | image_url: width: 900, height: 1200, crop: 'center' -%}
+            {%- assign secondary_url = v_secondary_media | image_url: width: 900 -%}
           {%- endif -%}
           <a
             href="{{ v_variant.url | default: product.url }}?variant={{ v_variant.id }}"
