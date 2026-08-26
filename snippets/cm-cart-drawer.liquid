@@ -53,7 +53,15 @@
           <div class="cm-cart__line" data-cm-line data-key="{{ item.key }}">
             <a href="{{ item.url }}" class="cm-cart__line-media" aria-label="{{ item.title | escape }}">
               {%- if item.image -%}
-                <img src="{{ item.image | image_url: width: 220 }}" alt="{{ item.title | escape }}" width="84" height="112" loading="lazy">
+                {%- render 'cm-image-fit',
+                  image: item.image,
+                  ratio: 0.75,
+                  width: 220,
+                  widths: '84,168,220,330',
+                  sizes: '84px',
+                  alt: item.title,
+                  loading: 'lazy'
+                -%}
               {%- endif -%}
             </a>
             <div class="cm-cart__line-info">
@@ -116,7 +124,15 @@
                   <a href="{{ p.url }}" class="cm-cart__rec">
                     <div class="cm-cart__rec-media">
                       {%- if p.featured_media -%}
-                        <img src="{{ p.featured_media | image_url: width: 400 }}" alt="{{ p.title | escape }}" width="200" height="266" loading="lazy">
+                        {%- render 'cm-image-fit',
+                          image: p.featured_media,
+                          ratio: 0.75,
+                          width: 400,
+                          widths: '200,300,400,600,800',
+                          sizes: '(max-width: 749px) 40vw, 200px',
+                          alt: p.title,
+                          loading: 'lazy'
+                        -%}
                       {%- endif -%}
                       {%- if p.available -%}
                         <button type="button" class="cm-cart__rec-add" data-cm-rec-add data-variant-id="{{ rec_variant.id }}">+ Add</button>

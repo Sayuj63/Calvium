@@ -46,31 +46,50 @@
 <article class="cm-card {% if product.available == false %}is-sold-out{% endif %}" data-cm-card data-product-id="{{ product.id }}">
   <div class="cm-card__figure">
     <a class="cm-card__link" href="{{ product.url | within: collection }}" aria-label="{{ product.title | escape }}">
+      {%- comment -%}
+        Cards target a fixed 3:4 (portrait) frame. Serve every source PRE-CROPPED
+        by Shopify's CDN so image AR always matches frame AR → no side/top cuts.
+        See snippets/cm-image-fit.liquid for the transformation logic.
+      {%- endcomment -%}
+      {%- assign cm_card_ratio = 0.75 -%}
+      {%- assign cm_card_widths = '240,352,500,700,900,1200,1600' -%}
+      {%- assign cm_card_sizes = '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw' -%}
       {%- if primary -%}
-        <img
-          class="cm-card__img cm-card__img--primary"
-          data-cm-card-img="primary"
-          src="{{ primary | image_url: width: 700 }}"
-          srcset="{{ primary | image_url: width: 300 }} 300w, {{ primary | image_url: width: 500 }} 500w, {{ primary | image_url: width: 700 }} 700w, {{ primary | image_url: width: 900 }} 900w"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          alt="{{ primary.alt | default: product.title | escape }}"
-          width="750" height="1000" loading="lazy"
-        >
+        {%- render 'cm-image-fit',
+          image: primary,
+          ratio: cm_card_ratio,
+          width: 900,
+          widths: cm_card_widths,
+          sizes: cm_card_sizes,
+          alt: primary.alt | default: product.title,
+          class: 'cm-card__img cm-card__img--primary',
+          loading: 'lazy'
+        -%}
       {%- else -%}
-        <img class="cm-card__img cm-card__img--primary" src="" alt="" width="750" height="1000" data-cm-card-img="primary">
+        <img class="cm-card__img cm-card__img--primary" src="" alt="" width="900" height="1200" data-cm-card-img="primary">
       {%- endif -%}
       {%- if secondary -%}
-        <img
-          class="cm-card__img cm-card__img--secondary"
-          data-cm-card-img="secondary"
-          src="{{ secondary | image_url: width: 700 }}"
-          srcset="{{ secondary | image_url: width: 300 }} 300w, {{ secondary | image_url: width: 500 }} 500w, {{ secondary | image_url: width: 700 }} 700w"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          alt="{{ secondary.alt | default: product.title | escape }}"
-          width="750" height="1000" loading="lazy"
-        >
+        {%- render 'cm-image-fit',
+          image: secondary,
+          ratio: cm_card_ratio,
+          width: 900,
+          widths: cm_card_widths,
+          sizes: cm_card_sizes,
+          alt: secondary.alt | default: product.title,
+          class: 'cm-card__img cm-card__img--secondary',
+          loading: 'lazy'
+        -%}
       {%- elsif primary -%}
-        <img class="cm-card__img cm-card__img--secondary" data-cm-card-img="secondary" src="{{ primary | image_url: width: 700 }}" alt="" width="750" height="1000" loading="lazy">
+        {%- render 'cm-image-fit',
+          image: primary,
+          ratio: cm_card_ratio,
+          width: 900,
+          widths: cm_card_widths,
+          sizes: cm_card_sizes,
+          alt: '',
+          class: 'cm-card__img cm-card__img--secondary',
+          loading: 'lazy'
+        -%}
       {%- endif -%}
     </a>
 
@@ -143,10 +162,16 @@
           {%- assign v_secondary_media = v_variant.metafields.custom.secondary_image.value -%}
         {%- endif -%}
         {%- if v_media -%}
-          {%- assign primary_url = v_media | image_url: width: 700 -%}
+          {%- comment -%}
+            Swatch cards target the same 3:4 frame as the main card image so
+            variant hover-swap doesn't jump aspect. Serve the swatch icon at
+            the swatch box's own 34/44 ratio (≈0.773 ≈ 3:4) via Shopify's CDN
+            crop:'center' so the tiny thumbnail doesn't chop the bag.
+          {%- endcomment -%}
+          {%- assign primary_url = v_media | image_url: width: 900, height: 1200, crop: 'center' -%}
           {%- assign secondary_url = primary_url -%}
           {%- if v_secondary_media -%}
-            {%- assign secondary_url = v_secondary_media | image_url: width: 700 -%}
+            {%- assign secondary_url = v_secondary_media | image_url: width: 900, height: 1200, crop: 'center' -%}
           {%- endif -%}
           <a
             href="{{ v_variant.url | default: product.url }}?variant={{ v_variant.id }}"
@@ -156,7 +181,15 @@
             data-variant-img="{{ secondary_url }}"
             data-primary-img="{{ primary_url }}"
           >
-            <img src="{{ v_media | image_url: width: 100 }}" alt="{{ value | escape }}" width="34" height="44" loading="lazy">
+            {%- render 'cm-image-fit',
+              image: v_media,
+              ratio: 0.7727,
+              width: 100,
+              widths: '34,50,68,100,136,200',
+              sizes: '34px',
+              alt: value,
+              loading: 'lazy'
+            -%}
           </a>
           {%- assign shown = shown | plus: 1 -%}
         {%- else -%}

@@ -1,0 +1,96 @@
+{%- doc -%}
+  Calvium — renders a product image PRE-CROPPED by Shopify's CDN so the
+  image's aspect ratio always equals the card container's aspect ratio.
+
+  Fixes the site-wide "images cut from the sides / heads chopped" bug:
+  requesting only `width` returns the image at its native ratio, forcing
+  `object-fit: cover` to crop anything that doesn't match the frame. Passing
+  `width + height + crop: 'center'` makes Shopify's CDN deliver the image
+  already cropped to the requested ratio, respecting any focal point the
+  merchant set in the theme image editor.
+
+  @param {media|image} image        Product media / image. Required.
+  @param {number}      [ratio]      Target aspect ratio (width / height) as a
+                                    decimal. Default 0.75 = 3:4 portrait.
+  @param {number}      [width]      Max intrinsic width for the largest srcset
+                                    candidate. Default 900.
+  @param {string}      [widths]     Comma-separated srcset widths.
+                                    Default '240,352,500,700,900,1200,1600'.
+  @param {string}      [sizes]      HTML `sizes` attribute.
+                                    Default '(max-width:749px) 50vw,
+                                             (max-width:1024px) 33vw, 25vw'.
+  @param {string}      [alt]        Alt text. Default image.alt || ''.
+  @param {string}      [class]      Class attribute for the <img>.
+  @param {string}      [loading]    'lazy' | 'eager'. Default 'lazy'.
+  @param {string}      [fetchpriority] Optional fetchpriority attribute.
+  @param {string}      [id]         Optional id.
+  @param {string}      [style]      Inline style (e.g. focal-point CSS var).
+
+  @example
+  {%- render 'cm-image-fit',
+    image: product.featured_media,
+    ratio: 0.75,
+    width: 900,
+    sizes: '(max-width:749px) 50vw, 25vw',
+    alt: product.title
+  -%}
+{%- enddoc -%}
+
+{%- if image != blank and image != nil -%}
+  {%- liquid
+    # ------------------------------------------------------------
+    # Defaults
+    # ------------------------------------------------------------
+    assign _ratio = ratio | default: 0.75
+    if _ratio == 0 or _ratio == nil
+      assign _ratio = 0.75
+    endif
+
+    assign _width = width | default: 900
+    assign _widths = widths | default: '240,352,500,700,900,1200,1600'
+    assign _sizes = sizes | default: '(max-width: 749px) 50vw, (max-width: 1024px) 33vw, 25vw'
+    assign _alt = alt | default: image.alt | default: ''
+    assign _class = class | default: 'motion-reduce'
+    assign _loading = loading | default: 'lazy'
+
+    # Intrinsic <img> width/height for CLS. Height = width / ratio.
+    assign _out_width = _width
+    assign _out_height = _width | times: 1.0 | divided_by: _ratio | round
+
+    # ------------------------------------------------------------
+    # Build srcset: each candidate width is paired with a height that
+    # matches the target ratio, so every URL delivered is pre-cropped.
+    # ------------------------------------------------------------
+    assign _widths_list = _widths | split: ','
+    assign _srcset = ''
+    for w in _widths_list
+      assign wi = w | strip | plus: 0
+      if wi <= 0
+        continue
+      endif
+      assign hi = wi | times: 1.0 | divided_by: _ratio | round
+      assign url = image | image_url: width: wi, height: hi, crop: 'center'
+      if _srcset == ''
+        assign _srcset = url | append: ' ' | append: wi | append: 'w'
+      else
+        assign _srcset = _srcset | append: ', ' | append: url | append: ' ' | append: wi | append: 'w'
+      endif
+    endfor
+
+    # Default src = the max width variant, pre-cropped.
+    assign _src = image | image_url: width: _out_width, height: _out_height, crop: 'center'
+  -%}
+  <img
+    src="{{ _src }}"
+    srcset="{{ _srcset }}"
+    sizes="{{ _sizes }}"
+    width="{{ _out_width }}"
+    height="{{ _out_height }}"
+    alt="{{ _alt | escape }}"
+    loading="{{ _loading }}"
+    class="{{ _class }}"
+    {%- if fetchpriority %} fetchpriority="{{ fetchpriority }}"{% endif -%}
+    {%- if id %} id="{{ id }}"{% endif -%}
+    {%- if style %} style="{{ style }}"{% endif -%}
+  >
+{%- endif -%}

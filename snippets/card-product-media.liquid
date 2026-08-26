@@ -1,5 +1,18 @@
+{%- comment -%}
+  Calvium — product-card media renderer.
+  Now delegates to `cm-image-fit` so images are PRE-CROPPED by Shopify's CDN
+  to the exact aspect ratio of the card frame. Fixes site-wide "images cut
+  from the sides / heads chopped" bug — see snippets/cm-image-fit.liquid.
+
+  Params (from parent card renderer):
+  - card_product          Product object                                (required)
+  - show_secondary_image  Bool — hover-swap the 2nd media               (optional)
+  - media_aspect_ratio    'square' | 'portrait' | 'adapt'               (optional)
+  - lazy_load             Bool                                          (optional)
+  - image_shape, section, block, widths, sizes                          (optional)
+{%- endcomment -%}
+
 {%- capture sizes -%}
-  {% comment %} '(min-width: 750px) 50vw, 100vw' {% endcomment %}
   {%- render 'util-product-media-sizes-attr', block: block, section: section, settings: settings, is_single_column: is_single_column, needs_both_sizes: needs_both_sizes -%}
 {%- endcapture -%}
 
@@ -12,20 +25,36 @@
 
 {%- liquid
   assign f_media = card_product.featured_media
-  assign f_media_width = f_media.width
   assign media = card_product.media
-  assign media_width = media.width
 
   assign f_media_alt = f_media.alt | default: card_product.title | append: ' ' | append: f_media_alt | strip
   assign media_alt = media.alt | default: card_product.title | append: ' ' | append: media_alt | strip
 
-  assign sizes = sizes
+  assign sizes = sizes | strip
 
-  assign f_widths = widths | default: '240, 352, 650, 832, 1200'
-  assign m_widths = widths | default: '240, 352, 650, 832, 1200'
+  # ------------------------------------------------------------
+  # Target aspect ratio for the frame.
+  # Mirrors the exact logic in card-product.liquid / card-product-flex.liquid /
+  # product-card-compare.liquid / cart-popular-product-card.liquid so the
+  # image ratio ALWAYS matches the CSS container ratio → no cropping.
+  # ------------------------------------------------------------
+  assign target_ratio = 1
+  if f_media and media_aspect_ratio == 'portrait'
+    assign target_ratio = 0.8
+  elsif f_media and media_aspect_ratio == 'adapt' and f_media.aspect_ratio and f_media.aspect_ratio > 0
+    assign target_ratio = f_media.aspect_ratio
+  elsif f_media and media_aspect_ratio == 'landscape'
+    assign target_ratio = 1.2857
+  endif
+  if target_ratio == 0 or target_ratio == nil
+    assign target_ratio = 1
+  endif
+
+  assign f_widths = widths | default: '240,352,500,700,900,1200,1600'
+  assign m_widths = widths | default: '240,352,500,700,900,1200,1600'
 
   unless lazy_load == false
-    assign loading = "lazy"
+    assign loading = 'lazy'
   endunless
 
   if collection and collection.handle
@@ -34,25 +63,50 @@
     assign href_product_url = card_product.url
   endif
 
+  # Focal-point CSS variable stays available as a hint for the CDN AND as an
+  # object-position fallback if the CDN ever returns an un-cropped image.
+  assign focal_point_style = ''
   if f_media.presentation.focal_point != blank
     assign focal_point_style = '--image-focal-point: ' | append: media[0].presentation.focal_point | append: ';'
   endif
-
-  assign secondary_focal_point_style = '--image-focal-point: ' | append: media[1].presentation.focal_point | append: ';'
+  assign secondary_focal_point_style = ''
+  if media[1].presentation.focal_point != blank
+    assign secondary_focal_point_style = '--image-focal-point: ' | append: media[1].presentation.focal_point | append: ';'
+  endif
 -%}
 
 <card-media class="card__media block{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }}{% endif %}">
-  {% comment %} <section-fetcher class="absolute inset-0" data-section-id="{{ section.id }}" data-target-id="{{ secondary_media_id }}" data-activate="inview"></section-fetcher> {% endcomment %}
   <div class="media media--transparent media--hover-effect" id="CardProductMedia-Content-{{ section.id }}-{{ card_product.id }}">
-    {% if f_media %}
-      {{ f_media | image_url: width: f_media_width , format: 'webp' | image_tag: sizes: sizes, widths: f_widths, loading: 'lazy', alt: f_media_alt, class: 'motion-reduce', loading: loading, style: focal_point_style }}
-    {% else %}
+    {%- if f_media -%}
+      {%- render 'cm-image-fit',
+        image: f_media,
+        ratio: target_ratio,
+        width: 900,
+        widths: f_widths,
+        sizes: sizes,
+        loading: loading,
+        alt: f_media_alt,
+        class: 'motion-reduce',
+        style: focal_point_style
+      -%}
+    {%- else -%}
       {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
-    {% endif %}
+    {%- endif -%}
     {%- if media[1] != null and show_secondary_image -%}
       {%- case media[1].media_type -%}
         {%- when 'image' -%}
-          {{ media[1] | image_url: width: media_width , format: 'webp' | image_tag: sizes: sizes, widths: m_widths, loading: 'lazy', alt: media_alt, class: 'motion-reduce', loading: 'lazy', id: secondary_media_id, style: secondary_focal_point_style }}
+          {%- render 'cm-image-fit',
+            image: media[1],
+            ratio: target_ratio,
+            width: 900,
+            widths: m_widths,
+            sizes: sizes,
+            loading: 'lazy',
+            alt: media_alt,
+            class: 'motion-reduce',
+            id: secondary_media_id,
+            style: secondary_focal_point_style
+          -%}
         {%- when 'video', 'external_video' -%}
           {%- render 'video',
             video: media[1],

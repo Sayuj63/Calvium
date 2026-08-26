@@ -121,7 +121,7 @@
         class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }}{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %} card-badge-is-{{ check_pos_badge }}"
         style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
       >
-        {%- render 'card-product-media', show_secondary_image: show_secondary_image, card_product: card_product -%}
+        {%- render 'card-product-media', show_secondary_image: show_secondary_image, card_product: card_product, media_aspect_ratio: media_aspect_ratio -%}
 
         <div class="card-product__group-wrapper">
           <div class="card-product__group flex flex-column absolute top-0 right-0 z-2" style="--gap-y: 1rem; --p: .5rem; --pb: 1rem; --md-p: 1rem; --md-pb: 1rem; --lg-p: 1.6rem; --lg-pb: 1rem;">

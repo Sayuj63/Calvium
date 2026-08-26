@@ -17,7 +17,7 @@
   {%- if card_product.featured_media -%}
     <div class="card--block-media overflow-hidden relative group-block w-full" style="{%- if block.settings.width_option == 'custom' -%} --globalGroupWidth: {{ block.settings.custom_width }}%;{%- endif -%}">
       <div class="ratio" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
-        {%- render 'card-product-media', show_secondary_image: show_secondary_image, card_product: card_product -%}
+        {%- render 'card-product-media', show_secondary_image: show_secondary_image, card_product: card_product, media_aspect_ratio: media_aspect_ratio -%}
       </div>
     </div>
   {%- endif -%}

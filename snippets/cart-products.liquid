@@ -136,20 +136,25 @@
                           elsif bl_stts.image_ratio == 'adapt'
                             assign ratio = item.image.aspect_ratio
                           endif
+                          if ratio == 0 or ratio == null
+                            assign ratio = 1
+                          endif
                         %}
                         <a href="{{ item.url }}" class="cart-item__link" aria-hidden="true" tabindex="-1"></a>
                         <div
                           class="cart-item__image-container"
                           style="--aspect-ratio:{{ ratio }};"
                         >
-                          <img
-                            src="{{ item.image | image_url: width: 300 }}"
-                            class="cart-item__image"
-                            alt="{{ item.image.alt | escape }}"
-                            loading="lazy"
-                            width="150"
-                            height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
-                          >
+                          {%- render 'cm-image-fit',
+                            image: item.image,
+                            ratio: ratio,
+                            width: 300,
+                            widths: '120,180,240,300,450',
+                            sizes: '(max-width: 749px) 20vw, 150px',
+                            alt: item.image.alt,
+                            class: 'cart-item__image',
+                            loading: 'lazy'
+                          -%}
                         </div>
                       {% endif %}
                     </td>

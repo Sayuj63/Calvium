@@ -252,7 +252,10 @@ label[for^="Products-per-page-"] {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 18%;
+  /* Was `center 18%` to head-safe non-cropped images — no longer needed since
+     product cards now ship pre-cropped by the CDN. Lookbook shots still hit
+     this rule when they render via card-product-media, so keep centered. */
+  object-position: center center;
 }
 .lookbook-item-all .swiper-slide .card__media .lookbook-hover-image {
   display: block !important;
@@ -436,11 +439,11 @@ label[for^="Products-per-page-"] {
 }
 
 
-/* ----- 21. Recently-viewed — fix focal-point crop causing blank images -----
-   component-card.css sets object-position: center 18% globally for the head-cut
-   fix. Recently-viewed cards render at square aspect-ratio at small size, so the
-   18% offset pushes portrait model shots above the visible area → white blank.
-   Reset to center center for the recently-viewed section only. */
+/* ----- 21. Recently-viewed — historically fixed a blank-image bug caused by
+   the old `object-position: center 18%` global head-safe crop. That global was
+   removed on 2026-08-26 (images now pre-cropped by Shopify CDN via cm-image-fit),
+   so this override is a defensive belt-and-braces — kept in case a section
+   somewhere still ships an image at native aspect ratio into this frame. */
 .recently-viewed-products .card__media img,
 .recently-viewed-products .card__media .media img {
   object-position: center center !important;
@@ -2615,26 +2618,35 @@ iframe[src*="recaptcha"],
 }
 
 
-/* ----- 26. Product cards — stop cropping the bag -----
-   Requested 2026-08-21: collection/grid cards look "zoomed in" and the bag's edges
-   get clipped. Same root cause as the PDP gallery fix above: `.cm-card__figure` forces
-   aspect-ratio 3/4 (0.75) while `.cm-card__img` uses `object-fit: cover`, but the
-   catalogue photography ranges 0.67–1.27 w/h — so square and landscape shots lose up
-   to 40% off their sides. `contain` keeps the whole product visible; the 4/5 frame is
-   closer to the 0.8–1.0 range most shots actually sit in, so `contain` wastes less
-   vertical space. Applies everywhere cm-product-card renders (collection grid,
-   Shop by Style, Most Loved, search, wishlist). */
+/* ----- 26. Product cards — pre-crop via Shopify CDN (2026-08-26 rewrite) -----
+   Superseded the 2026-08-21 `object-fit: contain` + `padding: 5%` letterbox
+   workaround. Root cause was requesting images with only `width:` — the CDN
+   returned each product at its NATIVE aspect ratio (Calvium photography
+   ranges 0.67–1.27 w/h), and the fixed 3:4/4:5 frame then forced
+   `object-fit: cover` to crop the sides or heads.
+
+   Fix: every product-card image now goes through snippets/cm-image-fit.liquid,
+   which calls Shopify's image_url with `crop: 'center'` and an explicit
+   height matching the frame ratio. The CDN respects each image's focal point,
+   so the image ships pre-cropped and object-fit becomes a no-op. That means
+   the frame can go back to 3:4 (matches the theme's other portrait cards) and
+   `object-fit: cover` is safe again — no letterboxing, no cropping. Applies
+   everywhere cm-product-card renders (collection grid, Shop by Style,
+   Most Loved, search, wishlist). */
 .cm-card__figure {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
 }
 .cm-card__img {
-  object-fit: contain;
-  padding: 5%;
+  object-fit: cover;
+  object-position: center center;
+  padding: 0;
   box-sizing: border-box;
 }
-/* The hover cross-fade scaled the secondary image up, which re-introduced the crop. */
+/* Restore the subtle hover-zoom on the secondary image — safe again because
+   the image now matches the frame exactly, so scaling can't reveal a crop
+   edge or letterbox band. */
 .cm-card:hover .cm-card__img--secondary {
-  transform: none;
+  transform: scale(1.02);
 }
 
 
@@ -2662,15 +2674,18 @@ iframe[src*="recaptcha"],
 }
 
 /* Header mega-menu preview and cart-drawer recommendations both render product
-   photography, so they get the same treatment as the product cards above. */
+   photography. Same rewrite as .cm-card above — the images that flow through
+   these frames now come via cm-image-fit (card-product-media / cm-product-card),
+   so `cover` is safe again and no padding/letterbox is needed. */
 .cm-mega__preview img,
 .cm-cart__rec-media img {
-  object-fit: contain;
-  padding: 5%;
+  object-fit: cover;
+  object-position: center center;
+  padding: 0;
   box-sizing: border-box;
 }
 .cm-cart__rec-media {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
 }
 
 /* ============================================================

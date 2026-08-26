@@ -162,8 +162,11 @@
   // -----------------------------------------------------------
   // Product card — swatch → second image swap
   doc.querySelectorAll("[data-cm-card]").forEach((card) => {
-    const secondaryImg = card.querySelector('[data-cm-card-img="secondary"]');
-    const primaryImg = card.querySelector('[data-cm-card-img="primary"]');
+    // Prefer the class-based selector so the JS keeps working when the
+    // <img> is emitted by cm-image-fit (which doesn't set data-cm-card-img).
+    // Falls back to the data attribute for any legacy markup left in place.
+    const secondaryImg = card.querySelector('.cm-card__img--secondary, [data-cm-card-img="secondary"]');
+    const primaryImg = card.querySelector('.cm-card__img--primary, [data-cm-card-img="primary"]');
     const swatches = card.querySelectorAll("[data-cm-card-swatch]");
     if (!secondaryImg || swatches.length === 0) return;
     const initialSecondary = secondaryImg.getAttribute("src");

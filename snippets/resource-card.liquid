@@ -15,13 +15,33 @@
 {%- enddoc -%}
 
 {% liquid
-  if image_aspect_ratio == blank or image_aspect_ratio == 'adapt'
+  # Resolve the frame aspect ratio.
+  # `image_aspect_ratio` accepts either a keyword ('adapt') or a CSS-style
+  # string like '4 / 5' / '3/4'. Parse into a numeric ratio (width/height)
+  # so cm-image-fit can pre-crop from Shopify's CDN.
+  assign parsed_ratio = 0
+  if image_aspect_ratio == 'adapt' or image_aspect_ratio == blank
+    assign parsed_ratio = resource.featured_image.aspect_ratio
     assign ratio = resource.featured_image.aspect_ratio
   else
     assign ratio = image_aspect_ratio
+    assign ratio_parts = image_aspect_ratio | replace: ' ', '' | split: '/'
+    if ratio_parts.size == 2
+      assign r_w = ratio_parts[0] | plus: 0.0
+      assign r_h = ratio_parts[1] | plus: 0.0
+      if r_h > 0
+        assign parsed_ratio = r_w | divided_by: r_h
+      endif
+    else
+      assign parsed_ratio = image_aspect_ratio | plus: 0.0
+    endif
   endif
+  if parsed_ratio == 0 or parsed_ratio == nil
+    assign parsed_ratio = 0.75
+  endif
+
   assign image_width = image_width | default: 1200
-  assign widths = '240, 352, 832, 1200'
+  assign widths = '240, 352, 500, 700, 832, 1200'
   assign image_sizes = image_sizes | default: 'auto'
   assign single_thumbnail_collection = false
   if resource_type == 'collection' and collection_thumbnails != 'multiple'
@@ -91,18 +111,17 @@
                 endif
               %}
               {%- if featured_image != blank -%}
-                {{
-                  featured_image
-                  | image_url: width: image_width
-                  | image_tag:
-                    loading: 'lazy',
-                    class: 'resource-card__image',
-                    widths: widths,
-                    sizes: image_sizes,
-                    transitionToProduct: settings.transition_to_main_product,
-                    data-media-id: featured_image.id,
-                    style: primary_focal_point_style
-                }}
+                {%- render 'cm-image-fit',
+                  image: featured_image,
+                  ratio: parsed_ratio,
+                  width: image_width,
+                  widths: widths,
+                  sizes: image_sizes,
+                  alt: featured_image.alt | default: resource.title,
+                  class: 'resource-card__image',
+                  loading: 'lazy',
+                  style: primary_focal_point_style
+                -%}
                 {%- if image_hover and resource.media.size > 1 -%}
                   {% liquid
                     assign secondary_focal_point_style = ''
@@ -112,17 +131,17 @@
                   %}
                   {%- case resource.media[1].media_type -%}
                     {%- when 'image' -%}
-                      {{
-                        resource.media[1]
-                        | image_url: width: 1946
-                        | image_tag:
-                          sizes: image_sizes,
-                          widths: widths,
-                          loading: 'lazy',
-                          alt: resource.media[1].alt,
-                          class: 'resource-card__image resource-card__image--secondary',
-                          loading: 'lazy'
-                      }}
+                      {%- render 'cm-image-fit',
+                        image: resource.media[1],
+                        ratio: parsed_ratio,
+                        width: image_width,
+                        widths: widths,
+                        sizes: image_sizes,
+                        alt: resource.media[1].alt,
+                        class: 'resource-card__image resource-card__image--secondary',
+                        loading: 'lazy',
+                        style: secondary_focal_point_style
+                      -%}
                     {%- when 'video', 'external_video' -%}
                       {%- render 'video',
                         video: resource.media[1],

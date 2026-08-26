@@ -188,10 +188,13 @@
 .card__media .media img {
   height: 100%;
   object-fit: cover;
-  /* Calvium: default focal point shifted from "center center" to "center 18%" so
-     portrait model shots don't crop heads. Per-image overrides still work via
-     the --image-focal-point CSS variable. */
-  object-position: var(--image-focal-point, center 18%);
+  /* Calvium 2026-08-26: images are now delivered PRE-CROPPED by the Shopify
+     CDN via `crop: 'center'` (see snippets/cm-image-fit.liquid), so the image
+     aspect ratio always matches the frame — object-position is effectively a
+     no-op. Kept as center so any legacy render path that still ships a
+     non-cropped source still frames it cleanly. Per-image focal point set in
+     the theme editor is used by the CDN itself. */
+  object-position: var(--image-focal-point, center center);
   width: 100%;
   transition-property: opacity, transform;
   transition-duration: var(--duration-long);
