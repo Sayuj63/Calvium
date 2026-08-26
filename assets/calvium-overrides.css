@@ -2688,6 +2688,15 @@ iframe[src*="recaptcha"],
   aspect-ratio: 3 / 4;
 }
 
+/* Mega-menu preview frame — force a neutral white background so no cream/beige
+   ever bleeds through around a product photo (product PNGs shot on white DO
+   render with white edges, and the original .cm-mega__preview background of
+   --cm-cream-deep read as a "brown border" against those). Frame keeps its
+   4/5 aspect and rounded corners. */
+.cm-mega__preview {
+  background: #ffffff !important;
+}
+
 /* ============================================================
    Mobile UI batch — 2026-08-21
    Fixes bundled together after design review screenshots.
