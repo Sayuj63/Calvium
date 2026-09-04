@@ -47,7 +47,7 @@
       },
       "settings": {
         "cart_drawer_collection": "",
-        "color_scheme": ""
+        "color_scheme": "scheme-1"
       }
     },
     "toolbar_mobile_3HBwAV": {
@@ -720,7 +720,7 @@
       "settings": {
         "popup_expire": 1,
         "popup_delay": 60,
-        "color_scheme": ""
+        "color_scheme": "scheme-1"
       }
     },
     "before_you_leave_GxJyQy": {

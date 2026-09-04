@@ -1185,7 +1185,7 @@
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 60,
-        "color_scheme": "",
+        "color_scheme": "scheme-1",
         "padding-block-start": 0,
         "padding-block-end": 0
       }
@@ -1311,7 +1311,7 @@
         "right_banner_link_4": "",
         "open_in_new_tab": false,
         "image_behavior": "none",
-        "color_scheme": "",
+        "color_scheme": "scheme-1",
         "color_scheme_mobile": "",
         "padding-block-start": 36,
         "padding-block-end": 36
@@ -1689,7 +1689,7 @@
         "progress_top_offset": 40,
         "page_width": "page-width",
         "page_width_custom": 1570,
-        "color_scheme": "",
+        "color_scheme": "scheme-1",
         "columns_mobile": "2",
         "swipe_on_mobile": false,
         "padding-block-start": 36,
