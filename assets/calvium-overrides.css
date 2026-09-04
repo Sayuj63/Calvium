@@ -3022,3 +3022,32 @@ footer [class*="__text_Uy4xbz"] strong {
     transform: none !important;
   }
 }
+
+/* -------------------------------------------------------------------------
+   Calvium 2026-09-04 — smooth swatch → main image transition
+   Carousel mode already smooth-slides via Swiper (800ms). Grid + thumbnail
+   modes toggle the .active class only; add a subtle fade + slide so the
+   change is never a hard cut. Purely cosmetic; no JS wiring required.
+   ------------------------------------------------------------------------- */
+media-gallery [data-media-id] {
+  transition:
+    opacity 380ms cubic-bezier(.4, 0, .2, 1),
+    transform 480ms cubic-bezier(.4, 0, .2, 1);
+  will-change: opacity, transform;
+}
+media-gallery:not(.media-gallery--carousel) [data-media-id]:not(.active) {
+  opacity: 0;
+  transform: translate3d(24px, 0, 0);
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+media-gallery:not(.media-gallery--carousel) [data-media-id].active {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  position: relative;
+  z-index: 1;
+}
+media-gallery:not(.media-gallery--carousel) {
+  position: relative;
+}
