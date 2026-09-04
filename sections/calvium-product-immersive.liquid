@@ -14,6 +14,19 @@
   {%- assign percent_off = compare | minus: current_variant.price | times: 100.0 | divided_by: compare | round -%}
 {%- endif -%}
 
+{%- comment -%}
+  Resolve the currently-selected color value (used to filter the gallery
+  to just that color's media on page load). Handles Color / Colour /
+  either option position.
+{%- endcomment -%}
+{%- assign cm_color_value = '' -%}
+{%- for opt in product.options_with_values -%}
+  {%- assign _n = opt.name | downcase -%}
+  {%- if _n contains 'color' or _n contains 'colour' -%}
+    {%- assign cm_color_value = opt.selected_value -%}
+  {%- endif -%}
+{%- endfor -%}
+
 
 
 <style>
@@ -257,17 +270,18 @@
   </nav>
 
   <div class="cm-pdp-im__grid">
-    <div class="cm-pdp-im__gallery">
+    <div class="cm-pdp-im__gallery" data-cm-pdp-gallery data-cm-initial-color="{{ cm_color_value | escape }}">
       {%- comment -%}
         Mobile gallery: full-bleed horizontal-scroll carousel of every media
-        item, one image per swipe. Replaces the "main + thumbnails below"
-        layout that visually competed with the color-swatch thumb row.
-        Rendered as a separate element and toggled with the desktop layout
-        via CSS media query — desktop still gets the main + thumbnails grid.
+        item, one image per swipe. Each slide/thumb/dot carries a
+        data-cm-color attribute matching the media's alt text (which is
+        the color option value, e.g. "Midnight Black"). The inline script
+        at the bottom of this file filters to only the selected color's
+        media on load and whenever a swatch is clicked.
       {%- endcomment -%}
       <div class="cm-pdp-im__carousel" data-cm-pdp-carousel role="region" aria-roledescription="carousel" aria-label="Product images">
         {%- for media in product.media -%}
-          <div class="cm-pdp-im__slide" data-cm-pdp-slide data-cm-media-id="{{ media.id }}">
+          <div class="cm-pdp-im__slide" data-cm-pdp-slide data-cm-media-id="{{ media.id }}" data-cm-color="{{ media.alt | escape }}">
             <img
               src="{{ media | image_url: width: 1400 }}"
               srcset="{{ media | image_url: width: 700 }} 700w, {{ media | image_url: width: 1100 }} 1100w, {{ media | image_url: width: 1400 }} 1400w"
@@ -283,7 +297,7 @@
       {%- if product.media.size > 1 -%}
         <div class="cm-pdp-im__dots" data-cm-pdp-dots aria-hidden="true">
           {%- for media in product.media -%}
-            <span class="cm-pdp-im__dot {% if forloop.first %}is-active{% endif %}" data-cm-pdp-dot="{{ forloop.index0 }}"></span>
+            <span class="cm-pdp-im__dot {% if forloop.first %}is-active{% endif %}" data-cm-pdp-dot="{{ forloop.index0 }}" data-cm-color="{{ media.alt | escape }}"></span>
           {%- endfor -%}
         </div>
       {%- endif -%}
@@ -302,8 +316,8 @@
       </div>
       {%- if product.media.size > 1 -%}
         <div class="cm-pdp-im__thumbs">
-          {%- for media in product.media limit: 10 -%}
-            <button type="button" class="cm-pdp-im__thumb {% if forloop.first %}is-active{% endif %}" data-cm-pdp-thumb data-src="{{ media | image_url: width: 1400 }}">
+          {%- for media in product.media -%}
+            <button type="button" class="cm-pdp-im__thumb {% if forloop.first %}is-active{% endif %}" data-cm-pdp-thumb data-src="{{ media | image_url: width: 1400 }}" data-cm-color="{{ media.alt | escape }}">
               <img src="{{ media | image_url: width: 240 }}" alt="{{ media.alt | escape }}" width="240" height="300" loading="lazy">
             </button>
           {%- endfor -%}
@@ -475,22 +489,123 @@
   </div>
 </section>
 
+<style>
+  /* Filter helper — used by JS to hide media that don't match the
+     currently-selected colour. display:none rather than visibility so
+     the flex/grid layout collapses cleanly. */
+  .cm-pdp-im__slide.is-cm-hidden,
+  .cm-pdp-im__thumb.is-cm-hidden,
+  .cm-pdp-im__dot.is-cm-hidden { display: none !important; }
+  /* Smooth fade on the main image when the swatch changes it. */
+  .cm-pdp-im__main img[data-cm-pdp-main-img] {
+    transition: opacity 240ms cubic-bezier(.4, 0, .2, 1);
+  }
+  .cm-pdp-im__main.is-cm-swapping img[data-cm-pdp-main-img] {
+    opacity: 0;
+  }
+</style>
 <script>
   (function() {
-    var gallery = document.querySelector('.cm-pdp-im__gallery');
+    var gallery = document.querySelector('[data-cm-pdp-gallery]');
     if (!gallery) return;
     var mainImg = gallery.querySelector('[data-cm-pdp-main-img]');
-    gallery.querySelectorAll('[data-cm-pdp-thumb]').forEach(function(t) {
+    var mainWrap = gallery.querySelector('[data-cm-pdp-main]');
+    var carousel = gallery.querySelector('[data-cm-pdp-carousel]');
+    var thumbs = gallery.querySelectorAll('[data-cm-pdp-thumb]');
+    var slides = gallery.querySelectorAll('[data-cm-pdp-slide]');
+    var dots = gallery.querySelectorAll('[data-cm-pdp-dot]');
+
+    var norm = function(s) { return (s || '').toString().trim().toLowerCase(); };
+
+    // Filter every slide/thumb/dot down to the selected color.
+    // If no elements have a matching color (product has legacy media
+    // whose alt doesn't match a variant color), fall back to showing
+    // everything so the user is never left with an empty gallery.
+    function filterByColor(color) {
+      var target = norm(color);
+      if (!target) return;
+      var count = 0;
+      var all = [].concat.apply([], [slides, thumbs, dots].map(function(nl) { return [].slice.call(nl); }));
+      all.forEach(function(el) { if (norm(el.getAttribute('data-cm-color')) === target) count++; });
+      if (count === 0) {
+        // No match — show everything and bail.
+        all.forEach(function(el) { el.classList.remove('is-cm-hidden'); });
+        return;
+      }
+      all.forEach(function(el) {
+        if (norm(el.getAttribute('data-cm-color')) === target) el.classList.remove('is-cm-hidden');
+        else el.classList.add('is-cm-hidden');
+      });
+      // Highlight first visible thumb; leave dots active state to scroll sync.
+      var firstThumb = gallery.querySelector('[data-cm-pdp-thumb]:not(.is-cm-hidden)');
+      if (firstThumb) {
+        thumbs.forEach(function(t) { t.classList.remove('is-active'); });
+        firstThumb.classList.add('is-active');
+      }
+    }
+
+    // Called by the swatch handler in calvium-miraggio.js (or anywhere else).
+    // Also swaps the main image with a soft fade.
+    gallery._cmFilterByColor = function(color, opts) {
+      filterByColor(color);
+      // Main image: prefer variant.featured_image if the caller passed it,
+      // otherwise use the first visible thumb's data-src.
+      var newSrc = opts && opts.mainImageSrc;
+      if (!newSrc) {
+        var firstThumb = gallery.querySelector('[data-cm-pdp-thumb]:not(.is-cm-hidden)');
+        if (firstThumb) newSrc = firstThumb.dataset.src;
+      }
+      if (mainImg && newSrc && mainImg.getAttribute('src') !== newSrc) {
+        if (mainWrap) mainWrap.classList.add('is-cm-swapping');
+        var swap = function() {
+          mainImg.src = newSrc;
+          mainImg.removeAttribute('srcset');
+        };
+        // Wait one frame for the CSS fade-out to kick in, then swap.
+        requestAnimationFrame(function() {
+          setTimeout(function() {
+            swap();
+            requestAnimationFrame(function() {
+              if (mainWrap) mainWrap.classList.remove('is-cm-swapping');
+            });
+          }, 200);
+        });
+      }
+      // Snap the mobile carousel back to the first visible slide.
+      if (carousel) {
+        var firstSlide = gallery.querySelector('[data-cm-pdp-slide]:not(.is-cm-hidden)');
+        if (firstSlide) {
+          var idx = [].indexOf.call(slides, firstSlide);
+          if (idx >= 0) {
+            var w = carousel.clientWidth || firstSlide.clientWidth;
+            carousel.scrollTo({ left: idx * w, behavior: 'smooth' });
+          }
+        }
+      }
+    };
+
+    // Thumb click: change main image.  Ignore hidden thumbs.
+    thumbs.forEach(function(t) {
       t.addEventListener('click', function() {
-        gallery.querySelectorAll('[data-cm-pdp-thumb]').forEach(function(x) { x.classList.remove('is-active'); });
+        if (t.classList.contains('is-cm-hidden')) return;
+        thumbs.forEach(function(x) { x.classList.remove('is-active'); });
         t.classList.add('is-active');
-        if (mainImg) mainImg.src = t.dataset.src;
+        if (mainImg) {
+          if (mainWrap) mainWrap.classList.add('is-cm-swapping');
+          requestAnimationFrame(function() {
+            setTimeout(function() {
+              mainImg.src = t.dataset.src;
+              mainImg.removeAttribute('srcset');
+              requestAnimationFrame(function() {
+                if (mainWrap) mainWrap.classList.remove('is-cm-swapping');
+              });
+            }, 180);
+          });
+        }
       });
     });
 
     // Mobile carousel: sync dots with active slide as user swipes.
-    var carousel = gallery.querySelector('[data-cm-pdp-carousel]');
-    var dots = gallery.querySelectorAll('[data-cm-pdp-dot]');
     if (carousel && dots.length) {
       var setActive = function(idx) {
         dots.forEach(function(d, i) { d.classList.toggle('is-active', i === idx); });
@@ -508,11 +623,16 @@
       });
       dots.forEach(function(d) {
         d.addEventListener('click', function() {
+          if (d.classList.contains('is-cm-hidden')) return;
           var idx = parseInt(d.dataset.cmPdpDot, 10) || 0;
           carousel.scrollTo({ left: idx * carousel.clientWidth, behavior: 'smooth' });
         });
       });
     }
+
+    // Initial filter: apply the currently-selected color on page load.
+    var initial = gallery.getAttribute('data-cm-initial-color');
+    if (initial) filterByColor(initial);
   })();
 </script>
 

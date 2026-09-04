@@ -493,11 +493,27 @@
           atc.textContent = "Sold out";
         }
       }
-      if (variant.featured_image?.src) {
-        // All Calvium PDP templates use the variant's featured image as the
-        // colour source.  The immersive PDP has its own main-image hook, so
-        // include it here as well; otherwise its swatches changed the cart
-        // variant but left the gallery showing the previous colour.
+      // ── Immersive PDP: filter gallery by color + swap main image
+      // The immersive section exposes gallery._cmFilterByColor(colorName)
+      // which hides every media whose alt doesn't match the color and
+      // cross-fades the main image. We resolve the color from the picker
+      // group whose name contains "color"/"colour".
+      const immersiveGallery = document.querySelector("[data-cm-pdp-gallery]");
+      let colorValue = null;
+      form.querySelectorAll("[data-cm-picker-group]").forEach((g) => {
+        const active = g.querySelector(".cm-picker__thumb.is-active, .cm-picker__pill.is-active");
+        if (!active) return;
+        const name = (active.dataset.optionName || "").toLowerCase();
+        if (name.includes("color") || name.includes("colour")) {
+          colorValue = active.dataset.optionValue;
+        }
+      });
+      if (immersiveGallery && typeof immersiveGallery._cmFilterByColor === "function") {
+        immersiveGallery._cmFilterByColor(colorValue, {
+          mainImageSrc: variant.featured_image?.src,
+        });
+      } else if (variant.featured_image?.src) {
+        // Fallback for non-immersive PDP templates (luxury/editorial).
         const mainImg = document.querySelector(".cm-pdp-lux__main-img, .cm-pdp-ed__main-img, [data-cm-main-image], [data-cm-pdp-main-img]");
         if (mainImg) {
           mainImg.src = variant.featured_image.src;
@@ -505,9 +521,10 @@
         }
       }
       // Mobile: scroll the carousel to the variant's featured media so
-      // the picker acts as the image switcher on touch devices.
+      // the picker acts as the image switcher on touch devices. Skip
+      // when the immersive filter already snapped to the first visible.
       const mediaId = variant.featured_media?.id || variant.featured_image?.id;
-      if (mediaId) {
+      if (mediaId && !(immersiveGallery && typeof immersiveGallery._cmFilterByColor === "function")) {
         const carousel = document.querySelector("[data-cm-pdp-carousel]");
         if (carousel) {
           const slides = carousel.querySelectorAll("[data-cm-pdp-slide]");
