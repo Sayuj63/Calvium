@@ -17,7 +17,7 @@
         "message_TnaNpx": {
           "type": "message",
           "settings": {
-            "text": "Free shipping across India above ₹999",
+            "text": "Free shipping across India above ₹1999",
             "link": ""
           }
         },
@@ -43,7 +43,7 @@
       ],
       "name": "Calvium — Announcement",
       "settings": {
-        "default_text": "Free shipping across India above ₹999",
+        "default_text": "Free shipping across India above ₹1999",
         "auto_rotate": true,
         "interval": 4,
         "bg_color": "#0a0a0a",

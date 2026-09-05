@@ -26,15 +26,15 @@
         {%- for block in section.blocks -%}
           <div class="cm-ann__slide {% if forloop.first %}is-active{% endif %}" {{ block.shopify_attributes }}>
             {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}">{{ block.settings.text | default: 'Free shipping across India above ₹999' }}</a>
+              <a href="{{ block.settings.link }}">{{ block.settings.text | default: 'Free shipping across India above ₹1999' }}</a>
             {%- else -%}
-              <span>{{ block.settings.text | default: 'Free shipping across India above ₹999' }}</span>
+              <span>{{ block.settings.text | default: 'Free shipping across India above ₹1999' }}</span>
             {%- endif -%}
           </div>
         {%- endfor -%}
       {%- else -%}
         <div class="cm-ann__slide is-active">
-          <span>{{ section.settings.default_text | default: 'Free shipping across India above ₹999' }}</span>
+          <span>{{ section.settings.default_text | default: 'Free shipping across India above ₹1999' }}</span>
         </div>
       {%- endif -%}
     </div>
@@ -47,7 +47,7 @@
   "class": "shopify-section--cm-ann",
   "tag": "aside",
   "settings": [
-    { "type": "text", "id": "default_text", "label": "Fallback message", "default": "Free shipping across India above ₹999" },
+    { "type": "text", "id": "default_text", "label": "Fallback message", "default": "Free shipping across India above ₹1999" },
     { "type": "checkbox", "id": "auto_rotate", "label": "Auto-rotate through messages", "default": false, "info": "Turn on to cycle through multiple messages. Leave off to display just the first message statically." },
     { "type": "range", "id": "interval", "label": "Auto-rotate every (s)", "min": 2, "max": 10, "step": 1, "default": 4 },
     { "type": "color", "id": "bg_color", "label": "Background", "default": "#0a0a0a" },
@@ -58,7 +58,7 @@
       "type": "message",
       "name": "Message",
       "settings": [
-        { "type": "text", "id": "text", "label": "Message", "default": "Free shipping across India above ₹999" },
+        { "type": "text", "id": "text", "label": "Message", "default": "Free shipping across India above ₹1999" },
         { "type": "url", "id": "link", "label": "Link (optional)" }
       ]
     }
@@ -68,7 +68,7 @@
     {
       "name": "Calvium — Announcement",
       "blocks": [
-        { "type": "message", "settings": { "text": "Free shipping across India above ₹999" } }
+        { "type": "message", "settings": { "text": "Free shipping across India above ₹1999" } }
       ]
     }
   ],
