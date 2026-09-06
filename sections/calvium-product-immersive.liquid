@@ -560,6 +560,7 @@
         var swap = function() {
           mainImg.src = newSrc;
           mainImg.removeAttribute('srcset');
+          if (color) mainImg.setAttribute('alt', color);
         };
         // Wait one frame for the CSS fade-out to kick in, then swap.
         requestAnimationFrame(function() {
@@ -592,10 +593,12 @@
         t.classList.add('is-active');
         if (mainImg) {
           if (mainWrap) mainWrap.classList.add('is-cm-swapping');
+          var thumbAlt = t.querySelector('img')?.getAttribute('alt') || '';
           requestAnimationFrame(function() {
             setTimeout(function() {
               mainImg.src = t.dataset.src;
               mainImg.removeAttribute('srcset');
+              if (thumbAlt) mainImg.setAttribute('alt', thumbAlt);
               requestAnimationFrame(function() {
                 if (mainWrap) mainWrap.classList.remove('is-cm-swapping');
               });
