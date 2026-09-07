@@ -9,28 +9,6 @@
  */
 {
   "sections": {
-    "breadcrumb_w3kGjz": {
-      "type": "breadcrumb",
-      "name": "Breadcrumb",
-      "settings": {
-        "separator": "caret",
-        "horizontal_alignment": "start",
-        "gap": 6,
-        "font_size": "1.6rem",
-        "section_width": "page-width",
-        "page_width_custom": 1570,
-        "color_scheme": "scheme-1",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 24
-      }
-    },
     "cart-section": {
       "type": "main-cart",
       "blocks": {
@@ -339,7 +317,6 @@
     }
   },
   "order": [
-    "breadcrumb_w3kGjz",
     "cart-section",
     "section_7Yzqfd",
     "calvium_most_loved_cart"

@@ -12,40 +12,6 @@
     "main": {
       "type": "main-page",
       "blocks": {
-        "breadcrumb_gcR3i4": {
-          "type": "_breadcrumb",
-          "name": "Breadcrumb",
-          "settings": {
-            "separator": "slash",
-            "horizontal_alignment": "start",
-            "gap": 12,
-            "font_size": "1.2rem",
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "inherit_color_scheme": true,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "content_overlay": false,
-            "image_ratio": "adapt",
-            "border": "none",
-            "border_width": 1,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "extend_left_overlay": false,
-            "extend_right_overlay": false,
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 0,
-            "padding-block-end": 37,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "text_q48tHr": {
           "type": "text",
           "name": "Heading",
@@ -176,7 +142,6 @@
         }
       },
       "block_order": [
-        "breadcrumb_gcR3i4",
         "text_q48tHr",
         "text_4Jqeij"
       ],
@@ -406,7 +371,7 @@
                   "type": "text",
                   "name": "Text",
                   "settings": {
-                    "text": "<p>If you have an issue or question that requires immediate assistance, you can click the button below to chat live with a Customer Service representative.<br/><br/>If we aren’t available, drop us an email and we will get back to you within 20-36 hours!</p>",
+                    "text": "<p>If you have an issue or question that requires immediate assistance, you can click the button below to chat live with a Customer Service representative.<br/><br/>If we aren\u2019t available, drop us an email and we will get back to you within 20-36 hours!</p>",
                     "typing_text": false,
                     "primary_text": "Welcome to our store!",
                     "secondary_text": "Exclusive offers just for you.",
@@ -860,7 +825,7 @@
                     "accordion_row_b7TbAk": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "Q: “Will your template be fully compatible with Shopify?”",
+                        "heading": "Q: \u201cWill your template be fully compatible with Shopify?\u201d",
                         "open_by_default": true,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 35,
@@ -948,7 +913,7 @@
                     "accordion_row_eFxkEM": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "Q: “What is included in the theme package?”",
+                        "heading": "Q: \u201cWhat is included in the theme package?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1036,7 +1001,7 @@
                     "accordion_row_xrUHnA": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "Q: “Do you guys offer a refund or exchange?”",
+                        "heading": "Q: \u201cDo you guys offer a refund or exchange?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1125,7 +1090,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Would assistance be available to upload the template if needed?”",
+                        "heading": "Q: \u201cWould assistance be available to upload the template if needed?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1214,7 +1179,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Do you guys offer customisation services for your themes?”",
+                        "heading": "Q: \u201cDo you guys offer customisation services for your themes?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1303,7 +1268,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Do you guys provide customer support during weekends / holidays?”",
+                        "heading": "Q: \u201cDo you guys provide customer support during weekends / holidays?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1323,7 +1288,7 @@
                         "text_XYePed": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>Normally we don't provide support during weekends, except for urgent cases. In these cases, you only need to mark “Urgent” in your email, we will get back to you ASAP.</p>",
+                            "text": "<p>Normally we don't provide support during weekends, except for urgent cases. In these cases, you only need to mark \u201cUrgent\u201d in your email, we will get back to you ASAP.</p>",
                             "typing_text": false,
                             "primary_text": "Welcome to our store!",
                             "secondary_text": "Exclusive offers just for you.",
@@ -1392,7 +1357,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “What I have to do when I need your support?”",
+                        "heading": "Q: \u201cWhat I have to do when I need your support?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1412,7 +1377,7 @@
                         "text_YqnfcU": {
                           "type": "text",
                           "settings": {
-                            "text": "<p>1/ Create a staff account for us (with Themes permission and Settings permission) <a href=\"http://docs.shopify.com/manual/settings/account/staff-members\" title=\"http://docs.shopify.com/manual/settings/account/staff-members\">http://docs.shopify.com/manual/settings/account/staff-members</a></p><p>2/ Capture screenshot or video for the issue you get.</p><p>3/ Specify which template and version you are using.</p><p>4/ Describe clearly how to reproduce the issue.</p><p>5/ Submit a support ticket at here: <a href=\"https://halosoft.ticksy.com/\" title=\"https://halosoft.ticksy.com/\">https://halosoft.ticksy.com/</a>. Our support team will get back to you soonest, please help us to wait.</p>",
+                            "text": "<p>1/ Create a staff account for us (with Themes permission and Settings permission) <a href=\"http://docs.shopify.com/manual/settings/account/staff-members\" title=\"http://docs.shopify.com/manual/settings/account/staff-members\">http://docs.shopify.com/manual/settings/account/staff-members</a></p><p>2/ Capture screenshot or video for the issue you get.</p><p>3/\u00a0Specify which template and version you are using.</p><p>4/ Describe clearly how to reproduce the issue.</p><p>5/ Submit a support ticket at here: <a href=\"https://halosoft.ticksy.com/\" title=\"https://halosoft.ticksy.com/\">https://halosoft.ticksy.com/</a>. Our support team will get back to you soonest, please help us to wait.</p>",
                             "typing_text": false,
                             "primary_text": "Welcome to our store!",
                             "secondary_text": "Exclusive offers just for you.",
@@ -1529,7 +1494,7 @@
                     "accordion_row_nFnUXd": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "Q: “I cannot upload the theme to my Shopify store / Shopify alerts that the file is too big to upload, what is the problem?”",
+                        "heading": "Q: \u201cI cannot upload the theme to my Shopify store / Shopify alerts that the file is too big to upload, what is the problem?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 35,
@@ -1617,7 +1582,7 @@
                     "accordion_row_bizWBD": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "Q: “Can I turn on/off Lazy Loading Image / Item Animation / Fade Up on the page?”",
+                        "heading": "Q: \u201cCan I turn on/off Lazy Loading Image / Item Animation / Fade Up on the page?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1705,7 +1670,7 @@
                     "accordion_row_ex9BWU": {
                       "type": "_accordion-row",
                       "settings": {
-                        "heading": "Q: “I want to have the dropdown cart displayed automatically every time clients hover over it (instead of clicking on it). Is it possible?”",
+                        "heading": "Q: \u201cI want to have the dropdown cart displayed automatically every time clients hover over it (instead of clicking on it). Is it possible?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1794,7 +1759,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Can I turn on/off some blocks on the page?”",
+                        "heading": "Q: \u201cCan I turn on/off some blocks on the page?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1883,7 +1848,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “I notice that the images used in the theme are all portrait. Will that be a problem if I use square images for our products? How will they be displayed in the theme?”",
+                        "heading": "Q: \u201cI notice that the images used in the theme are all portrait. Will that be a problem if I use square images for our products? How will they be displayed in the theme?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -1972,7 +1937,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Does the theme support image resizing and cropping?”",
+                        "heading": "Q: \u201cDoes the theme support image resizing and cropping?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -2061,7 +2026,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Can I add borders around our product images?”",
+                        "heading": "Q: \u201cCan I add borders around our product images?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -2150,7 +2115,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Can I have multi level menu?”",
+                        "heading": "Q: \u201cCan I have multi level menu?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,
@@ -2239,7 +2204,7 @@
                       "type": "_accordion-row",
                       "name": "Accordion row",
                       "settings": {
-                        "heading": "Q: “Does the theme support variant image?”",
+                        "heading": "Q: \u201cDoes the theme support variant image?\u201d",
                         "open_by_default": false,
                         "inherit_color_scheme": false,
                         "margin-block-start-row": 0,

@@ -11,44 +11,6 @@
   "sections": {
     "main": {
       "type": "main-page",
-      "blocks": {
-        "breadcrumb_ya6HVh": {
-          "type": "_breadcrumb",
-          "name": "Breadcrumb",
-          "settings": {
-            "separator": "slash",
-            "horizontal_alignment": "start",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "inherit_color_scheme": true,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "content_overlay": false,
-            "image_ratio": "adapt",
-            "border": "none",
-            "border_width": 1,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "extend_left_overlay": false,
-            "extend_right_overlay": false,
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "breadcrumb_ya6HVh"
-      ],
       "disabled": true,
       "settings": {
         "horizontal_alignment": "start",
@@ -56,26 +18,6 @@
         "section_width": "page-width",
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
-    },
-    "breadcrumb_wqt7f7": {
-      "type": "breadcrumb",
-      "name": "Breadcrumb",
-      "settings": {
-        "separator": "slash",
-        "horizontal_alignment": "start",
-        "gap": 12,
-        "section_width": "custom",
-        "page_width_custom": 1170,
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 24,
-        "padding-block-end": 24
       }
     },
     "section_BXQnGW": {
@@ -1858,7 +1800,6 @@
   },
   "order": [
     "main",
-    "breadcrumb_wqt7f7",
     "section_BXQnGW"
   ]
 }

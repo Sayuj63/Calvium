@@ -1351,40 +1351,6 @@
     "main": {
       "type": "main-page",
       "blocks": {
-        "breadcrumb_P3KBrk": {
-          "type": "_breadcrumb",
-          "name": "Breadcrumb",
-          "settings": {
-            "separator": "caret",
-            "horizontal_alignment": "center",
-            "gap": 12,
-            "font_size": "1.6rem",
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "inherit_color_scheme": true,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "content_overlay": false,
-            "image_ratio": "adapt",
-            "border": "none",
-            "border_width": 1,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "extend_left_overlay": false,
-            "extend_right_overlay": false,
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "group_QhcWW6": {
           "type": "group",
           "name": "Group",
@@ -1584,7 +1550,6 @@
         }
       },
       "block_order": [
-        "breadcrumb_P3KBrk",
         "group_QhcWW6"
       ],
       "settings": {

@@ -12,16 +12,6 @@
     "main": {
       "type": "main-page",
       "blocks": {
-        "breadcrumb_yA68Pg": {
-          "type": "_breadcrumb",
-          "name": "Breadcrumb",
-          "settings": {
-            "separator": "caret",
-            "horizontal_alignment": "center",
-            "gap": 12
-          },
-          "blocks": {}
-        },
         "text_47a7ey": {
           "type": "text",
           "name": "Heading",
@@ -74,7 +64,7 @@
           "type": "text",
           "name": "Text",
           "settings": {
-            "text": "<p>We create timeless fashion and interiors that blend elegance, comfort, and individuality — inspiring a lifestyle that feels truly yours.</p>",
+            "text": "<p>We create timeless fashion and interiors that blend elegance, comfort, and individuality \u2014 inspiring a lifestyle that feels truly yours.</p>",
             "typing_text": false,
             "primary_text": "Welcome to our store!",
             "secondary_text": "Exclusive offers just for you.",
@@ -120,7 +110,6 @@
         }
       },
       "block_order": [
-        "breadcrumb_yA68Pg",
         "text_47a7ey",
         "text_XX6jCF"
       ],
@@ -882,7 +871,7 @@
                     "text_3eVwQb": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>From curated interiors to contemporary fashion, we design with purpose — blending beauty, function, and comfort to elevate everyday living.</p>",
+                        "text": "<p>From curated interiors to contemporary fashion, we design with purpose \u2014 blending beauty, function, and comfort to elevate everyday living.</p>",
                         "typing_text": false,
                         "primary_text": "Welcome to our store!",
                         "secondary_text": "Exclusive offers just for you.",
@@ -1441,7 +1430,7 @@
                     "text_WpAPtL": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>We bring together modern design and timeless elegance — creating fashion and interiors that inspire confidence, comfort, and everyday beauty.</p>",
+                        "text": "<p>We bring together modern design and timeless elegance \u2014 creating fashion and interiors that inspire confidence, comfort, and everyday beauty.</p>",
                         "typing_text": false,
                         "primary_text": "Welcome to our store!",
                         "secondary_text": "Exclusive offers just for you.",
@@ -1688,7 +1677,7 @@
               "type": "text",
               "name": "Text",
               "settings": {
-                "text": "<p>Behind every design is a team of passionate creators. We are designers, makers, and dreamers who share one vision — to craft fashion and interiors that connect beauty with everyday living. Together, we bring ideas to life and stories to style.</p>",
+                "text": "<p>Behind every design is a team of passionate creators. We are designers, makers, and dreamers who share one vision \u2014 to craft fashion and interiors that connect beauty with everyday living. Together, we bring ideas to life and stories to style.</p>",
                 "typing_text": false,
                 "primary_text": "Welcome to our store!",
                 "secondary_text": "Exclusive offers just for you.",

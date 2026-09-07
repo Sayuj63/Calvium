@@ -9,27 +9,6 @@
  */
 {
   "sections": {
-    "breadcrumb_kCyAFT": {
-      "type": "breadcrumb",
-      "name": "Breadcrumb",
-      "settings": {
-        "separator": "caret",
-        "horizontal_alignment": "center",
-        "gap": 12,
-        "font_size": "1.2rem",
-        "section_width": "custom",
-        "page_width_custom": 1170,
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 24,
-        "padding-block-end": 10
-      }
-    },
     "main": {
       "type": "main-page",
       "blocks": {
@@ -898,7 +877,7 @@
                           "type": "text",
                           "name": "Heading",
                           "settings": {
-                            "text": "<h2>Metropólis</h2>",
+                            "text": "<h2>Metrop\u00f3lis</h2>",
                             "typing_text": false,
                             "primary_text": "Welcome to our store!",
                             "secondary_text": "Exclusive offers just for you.",
@@ -5038,7 +5017,6 @@
     }
   },
   "order": [
-    "breadcrumb_kCyAFT",
     "main",
     "section_mjmizC",
     "section_3wM7EM",

@@ -12,48 +12,6 @@
     "main": {
       "type": "main-page",
       "blocks": {
-        "breadcrumb_ya6HVh": {
-          "type": "_breadcrumb",
-          "name": "Breadcrumb",
-          "settings": {
-            "separator": "caret",
-            "horizontal_alignment": "start",
-            "gap": 12,
-            "font_size": "1.2rem",
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "inherit_color_scheme": true,
-            "scheme_background": "#ffffff",
-            "scheme_background_gradient": "",
-            "scheme_foreground_heading": "#000000",
-            "scheme_foreground": "#000000",
-            "scheme_primary": "#000f9f",
-            "scheme_primary_hover": "#000000",
-            "scheme_border": "#e6e6e6",
-            "scheme_shadow": "#000000",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "content_overlay": false,
-            "image_ratio": "adapt",
-            "border": "none",
-            "border_width": 1,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "extend_left_overlay": false,
-            "extend_right_overlay": false,
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 24,
-            "padding-block-end": 24,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "text_6EzwC6": {
           "type": "text",
           "name": "t:names.heading",
@@ -134,7 +92,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>We create timeless fashion and interiors that blend elegance, comfort, and individuality — inspiring a lifestyle that feels truly yours.</p>",
+            "text": "<p>We create timeless fashion and interiors that blend elegance, comfort, and individuality \u2014 inspiring a lifestyle that feels truly yours.</p>",
             "collection_description_only": false,
             "collapse_text": false,
             "typing_text": false,
@@ -208,7 +166,6 @@
         }
       },
       "block_order": [
-        "breadcrumb_ya6HVh",
         "text_6EzwC6"
       ],
       "settings": {
@@ -983,7 +940,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>If you have an issue or question that requires immediate assistance, you can click the button below to chat live with a Customer Service representative. If we aren’t available, drop us an email to the left and we will get back to you within 20-36 hours!</p>",
+                    "text": "<p>If you have an issue or question that requires immediate assistance, you can click the button below to chat live with a Customer Service representative. If we aren\u2019t available, drop us an email to the left and we will get back to you within 20-36 hours!</p>",
                     "collection_description_only": false,
                     "collapse_text": false,
                     "typing_text": false,

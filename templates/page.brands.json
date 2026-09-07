@@ -9,27 +9,6 @@
  */
 {
   "sections": {
-    "breadcrumb_EQ4DF8": {
-      "type": "breadcrumb",
-      "name": "Breadcrumb",
-      "settings": {
-        "separator": "slash",
-        "horizontal_alignment": "start",
-        "gap": 12,
-        "font_size": "1.2rem",
-        "section_width": "custom",
-        "page_width_custom": 1200,
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 20,
-        "padding-block-end": 10
-      }
-    },
     "main": {
       "type": "main-page",
       "blocks": {
@@ -890,7 +869,6 @@
     }
   },
   "order": [
-    "breadcrumb_EQ4DF8",
     "main",
     "section_DyLP6K",
     "section_ATMbGg"

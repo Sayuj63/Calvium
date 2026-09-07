@@ -9,28 +9,6 @@
  */
 {
   "sections": {
-    "breadcrumb_kCyAFT": {
-      "type": "breadcrumb",
-      "name": "Breadcrumb",
-      "settings": {
-        "separator": "caret",
-        "horizontal_alignment": "start",
-        "gap": 12,
-        "font_size": "1.2rem",
-        "section_width": "custom",
-        "page_width_custom": 1170,
-        "color_scheme": "scheme-1",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 24,
-        "padding-block-end": 16
-      }
-    },
     "main": {
       "type": "main-page",
       "blocks": {
@@ -479,7 +457,7 @@
                       "type": "text",
                       "name": "Text",
                       "settings": {
-                        "text": "<p><strong>Where light meets fabric.</strong><br/>Every season tells a new story — this one speaks in sunlit tones, airy silhouettes, and confident ease.<br/>From crisp linens to fluid satins, discover the looks made for motion, made for you.</p>",
+                        "text": "<p><strong>Where light meets fabric.</strong><br/>Every season tells a new story \u2014 this one speaks in sunlit tones, airy silhouettes, and confident ease.<br/>From crisp linens to fluid satins, discover the looks made for motion, made for you.</p>",
                         "typing_text": false,
                         "primary_text": "Welcome to our store!",
                         "secondary_text": "Exclusive offers just for you.",
@@ -2847,7 +2825,7 @@
                       "type": "text",
                       "name": "Text",
                       "settings": {
-                        "text": "<p>A modern interpretation of elegance—four interlacing bands in polished 2.90ctw yellow gold, creating a look that’s both powerful and refined. Perfect for layering or standing alone as a statement of sophistication.</p>",
+                        "text": "<p>A modern interpretation of elegance\u2014four interlacing bands in polished 2.90ctw yellow gold, creating a look that\u2019s both powerful and refined. Perfect for layering or standing alone as a statement of sophistication.</p>",
                         "typing_text": false,
                         "primary_text": "Welcome to our store!",
                         "secondary_text": "Exclusive offers just for you.",
@@ -3186,7 +3164,6 @@
     }
   },
   "order": [
-    "breadcrumb_kCyAFT",
     "main",
     "lookbook_rTiQht",
     "lookbook_PWrcar",
