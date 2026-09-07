@@ -121,7 +121,7 @@
           "settings": {
             "image": "shopify://shop_images/EVERYDAY.jpg",
             "label": "Everyday",
-            "link": "/collections/everyday"
+            "link": "shopify://collections/everyday-icons"
           }
         },
         "tile_2": {

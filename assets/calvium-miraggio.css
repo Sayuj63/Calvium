@@ -603,7 +603,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 3 / 4;
-  background: var(--cm-white);
+  background: #ffffff;
   border-radius: var(--cm-radius-lg);
 }
 
@@ -611,7 +611,12 @@
 .cm-card__img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  object-fit: cover;
+  /* Calvium 2026-09-07: switched from `cover` → `contain` so tall product
+     photos (bags shot in landscape) are never chopped at the sides. The
+     figure has a solid white bg so the letterbox space renders as clean
+     white rather than the section's page-cream tone. */
+  object-fit: contain;
+  background: #ffffff;
   transition: opacity 400ms var(--cm-ease-out), transform 900ms var(--cm-ease-out);
 }
 .cm-card__img--secondary { opacity: 0; }
