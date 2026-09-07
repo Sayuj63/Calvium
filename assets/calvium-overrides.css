@@ -2184,14 +2184,13 @@ iframe[src*="recaptcha"],
 .template-page .section-content-wrapper > ol {
   list-style-position: inside;
 }
-/* Scope to page-body content ONLY. The old selector `.template-page .text-block`
-   also hit footer/header text-block sections inside the same body, which is
-   why the contact-page footer text was rendering centred while the same
-   footer on the home page rendered left-aligned. */
-.template-page main .text-block,
-.template-page #MainContent .text-block { text-align: center; }
-.template-page main .text-block > *,
-.template-page #MainContent .text-block > * { text-align: center; margin-inline: auto; }
+/* Removed 2026-09-07: the previous `.template-page .text-block { text-align: center }`
+   rule forced centering onto every text-block on every page-template body,
+   overriding the section's own `--horizontal-alignment` setting. It caused
+   the contact page's address (which the section asks to render at
+   `flex-start`) to appear centred while the email line above it rendered
+   left-aligned — inconsistent. Text-block alignment now follows the section's
+   settings; edit alignment inside the theme editor per-block if needed. */
 
 /* ============================================================
    Calvium — Policy page (sections/calvium-policy-page.liquid).
