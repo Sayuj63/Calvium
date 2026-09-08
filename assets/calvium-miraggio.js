@@ -136,7 +136,19 @@
   doc.querySelectorAll("[data-cm-mega]").forEach((group) => {
     const previewImg = group.querySelector("[data-cm-mega-img]");
     if (!previewImg) return;
-    const initial = previewImg.getAttribute("src") || "";
+    let initial = previewImg.getAttribute("src") || "";
+    // If no default_preview was set in the section settings, use the first
+    // row's data-hover-image so the menu never opens with an empty white
+    // panel.
+    if (!initial) {
+      const firstLink = group.querySelector("[data-cm-mega-link][data-hover-image]");
+      const seed = firstLink && firstLink.dataset.hoverImage;
+      if (seed) {
+        initial = seed;
+        previewImg.setAttribute("src", seed);
+        previewImg.style.opacity = "1";
+      }
+    }
     let currentSrc = initial;
     function setImage(src) {
       if (!src || src === currentSrc) return;

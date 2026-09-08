@@ -496,9 +496,10 @@
   .cm-pdp-im__slide.is-cm-hidden,
   .cm-pdp-im__thumb.is-cm-hidden,
   .cm-pdp-im__dot.is-cm-hidden { display: none !important; }
-  /* Smooth fade on the main image when the swatch changes it. */
+  /* Smooth fade on the main image when the swatch changes it. Keep short so
+     swatch clicks feel instant. */
   .cm-pdp-im__main img[data-cm-pdp-main-img] {
-    transition: opacity 240ms cubic-bezier(.4, 0, .2, 1);
+    transition: opacity 140ms cubic-bezier(.4, 0, .2, 1);
   }
   .cm-pdp-im__main.is-cm-swapping img[data-cm-pdp-main-img] {
     opacity: 0;
@@ -569,7 +570,7 @@
             requestAnimationFrame(function() {
               if (mainWrap) mainWrap.classList.remove('is-cm-swapping');
             });
-          }, 200);
+          }, 60);
         });
       }
       // Snap the mobile carousel back to the first visible slide.
@@ -602,7 +603,7 @@
               requestAnimationFrame(function() {
                 if (mainWrap) mainWrap.classList.remove('is-cm-swapping');
               });
-            }, 180);
+            }, 50);
           });
         }
       });
@@ -636,6 +637,23 @@
     // Initial filter: apply the currently-selected color on page load.
     var initial = gallery.getAttribute('data-cm-initial-color');
     if (initial) filterByColor(initial);
+
+    // PRELOAD every thumbnail's full-size image on idle so subsequent swatch
+    // / thumbnail clicks show the new image instantly instead of waiting for
+    // the browser to fetch it (this was the main source of the "2s lag"
+    // between swatch click and image swap on cold cache).
+    var preload = function() {
+      thumbs.forEach(function(t) {
+        var src = t.dataset.src;
+        if (!src) return;
+        var img = new Image();
+        img.decoding = 'async';
+        img.loading = 'eager';
+        img.src = src;
+      });
+    };
+    if (window.requestIdleCallback) window.requestIdleCallback(preload, { timeout: 800 });
+    else setTimeout(preload, 300);
   })();
 </script>
 
