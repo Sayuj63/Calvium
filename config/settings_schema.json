@@ -3356,8 +3356,8 @@
         "type": "number",
         "id": "cm_free_shipping_threshold",
         "label": "Free shipping threshold (in cents)",
-        "info": "Example: 99900 for ₹999.00. Used by the progress bar.",
-        "default": 99900
+        "info": "Example: 199900 for ₹1999.00. Used by the progress bar.",
+        "default": 199900
       },
       {
         "type": "collection",

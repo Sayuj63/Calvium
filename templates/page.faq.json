@@ -15,7 +15,7 @@
         "grp_shipping":  { "type": "group", "settings": { "label": "Shipping" } },
         "q_shipping_1":  { "type": "item",  "settings": { "question": "How long does shipping take?", "answer": "<p>All India orders ship within 24 hours of placement and arrive in 3–7 working days. You'll get a tracking link over WhatsApp once your order leaves our warehouse.</p>" } },
         "q_shipping_2":  { "type": "item",  "settings": { "question": "Do you ship internationally?", "answer": "<p>Not yet — we currently ship only within India. International shipping is on our roadmap for 2026.</p>" } },
-        "q_shipping_3":  { "type": "item",  "settings": { "question": "Is shipping free?", "answer": "<p>Yes, all orders above ₹999 ship free. Orders below that carry a flat ₹99 shipping fee.</p>" } },
+        "q_shipping_3":  { "type": "item",  "settings": { "question": "Is shipping free?", "answer": "<p>Yes, all orders above ₹1999 ship free. Orders below that carry a flat ₹99 shipping fee.</p>" } },
 
         "grp_returns":   { "type": "group", "settings": { "label": "Returns & Exchanges" } },
         "q_returns_1":   { "type": "item",  "settings": { "question": "What is your return policy?", "answer": "<p>We offer 15-day easy returns on all unused products with original tags and packaging. Full details on our <a href=\"/pages/return-policy\">Return Policy</a> page.</p>" } },
