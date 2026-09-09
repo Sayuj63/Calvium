@@ -35,6 +35,14 @@
             width="1400" height="1750"
             loading="lazy"
           >
+        {%- elsif section.settings.image_asset != blank -%}
+          <img
+            src="{{ section.settings.image_asset | asset_url }}"
+            sizes="(max-width: 749px) 100vw, 60vw"
+            alt="{{ section.settings.heading | escape }}"
+            width="1400" height="1750"
+            loading="lazy"
+          >
         {%- else -%}
           <div class="cm-lookbook__placeholder" aria-hidden="true"></div>
         {%- endif -%}
@@ -107,6 +115,7 @@
   "settings": [
     { "type": "header", "content": "Editorial media" },
     { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait 4:5 or taller works best (1400×1750+)." },
+    { "type": "text", "id": "image_asset", "label": "Asset filename fallback", "info": "Filename in /assets when no image is picked (e.g. cm-story-hero.jpg)" },
     { "type": "text", "id": "badge_text", "label": "Badge (optional)", "default": "New Collection" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "THE EDIT" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Layered minimalism, crafted for every day." },

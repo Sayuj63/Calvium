@@ -27,6 +27,11 @@
                    sizes="(max-width: 900px) 50vw, 25vw"
                    alt="{{ block.settings.label | escape }}"
                    width="600" height="800" loading="lazy">
+            {%- elsif block.settings.image_asset != blank -%}
+              <img src="{{ block.settings.image_asset | asset_url }}"
+                   sizes="(max-width: 900px) 50vw, 25vw"
+                   alt="{{ block.settings.label | escape }}"
+                   width="600" height="800" loading="lazy">
             {%- endif -%}
             <span class="cm-cat__label">{{ block.settings.label | default: 'Category' }}</span>
           </a>
@@ -37,6 +42,11 @@
               {%- if block.settings.image != blank -%}
                 <img src="{{ block.settings.image | image_url: width: 900 }}"
                      srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 700 }} 700w, {{ block.settings.image | image_url: width: 900 }} 900w, {{ block.settings.image | image_url: width: 1200 }} 1200w"
+                     sizes="(max-width: 900px) 50vw, 25vw"
+                     alt=""
+                     width="600" height="800" loading="lazy">
+              {%- elsif block.settings.image_asset != blank -%}
+                <img src="{{ block.settings.image_asset | asset_url }}"
                      sizes="(max-width: 900px) 50vw, 25vw"
                      alt=""
                      width="600" height="800" loading="lazy">
@@ -73,6 +83,7 @@
       "name": "Category tile",
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image (3:4)" },
+        { "type": "text", "id": "image_asset", "label": "Asset filename fallback", "info": "Filename in /assets when no image is picked (e.g. cm-newin-everyday.jpg)" },
         { "type": "text", "id": "label", "label": "Label", "default": "Category" },
         { "type": "url", "id": "link", "label": "Link" }
       ]

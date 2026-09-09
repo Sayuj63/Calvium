@@ -119,7 +119,7 @@
         "tile_1": {
           "type": "tile",
           "settings": {
-            "image": "shopify://shop_images/EVERYDAY.jpg",
+            "image_asset": "cm-newin-everyday.jpg",
             "label": "Everyday",
             "link": "shopify://collections/everyday-icons"
           }
@@ -127,7 +127,7 @@
         "tile_2": {
           "type": "tile",
           "settings": {
-            "image": "shopify://shop_images/WORK-ESSENTIAL.jpg",
+            "image_asset": "cm-newin-work.jpg",
             "label": "Work Ready",
             "link": "shopify://collections/work-ready"
           }
@@ -135,7 +135,7 @@
         "tile_3": {
           "type": "tile",
           "settings": {
-            "image": "shopify://shop_images/AFTER-HOURS.jpg",
+            "image_asset": "cm-newin-move.jpg",
             "label": "On the Move",
             "link": "shopify://collections/on-the-move"
           }
@@ -143,7 +143,7 @@
         "tile_4": {
           "type": "tile",
           "settings": {
-            "image": "shopify://shop_images/NEW-COLLECTION.jpg",
+            "image_asset": "cm-newin-newcollection.jpg",
             "label": "New Collection",
             "link": "shopify://collections/new-arrivals"
           }
@@ -236,7 +236,7 @@
     "calvium_lookbook_hp": {
       "type": "calvium-lookbook",
       "settings": {
-        "image": "shopify://shop_images/AFTER-HOURS_jpg.jpg",
+        "image_asset": "cm-story-hero.jpg",
         "badge_text": "",
         "eyebrow": "THE STORY",
         "heading": "Layered minimalism, crafted for every day.",
