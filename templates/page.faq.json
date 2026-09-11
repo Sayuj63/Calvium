@@ -17,10 +17,10 @@
         "q_shipping_2":  { "type": "item",  "settings": { "question": "Do you ship internationally?", "answer": "<p>Not yet — we currently ship only within India. International shipping is on our roadmap for 2026.</p>" } },
         "q_shipping_3":  { "type": "item",  "settings": { "question": "Is shipping free?", "answer": "<p>Yes, all orders above ₹1999 ship free. Orders below that carry a flat ₹99 shipping fee.</p>" } },
 
-        "grp_returns":   { "type": "group", "settings": { "label": "Returns & Exchanges" } },
-        "q_returns_1":   { "type": "item",  "settings": { "question": "What is your return policy?", "answer": "<p>We offer 15-day easy returns on all unused products with original tags and packaging. Full details on our <a href=\"/pages/return-policy\">Return Policy</a> page.</p>" } },
-        "q_returns_2":   { "type": "item",  "settings": { "question": "How do I initiate a return?", "answer": "<p>WhatsApp us on +91 91350 30303 with your order ID and a photo of the item. Our team will schedule a pickup within 24–48 hours.</p>" } },
-        "q_returns_3":   { "type": "item",  "settings": { "question": "When will I receive my refund?", "answer": "<p>Refunds are processed within 7–10 working days of us receiving the returned item, back to the original payment method.</p>" } },
+        "grp_returns":   { "type": "group", "settings": { "label": "Exchanges" } },
+        "q_returns_1":   { "type": "item",  "settings": { "question": "What is your exchange policy?", "answer": "<p>We offer exchanges on unused products with original tags and packaging. To arrange an exchange, contact our team. We do not offer returns or refunds.</p>" } },
+        "q_returns_2":   { "type": "item",  "settings": { "question": "How do I initiate an exchange?", "answer": "<p>WhatsApp us on +91 91350 30303 with your order ID and a photo of the item. Our team will arrange your exchange within 24–48 hours.</p>" } },
+        "q_returns_3":   { "type": "item",  "settings": { "question": "How long does an exchange take?", "answer": "<p>Exchanges are arranged within 7–10 working days of us receiving the item.</p>" } },
 
         "grp_product":   { "type": "group", "settings": { "label": "Product & Care" } },
         "q_product_1":   { "type": "item",  "settings": { "question": "What material are your bags made from?", "answer": "<p>Our products are made up of 100% genuine leather and Vegan leather.</p>" } },
