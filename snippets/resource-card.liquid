@@ -111,17 +111,7 @@
                 endif
               %}
               {%- if featured_image != blank -%}
-                {%- render 'cm-image-fit',
-                  image: featured_image,
-                  ratio: parsed_ratio,
-                  width: image_width,
-                  widths: widths,
-                  sizes: image_sizes,
-                  alt: featured_image.alt | default: resource.title,
-                  class: 'resource-card__image',
-                  loading: 'lazy',
-                  style: primary_focal_point_style
-                -%}
+                {%- render 'cm-image-fit', image: featured_image, ratio: parsed_ratio, width: image_width, widths: widths, sizes: image_sizes, alt: featured_image.alt, default: resource.title, class: 'resource-card__image', loading: 'lazy', style: primary_focal_point_style -%}
                 {%- if image_hover and resource.media.size > 1 -%}
                   {% liquid
                     assign secondary_focal_point_style = ''
@@ -282,3 +272,21 @@
     </div>
   </div>
 </div>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'cm-image-fit',\r\n                  image: featured_image,\r\n
+    \                 ratio: parsed_ratio,\r\n                  width: image_width,\r\n
+    \                 widths: widths,\r\n                  sizes: image_sizes,\r\n
+    \                 alt: featured_image.alt | default: resource.title,\r\n                  class:
+    'resource-card__image',\r\n                  loading: 'lazy',\r\n                  style:
+    primary_focal_point_style\r\n                -%}"
+  to: "{%- render 'cm-image-fit', image: featured_image, ratio: parsed_ratio, width:
+    image_width, widths: widths, sizes: image_sizes, alt: featured_image.alt, default:
+    resource.title, class: 'resource-card__image', loading: 'lazy', style: primary_focal_point_style
+    -%}"
+  position: 5251..5512
+{% endcomment %}

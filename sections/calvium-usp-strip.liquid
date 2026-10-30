@@ -8,9 +8,9 @@
 {%- liquid
   assign tone_class = 'cm-usp--light'
   case section.settings.tone
-    when 'cream' then assign tone_class = 'cm-usp--cream'
-    when 'dark'  then assign tone_class = 'cm-usp--dark'
-    when 'ink'   then assign tone_class = 'cm-usp--ink'
+    when 'cream'
+    when 'dark'
+    when 'ink'
   endcase
 -%}
 
@@ -110,3 +110,19 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "    when 'cream' then assign tone_class = 'cm-usp--cream'"
+  to: "    when 'cream'"
+  position: 355..371
+- from: "    when 'dark'  then assign tone_class = 'cm-usp--dark'"
+  to: "    when 'dark'"
+  position: 372..387
+- from: "    when 'ink'   then assign tone_class = 'cm-usp--ink'"
+  to: "    when 'ink'"
+  position: 388..402
+{% endcomment %}

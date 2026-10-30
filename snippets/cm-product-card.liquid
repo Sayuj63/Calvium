@@ -55,30 +55,12 @@
       {%- assign cm_card_widths = '240,352,500,700,900,1200,1600' -%}
       {%- assign cm_card_sizes = '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw' -%}
       {%- if primary -%}
-        {%- render 'cm-image-fit',
-          image: primary,
-          ratio: cm_card_ratio,
-          width: 900,
-          widths: cm_card_widths,
-          sizes: cm_card_sizes,
-          alt: primary.alt | default: product.title,
-          class: 'cm-card__img cm-card__img--primary',
-          loading: 'lazy'
-        -%}
+        {%- render 'cm-image-fit', image: primary, ratio: cm_card_ratio, width: 900, widths: cm_card_widths, sizes: cm_card_sizes, alt: primary.alt, default: product.title, class: 'cm-card__img cm-card__img--primary', loading: 'lazy' -%}
       {%- else -%}
         <img class="cm-card__img cm-card__img--primary" src="" alt="" width="900" height="1200" data-cm-card-img="primary">
       {%- endif -%}
       {%- if secondary -%}
-        {%- render 'cm-image-fit',
-          image: secondary,
-          ratio: cm_card_ratio,
-          width: 900,
-          widths: cm_card_widths,
-          sizes: cm_card_sizes,
-          alt: secondary.alt | default: product.title,
-          class: 'cm-card__img cm-card__img--secondary',
-          loading: 'lazy'
-        -%}
+        {%- render 'cm-image-fit', image: secondary, ratio: cm_card_ratio, width: 900, widths: cm_card_widths, sizes: cm_card_sizes, alt: secondary.alt, default: product.title, class: 'cm-card__img cm-card__img--secondary', loading: 'lazy' -%}
       {%- elsif primary -%}
         {%- render 'cm-image-fit',
           image: primary,
@@ -202,3 +184,40 @@
     </div>
   {%- endif -%}
 </article>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%- render 'cm-image-fit',
+              image: primary,
+              ratio: cm_card_ratio,
+              width: 900,
+              widths: cm_card_widths,
+              sizes: cm_card_sizes,
+              alt: primary.alt | default: product.title,
+              class: 'cm-card__img cm-card__img--primary',
+              loading: 'lazy'
+            -%}
+  to: "{%- render 'cm-image-fit', image: primary, ratio: cm_card_ratio, width: 900,
+    widths: cm_card_widths, sizes: cm_card_sizes, alt: primary.alt, default: product.title,
+    class: 'cm-card__img cm-card__img--primary', loading: 'lazy' -%}"
+  position: 2056..2285
+- from: |-
+    {%- render 'cm-image-fit',
+              image: secondary,
+              ratio: cm_card_ratio,
+              width: 900,
+              widths: cm_card_widths,
+              sizes: cm_card_sizes,
+              alt: secondary.alt | default: product.title,
+              class: 'cm-card__img cm-card__img--secondary',
+              loading: 'lazy'
+            -%}
+  to: "{%- render 'cm-image-fit', image: secondary, ratio: cm_card_ratio, width: 900,
+    widths: cm_card_widths, sizes: cm_card_sizes, alt: secondary.alt, default: product.title,
+    class: 'cm-card__img cm-card__img--secondary', loading: 'lazy' -%}"
+  position: 2484..2719
+{% endcomment %}
